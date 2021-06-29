@@ -1,0 +1,41 @@
+{
+  "name": "vscreenshot-assistant",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "webpack --watch",
+    "build": "npm run clean && npm run build:compile && npm run build:package",
+    "build:compile": "webpack",
+    "build:package": "mkdir dist && cd build && bestzip ../dist/vscreenshot-assistant.zip vscreenshot-assistant",
+    "clean": "rimraf build dist"
+  },
+  "author": "qitoi",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@chakra-ui/icons": "^1.0.13",
+    "@chakra-ui/react": "^1.6.4",
+    "@emotion/react": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@types/chrome": "^0.0.145",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.8",
+    "fflate": "^0.7.1",
+    "framer-motion": "^4.1.17",
+    "hotkeys-js": "^3.8.7",
+    "p-cancelable": "^3.0.0",
+    "pica": "^7.1.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-intersection-observer": "^8.32.0"
+  },
+  "devDependencies": {
+    "bestzip": "^2.2.0",
+    "copy-webpack-plugin": "^9.0.1",
+    "glob": "^7.1.7",
+    "rimraf": "^3.0.2",
+    "terser-webpack-plugin": "^5.1.4",
+    "ts-loader": "^9.2.3",
+    "webpack": "^5.41.0",
+    "webpack-cli": "^4.7.2"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/lib"
+  ],
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "incremental": true
+  }
+}
