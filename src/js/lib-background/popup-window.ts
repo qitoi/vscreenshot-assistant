@@ -24,6 +24,7 @@ export default class PopupWindow {
     public readonly name: string;
     public readonly url: string;
     private window: chrome.windows.Window;
+    private opening: boolean;
 
     static create(name: string, url: string): PopupWindow {
         if (name in windowByName) {
@@ -42,6 +43,7 @@ export default class PopupWindow {
         this.name = name;
         this.url = url;
         this.window = null;
+        this.opening = false;
     }
 
     getWindow(): chrome.windows.Window {
@@ -49,11 +51,16 @@ export default class PopupWindow {
     }
 
     show() {
+        if (this.opening) {
+            return;
+        }
+
         if (this.window !== null) {
             chrome.windows.update(this.window.id, { focused: true });
             return;
         }
 
+        this.opening = true;
         loadWindowSize(this.name)
             .then(size => {
                 chrome.windows.create({
@@ -64,6 +71,7 @@ export default class PopupWindow {
                 }, window => {
                     this.window = window;
                     windowById[window.id] = this;
+                    this.opening = false;
                 });
             });
     }
