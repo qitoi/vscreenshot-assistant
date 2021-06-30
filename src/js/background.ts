@@ -29,6 +29,7 @@ chrome.browserAction.onClicked.addListener(() => {
 
 import {
     CaptureParam,
+    VideoThumbnailParam,
 } from './lib/types';
 
 import * as storage from './lib-background/storage';
@@ -36,16 +37,29 @@ import { createThumbnail } from './lib-background/thumbnail';
 
 
 chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
-    switch (param.event) {
+    switch (param.type) {
         case 'capture': {
             const p = param as CaptureParam;
-            Promise.all([
-                createThumbnail(p.thumbnail, 320, 180),
-                createThumbnail(p.image, 480, 270),
-            ]).then(([videoThumb, screenshotThumb]) => {
-                storage.saveScreenshot(p.platform, p.videoId, p.image, screenshotThumb, p.pos, p.datetime);
-                storage.saveVideoInfo(p.platform, p.videoId, p.title, p.author, p.private, p.ratio, videoThumb, p.videoDate, p.datetime);
-            });
+            storage.existsVideoThumbnail(p.platform, p.videoId)
+                .then(exists => sendResponse(exists));
+            createThumbnail(p.image, 480, 270)
+                .then(thumbnail => {
+                    storage.saveScreenshot(p.platform, p.videoId, p.pos, p.datetime, p.image, thumbnail);
+                    storage.saveVideoInfo({
+                        platform: p.platform,
+                        videoId: p.videoId,
+                        lastUpdated: p.datetime,
+                        ...p.videoInfo,
+                    });
+                });
+            break;
+        }
+        case 'video-thumbnail': {
+            const p = param as VideoThumbnailParam;
+            createThumbnail(p.thumbnail, 320, 180)
+                .then(thumbnail => {
+                    storage.saveVideoThumbnail(p.platform, p.videoId, thumbnail);
+                });
             break;
         }
     }

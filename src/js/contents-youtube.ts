@@ -16,7 +16,7 @@
 
 import hotkeys from 'hotkeys-js';
 
-import { CaptureParam } from './lib/types';
+import { CaptureParam, VideoThumbnailParam } from './lib/types';
 import capture from './lib/capture';
 import { downloadImage } from './lib-contents/download';
 
@@ -69,7 +69,7 @@ hotkeys('alt+s', { keyup: true }, (event, handler) => {
     }
 });
 
-function exec(): void {
+async function exec(): Promise<void> {
     if (!checkPage()) {
         return;
     }
@@ -80,24 +80,33 @@ function exec(): void {
     const video = document.querySelector('video.video-stream') as HTMLVideoElement;
     const image = capture(video, 'image/jpeg', 0.98);
 
-    downloadImage(getVideoThumbnail(info))
-        .then(thumbnail => {
-            const param: CaptureParam = {
-                event: 'capture',
+    const param: CaptureParam = {
+        type: 'capture',
+        platform: 'youtube',
+        videoId: videoId,
+        videoInfo: {
+            title: getVideoTitle(info),
+            author: getVideoChannelName(info),
+            private: isPrivate(),
+            ratio: video.videoHeight / video.videoWidth,
+            date: getVideoDate(info),
+        },
+        pos: video.currentTime,
+        datetime: (new Date()).getTime(),
+        image: image,
+    };
+    chrome.runtime.sendMessage(param, async existsThumbnail => {
+        if (!existsThumbnail) {
+            const thumbnail = await downloadImage(getVideoThumbnail(info));
+            const param: VideoThumbnailParam = {
+                type: 'video-thumbnail',
                 platform: 'youtube',
                 videoId: videoId,
-                title: getVideoTitle(info),
-                author: getVideoChannelName(info),
-                private: isPrivate(),
-                ratio: video.videoHeight / video.videoWidth,
                 thumbnail: thumbnail,
-                videoDate: getVideoDate(info),
-                image: image,
-                pos: video.currentTime,
-                datetime: (new Date()).getTime(),
             };
             chrome.runtime.sendMessage(param);
-        });
+        }
+    });
 }
 
 function checkPage(): boolean {

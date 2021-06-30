@@ -52,22 +52,26 @@ export function getScreenshotKey(s: ScreenshotInfo): string {
 // messaging parameter
 
 export type EventParam = {
-    event: string,
+    type: string,
 };
 
+export type CaptureVideoInfo = Omit<VideoInfo, 'platform' | 'videoId' | 'lastUpdated'>;
+
 export type CaptureParam = EventParam & {
-    event: 'capture',
+    type: 'capture',
     platform: string,
     videoId: string,
-    // video info
-    title: string,
-    author: string,
-    private: boolean,
-    ratio: number,
-    thumbnail: string,
-    videoDate: number,
+    // video
+    videoInfo: CaptureVideoInfo,
     // screenshot
-    image: ImageDataUrl,
     pos: number,
     datetime: number,
+    image: ImageDataUrl,
+};
+
+export type VideoThumbnailParam = EventParam & {
+    type: 'video-thumbnail',
+    platform: string,
+    videoId: string,
+    thumbnail: ImageDataUrl,
 };
