@@ -14,15 +14,13 @@
  *  limitations under the License.
  */
 
-type WindowDisposer = () => void;
-
 let windowById: { [key: number]: PopupWindow } = {};
+let onCloseById: { [key: number]: () => void } = {};
 let windowByName: { [key: string]: PopupWindow } = {};
-let disposeByName: { [key: string]: WindowDisposer } = {};
 
 export default class PopupWindow {
-    public readonly name: string;
-    public readonly url: string;
+    readonly name: string;
+    readonly url: string;
     private window: chrome.windows.Window;
     private opening: boolean;
 
@@ -30,13 +28,7 @@ export default class PopupWindow {
         if (name in windowByName) {
             return windowByName[name];
         }
-
-        const w = new this(name, url);
-        windowByName[name] = w;
-        disposeByName[name] = () => {
-            w.dispose();
-        };
-        return w;
+        return new this(name, url);
     }
 
     private constructor(name: string, url: string) {
@@ -44,6 +36,7 @@ export default class PopupWindow {
         this.url = url;
         this.window = null;
         this.opening = false;
+        windowByName[name] = this;
     }
 
     getWindow(): chrome.windows.Window {
@@ -70,31 +63,34 @@ export default class PopupWindow {
                     height: size.height,
                 }, window => {
                     this.window = window;
-                    windowById[window.id] = this;
                     this.opening = false;
+                    const windowId = window.id;
+                    windowById[windowId] = this;
+                    onCloseById[windowId] = () => {
+                        this.onClose(windowId);
+                    };
                 });
             });
     }
 
-    private dispose() {
-        if (this.window !== null) {
-            delete windowById[this.window.id];
+    private onClose(windowId: number) {
+        delete windowById[windowId];
+        delete onCloseById[windowId];
+        if (this.window.id === windowId) {
             this.window = null;
         }
     }
 }
 
 chrome.windows.onRemoved.addListener(windowId => {
-    const name = windowById[windowId]?.name;
-    if (name in disposeByName) {
-        disposeByName[name]();
+    if (windowId in onCloseById) {
+        onCloseById[windowId]();
     }
 });
 
 chrome.windows.onBoundsChanged.addListener(window => {
-    const name = windowById[window.id]?.name;
-    if (name !== null) {
-        saveWindowSize(name, window.width, window.height);
+    if (window.id in windowById) {
+        saveWindowSize(windowById[window.id].name, window.width, window.height);
     }
 });
 
