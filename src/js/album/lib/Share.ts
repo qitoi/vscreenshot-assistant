@@ -19,6 +19,7 @@ import {
     ScreenshotInfo,
 } from '../../lib/types';
 import * as storage from '../../lib-background/storage';
+import platforms from '../../lib/platforms';
 
 export function ShareScreenshot(platform, videoId: string, screenshots: ScreenshotInfo[]) {
     storage.getScreenshotList(screenshots).then(images => {
@@ -31,7 +32,7 @@ const TWITTER_SHARE_URL = 'https://twitter.com/intent/tweet';
 function shareScreenshotOnTwitter(platform, videoId: string, screenshots: ImageDataUrl[]): void {
     let url = new URL(TWITTER_SHARE_URL);
     url.search = new URLSearchParams({
-        url: `https://www.youtube.com/watch?v=${videoId}`,
+        url: platforms.getVideoURL(platform, videoId),
     }).toString();
 
     chrome.windows.create({

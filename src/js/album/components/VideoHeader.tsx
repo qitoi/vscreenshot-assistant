@@ -31,6 +31,7 @@ import {
 import { DeleteIcon, DownloadIcon, HamburgerIcon, LockIcon } from '@chakra-ui/icons';
 import { CancelError } from 'p-cancelable';
 
+import platforms from '../../lib/platforms';
 import { VideoInfo } from '../../lib/types';
 import { ScreenshotSortOrder, ScreenshotSortOrders } from '../lib/ScreenshotSort';
 import * as storage from '../../lib-background/storage';
@@ -98,7 +99,7 @@ export default function VideoHeader({ video, order, onChangeSortOrder }: VideoHe
                 <Box w="100%" overflow="hidden">
                     <HStack w="100%" spacing={1}>
                         {video.private && <LockIcon boxSize="1em" color="yellow.400" />}
-                        <Link href={`https://www.youtube.com/watch?v=${video.videoId}`} isExternal={true}
+                        <Link href={platforms.getVideoURL(video.platform, video.videoId)} isExternal={true}
                               whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
                             {video.title} / {video.author}
                         </Link>

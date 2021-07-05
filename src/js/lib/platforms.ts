@@ -14,7 +14,15 @@
  *  limitations under the License.
  */
 
-import Youtube from './lib/platforms/youtube';
-import * as capture from './lib-contents/capture';
+import Platform from './platforms/platform';
+import Youtube from './platforms/youtube';
 
-capture.Setup(Youtube);
+const platforms: { [key: string]: Platform } = {
+    [Youtube.PLATFORM_ID]: Youtube,
+};
+
+export default {
+    getVideoURL(platform, videoId: string): string {
+        return platforms[platform]?.getVideoUrl(videoId);
+    }
+};

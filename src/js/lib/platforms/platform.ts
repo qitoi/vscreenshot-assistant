@@ -14,17 +14,26 @@
  *  limitations under the License.
  */
 
-export default function capture(image: CanvasImageSource, type: string, quality?: number): string {
-    const canvas = document.createElement('canvas');
-    if (image instanceof HTMLVideoElement) {
-        canvas.width = image.videoWidth;
-        canvas.height = image.videoHeight;
-    }
-    else if (!(image instanceof SVGElement)) {
-        canvas.width = image.width;
-        canvas.height = image.height;
-    }
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL(type, quality);
+export default interface Platform {
+    readonly PLATFORM_ID: string;
+
+    getVideoUrl(videoId: string): string;
+
+    checkVideoPage(): boolean;
+
+    getVideoId(): string;
+
+    getVideoElement(): HTMLVideoElement;
+
+    initVideoInfo(videoId: string): Promise<any>;
+
+    getVideoTitle(videoId: string, info: any): string;
+
+    getAuthor(videoId: string, info: any): string;
+
+    getVideoDate(videoId: string, info: any): number;
+
+    getVideoThumbnailUrl(videoId: string, info: any): string;
+
+    isPrivate(videoId: string, info: any): boolean;
 }
