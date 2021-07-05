@@ -16,7 +16,7 @@
 
 // album window
 
-import PopupWindow from './lib-background/popup-window';
+import PopupWindow from './lib/background/popup-window';
 
 const albumWindow = PopupWindow.create('album', 'album.html');
 
@@ -32,8 +32,8 @@ import {
     VideoThumbnailParam,
 } from './lib/types';
 
-import * as storage from './lib-background/storage';
-import { createThumbnail } from './lib-background/thumbnail';
+import * as storage from './lib/background/storage';
+import { createThumbnail } from './lib/background/thumbnail';
 
 
 chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {

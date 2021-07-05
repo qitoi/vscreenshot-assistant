@@ -18,7 +18,7 @@ import {
     ImageDataUrl,
     ScreenshotInfo,
 } from '../../lib/types';
-import * as storage from '../../lib-background/storage';
+import * as storage from '../../lib/background/storage';
 import platforms from '../../lib/platforms';
 
 export function ShareScreenshot(platform, videoId: string, screenshots: ScreenshotInfo[]) {

@@ -18,7 +18,7 @@ import * as React from 'react';
 import PCancelable from 'p-cancelable';
 
 import { ScreenshotInfo } from '../../lib/types';
-import * as storage from '../../lib-background/storage';
+import * as storage from '../../lib/background/storage';
 import * as Archive from '../lib/Archive';
 
 export type ArchiveFunc = () => Promise<Blob>;

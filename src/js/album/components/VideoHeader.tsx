@@ -34,7 +34,7 @@ import { CancelError } from 'p-cancelable';
 import platforms from '../../lib/platforms';
 import { VideoInfo } from '../../lib/types';
 import { ScreenshotSortOrder, ScreenshotSortOrders } from '../lib/ScreenshotSort';
-import * as storage from '../../lib-background/storage';
+import * as storage from '../../lib/background/storage';
 import DownloadDialog from './DownloadDialog';
 import useArchive from '../hooks/useArchive';
 import Dialog from './Dialog';

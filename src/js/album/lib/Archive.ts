@@ -18,7 +18,7 @@ import * as fflate from 'fflate';
 import PCancelable from 'p-cancelable';
 
 import { ScreenshotInfo } from '../../lib/types';
-import * as storage from '../../lib-background/storage';
+import * as storage from '../../lib/background/storage';
 import { decodeBase64, getFileExt, parseDataURL } from '../../lib/data-url';
 
 type ProgressCallback = (current, max: number) => void;

@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Box, Center, Divider, Fade, Image, Select, useBoolean, VStack } from '@chakra-ui/react';
 import { VideoInfo } from '../../lib/types';
 import { useInView } from 'react-intersection-observer';
-import * as storage from '../../lib-background/storage';
+import * as storage from '../../lib/background/storage';
 import { loadVideoSortOrder, saveVideoSortOrder, sortVideo, VideoSortOrder, VideoSortOrders } from '../lib/VideoSort';
 
 type VideoListProps = {

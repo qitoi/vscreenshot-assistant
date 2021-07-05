@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { ImageDataUrl } from '../lib/types';
+import { ImageDataUrl } from '../types';
 
 export function downloadImage(url: string): Promise<ImageDataUrl> {
     return new Promise<ImageDataUrl>(resolve => {

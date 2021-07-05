@@ -19,7 +19,7 @@ import { Box, Checkbox, Fade, Grid, Image, useBoolean, useMergeRefs } from '@cha
 import { useInView } from 'react-intersection-observer';
 
 import { getScreenshotKey, ScreenshotInfo, ScreenshotSummary, VideoInfo } from '../../lib/types';
-import * as storage from '../../lib-background/storage';
+import * as storage from '../../lib/background/storage';
 import { ScreenshotSortOrder, sortScreenshot } from '../lib/ScreenshotSort';
 import SelectedScreenshotList from './SelectedScreenshotList';
 

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { ImageDataUrl } from '../lib/types';
+import { ImageDataUrl } from '../types';
 
 import * as pica from 'pica';
 

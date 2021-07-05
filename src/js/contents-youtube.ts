@@ -15,6 +15,6 @@
  */
 
 import Youtube from './lib/platforms/youtube';
-import * as capture from './lib-contents/capture';
+import * as capture from './lib/contents/capture';
 
 capture.Setup(Youtube);
