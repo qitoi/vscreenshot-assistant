@@ -29,6 +29,7 @@ chrome.browserAction.onClicked.addListener(() => {
 
 import {
     CaptureParam,
+    VideoInfo,
     VideoThumbnailParam,
 } from './lib/types';
 
@@ -40,25 +41,39 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
     switch (param.type) {
         case 'capture': {
             const p = param as CaptureParam;
-            storage.existsVideoThumbnail(p.platform, p.videoId)
-                .then(exists => sendResponse(exists));
-            createThumbnail(p.image, 480, 270)
-                .then(thumbnail => {
-                    storage.saveScreenshot(p.platform, p.videoId, p.pos, p.datetime, p.image, thumbnail);
-                    storage.saveVideoInfo({
-                        platform: p.platform,
-                        videoId: p.videoId,
-                        lastUpdated: p.datetime,
-                        ...p.videoInfo,
+            const videoInfo: VideoInfo = {
+                platform: p.platform,
+                videoId: p.videoId,
+                lastUpdated: p.datetime,
+                ...p.videoInfo,
+            };
+            // ビデオのサムネイル存在チェック
+            const existsThumbnail =
+                storage.existsVideoThumbnail(p.platform, p.videoId)
+                    .then(exists => {
+                        sendResponse({ existsVideoThumbnail: exists, videoInfoParam: videoInfo });
+                        return exists;
                     });
-                });
+            // スクリーンショットのサムネイル作成
+            const createScreenshotThumbnail = createThumbnail(p.image, 480, 270);
+
+            Promise.all([
+                existsThumbnail,
+                createScreenshotThumbnail,
+            ]).then(([existsVideoThumbnail, thumbnail]) => {
+                storage.saveScreenshot(p.platform, p.videoId, p.pos, p.datetime, p.image, thumbnail);
+                if (existsVideoThumbnail) {
+                    storage.saveVideoInfo(videoInfo);
+                }
+            });
             break;
         }
         case 'video-thumbnail': {
             const p = param as VideoThumbnailParam;
             createThumbnail(p.thumbnail, 320, 180)
                 .then(thumbnail => {
-                    storage.saveVideoThumbnail(p.platform, p.videoId, thumbnail);
+                    storage.saveVideoThumbnail(p.videoInfo.platform, p.videoInfo.videoId, thumbnail);
+                    storage.saveVideoInfo(p.videoInfo);
                 });
             break;
         }

@@ -17,6 +17,7 @@
 import * as React from 'react';
 import {
     Box,
+    Center,
     HStack,
     IconButton,
     Link,
@@ -24,35 +25,40 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
+    Progress,
     Select,
     Spacer,
+    Text,
     useBoolean,
 } from '@chakra-ui/react';
 import { DeleteIcon, DownloadIcon, HamburgerIcon, LockIcon } from '@chakra-ui/icons';
 import { CancelError } from 'p-cancelable';
 
 import platforms from '../../lib/platforms';
-import { VideoInfo } from '../../lib/types';
 import { ScreenshotSortOrder, ScreenshotSortOrders } from '../lib/ScreenshotSort';
-import * as storage from '../../lib/background/storage';
-import DownloadDialog from './DownloadDialog';
 import useArchive from '../hooks/useArchive';
+import { useDispatch, useSelector } from '../stores/store';
+import { selectScreenshotSortOrder, setSortOrder } from '../stores/screenshotSlice';
+import { removeVideo, selectActiveVideo } from '../stores/videoSlice';
+
+import DownloadDialog from './DownloadDialog';
 import Dialog from './Dialog';
+import { setActiveVideo } from '../stores/activeVideoAction';
 
-type VideoHeaderProps = {
-    video: VideoInfo,
-    order: ScreenshotSortOrder,
-    onChangeSortOrder: (ScreenshotSortOrder) => void,
-};
+export default function VideoHeader() {
+    const dispatch = useDispatch();
+    const video = useSelector(selectActiveVideo);
+    const order = useSelector(selectScreenshotSortOrder);
 
-export default function VideoHeader({ video, order, onChangeSortOrder }: VideoHeaderProps) {
     const [isDeleteOpen, setIsDeleteOpen] = useBoolean(false);
 
-    const [archive, cancel, setProgressHandler] = useArchive(video.platform, video.videoId);
+    const [archive, cancel, setProgressHandler] = useArchive();
     const [isDownloadOpen, setIsDownloadOpen] = useBoolean(false);
+    const [isDeletingVideo, setIsDeletingVideo] = useBoolean(false);
 
     const handleChangeSortOrder = e => {
-        onChangeSortOrder(e.target.value);
+        const order = (+e.target.value) as ScreenshotSortOrder;
+        dispatch(setSortOrder({ order: order }));
     };
 
     const handleDeleteConfirm = () => {
@@ -63,17 +69,25 @@ export default function VideoHeader({ video, order, onChangeSortOrder }: VideoHe
         setIsDeleteOpen.off();
     };
 
-    const handleDelete = () => {
-        storage.removeVideoInfo(video.platform, video.videoId).then(() => {
-            setIsDeleteOpen.off();
-        });
+    const handleDelete = async () => {
+        if (video !== null) {
+            setIsDeletingVideo.on();
+            await dispatch(removeVideo({ platform: video.platform, videoId: video.videoId }));
+            dispatch(setActiveVideo(null));
+        }
+        setIsDeleteOpen.off();
+        setIsDeletingVideo.off();
     };
 
     const handleDownload = React.useCallback(async e => {
         setIsDownloadOpen.on();
 
+        if (video === null) {
+            return;
+        }
+
         try {
-            const zipBlob = await archive();
+            const zipBlob = await archive(video.platform, video.videoId);
             const a = document.createElement('a') as HTMLAnchorElement;
             a.href = URL.createObjectURL(zipBlob);
             a.download = 'images.zip';
@@ -86,7 +100,7 @@ export default function VideoHeader({ video, order, onChangeSortOrder }: VideoHe
         }
 
         setIsDownloadOpen.off();
-    }, [archive]);
+    }, [archive, video]);
 
     const handleDownloadCancel = React.useCallback(() => {
         cancel();
@@ -94,8 +108,9 @@ export default function VideoHeader({ video, order, onChangeSortOrder }: VideoHe
     }, [cancel]);
 
     return (
-        <Box p="1em" fontSize="lg" lineHeight="1.5em" bg="teal.500" color="white">
+        <Box h="5em" p="1em" fontSize="lg" lineHeight="1.5em" bg="teal.500" color="white">
             <HStack h="3em">
+                {video !== null &&
                 <Box w="100%" overflow="hidden">
                     <HStack w="100%" spacing={1}>
                         {video.private && <LockIcon boxSize="1em" color="yellow.400" />}
@@ -106,6 +121,7 @@ export default function VideoHeader({ video, order, onChangeSortOrder }: VideoHe
                     </HStack>
                     <Box>{(new Date(video.date)).toDateString()}</Box>
                 </Box>
+                }
                 <Spacer />
                 <Box flexShrink={0}>
                     <Select onChange={handleChangeSortOrder}>
@@ -121,22 +137,34 @@ export default function VideoHeader({ video, order, onChangeSortOrder }: VideoHe
                             rounded="md"
                             icon={<HamburgerIcon color="gray.500" />} />
                         <MenuList>
-                            <MenuItem icon={<DownloadIcon />} onClick={handleDownload}>ダウンロード</MenuItem>
-                            <MenuItem icon={<DeleteIcon />} onClick={handleDeleteConfirm}>削除</MenuItem>
+                            <MenuItem isDisabled={video === null} icon={<DownloadIcon />} onClick={handleDownload}>ダウンロード</MenuItem>
+                            <MenuItem isDisabled={video === null} icon={<DeleteIcon />} onClick={handleDeleteConfirm}>削除</MenuItem>
                         </MenuList>
                     </Menu>
                 </Box>
             </HStack>
 
-            <Dialog isOpen={isDeleteOpen} okLabel="削除" cancelLabel="キャンセル" onOK={handleDelete}
+            <Dialog isOpen={isDeleteOpen}
+                    okLabel="削除"
+                    cancelLabel="キャンセル"
+                    isButtonDisabled={isDeletingVideo}
+                    onOK={handleDelete}
                     onCancel={handleDeleteCancel}>
-                {video.title} のスクリーンショットを削除しますか？
+                {!isDeletingVideo
+                    ? (
+                        <Box>
+                            <Center><Text py="1em">スクリーンショットを削除しますか？</Text></Center>
+                        </Box>
+                    ) : (
+                        <Box>
+                            <Center><Text py="1em">スクリーンショットを削除しています</Text></Center>
+                            <Progress isIndeterminate />
+                        </Box>
+                    )
+                }
             </Dialog>
 
-            <DownloadDialog
-                isOpen={isDownloadOpen}
-                onCancel={handleDownloadCancel}
-                setProgressHandler={setProgressHandler} />
+            <DownloadDialog isOpen={isDownloadOpen} onCancel={handleDownloadCancel} setProgressHandler={setProgressHandler} />
         </Box>
     );
 }

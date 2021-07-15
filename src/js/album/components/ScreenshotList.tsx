@@ -18,55 +18,51 @@ import * as React from 'react';
 import { Box, Checkbox, Fade, Grid, Image, useBoolean, useMergeRefs } from '@chakra-ui/react';
 import { useInView } from 'react-intersection-observer';
 
-import { getScreenshotKey, ScreenshotInfo, ScreenshotSummary, VideoInfo } from '../../lib/types';
+import {
+    compareScreenshotInfo,
+    getScreenshotKey,
+    ImageDataUrl,
+    ScreenshotInfo,
+} from '../../lib/types';
 import * as storage from '../../lib/background/storage';
-import { ScreenshotSortOrder, sortScreenshot } from '../lib/ScreenshotSort';
 import SelectedScreenshotList from './SelectedScreenshotList';
 
-type ScreenshotListProps = {
-    video: VideoInfo,
-    sortOrder: ScreenshotSortOrder,
-};
+import { useDispatch, useSelector } from '../stores/store';
+import useParameterizedSelector from '../hooks/useParameterizedSelector';
+import {
+    fetchScreenshotList,
+    removeThumbnail,
+    selectCachedThumbnail,
+    selectScreenshotList,
+} from '../stores/screenshotSlice';
+import {
+    toggleSelectedScreenshot,
+    removeSelectedScreenshot,
+    selectSelectedScreenshot,
+} from '../stores/selectedScreenshotSlice';
+import { selectActiveVideo } from '../stores/videoSlice';
 
 const thumbWidth = 320;
 
-export default function ScreenshotList({ video, sortOrder }: ScreenshotListProps) {
-    const [screenshots, setScreenshots] = React.useState<ScreenshotInfo[]>([]);
+export default function ScreenshotList() {
+    const dispatch = useDispatch();
+    const video = useSelector(selectActiveVideo);
+    const screenshots = useSelector(selectScreenshotList(video?.platform, video?.videoId));
+    const selected = useSelector(selectSelectedScreenshot);
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
-    const [selected, dispatch] = React.useReducer(reducer, []);
 
-    function reducer(state: ScreenshotSummary[], action: { type: string, screenshot: ScreenshotSummary }): ScreenshotSummary[] {
-        if (action.type === 'update') {
-            const screenshot = action.screenshot;
-            if (state.some(s => s.info === screenshot.info)) {
-                return state.filter(s => s.info !== screenshot.info);
-            }
-            else {
-                if (state.length < 4) {
-                    return [...state, screenshot];
-                }
-            }
+    React.useEffect(() => {
+        if (video !== null) {
+            dispatch(fetchScreenshotList({ platform: video.platform, videoId: video.videoId }));
         }
-        return state;
-    }
+    }, [video]);
 
-    React.useEffect(() => {
-        storage.getScreenshotInfoList(video.platform, video.videoId)
-            .then(screenshots => {
-                setScreenshots(sortScreenshot(screenshots, sortOrder));
-            });
-    }, [video.platform, video.videoId, sortOrder]);
-
-    React.useEffect(() => {
-        setScreenshots(sortScreenshot(screenshots, sortOrder));
-    }, [sortOrder]);
-
-    const handleClickScreenshot = React.useCallback(screenshot => {
-        dispatch({ type: 'update', screenshot });
+    const handleClickScreenshot = React.useCallback((info: ScreenshotInfo, thumbnail: ImageDataUrl) => {
+        dispatch(toggleSelectedScreenshot({ info, thumbnail }));
     }, []);
 
-    const handleRemoveSelected = React.useCallback(screenshot => {
-        dispatch({ type: 'update', screenshot });
+    const handleRemoveSelected = React.useCallback((info: ScreenshotInfo) => {
+        dispatch(removeSelectedScreenshot({ info }));
     }, []);
 
     const handleSelectedResize = React.useCallback(height => {
@@ -87,19 +83,16 @@ export default function ScreenshotList({ video, sortOrder }: ScreenshotListProps
                         key={getScreenshotKey(s)}
                         info={s}
                         disabled={video.private}
-                        isChecked={selected.some(summary => summary.info === s)}
+                        isChecked={selected.some(ss => compareScreenshotInfo(ss, s))}
                         onClick={handleClickScreenshot} />
                 ))}
             </Grid>
             <Box h="1rem" />
-            {selected.length > 0 && (
-                <SelectedScreenshotList
-                    key={`${video.platform}-${video.videoId}`}
-                    video={video}
-                    screenshots={selected}
-                    onResize={handleSelectedResize}
-                    onClick={handleRemoveSelected} />
-            )}
+            <SelectedScreenshotList
+                video={video}
+                screenshots={selected}
+                onResize={handleSelectedResize}
+                onClick={handleRemoveSelected} />
         </Box>
     );
 }
@@ -109,18 +102,19 @@ type ScreenshotCardProps = React.PropsWithChildren<{
     info: ScreenshotInfo,
     isChecked: boolean,
     disabled: boolean,
-    onClick: (summary: ScreenshotSummary) => void,
+    onClick: (info: ScreenshotInfo, thumbnail: ImageDataUrl) => void,
 }>;
 
 const ScreenshotCard = React.memo(({ info, isChecked, disabled, onClick }: ScreenshotCardProps) => {
     const [isShown, setIsShown] = useBoolean(false);
     const [isClickable, setIsClickable] = useBoolean(false);
     const ref = React.useRef<HTMLImageElement>(null);
+    const [visible, setVisible] = useBoolean(false);
 
     const handleClick = e => {
         e.preventDefault();
         if (isClickable && !disabled) {
-            onClick({ info: info, thumbnail: ref.current.src });
+            onClick(info, ref.current.src);
         }
     };
 
@@ -128,8 +122,13 @@ const ScreenshotCard = React.memo(({ info, isChecked, disabled, onClick }: Scree
         setIsClickable.on();
     }, []);
 
+    const handleVisible = React.useCallback(() => {
+        setVisible.on();
+    }, []);
+
     return (
         <Box as="button"
+             display={visible ? null : 'none'}
              position="relative"
              rounded="md"
              overflow="clip"
@@ -142,7 +141,8 @@ const ScreenshotCard = React.memo(({ info, isChecked, disabled, onClick }: Scree
                 platform={info.platform}
                 videoId={info.videoId}
                 no={info.no}
-                onLoad={handleLoad} />
+                onLoad={handleLoad}
+                onVisible={handleVisible} />
             <Fade in={isShown || isChecked}>
                 <Box w="100%" h="100%" position="absolute" top={0} left={0} bgColor="rgba(0, 0, 0, 0.5)" />
             </Fade>
@@ -155,11 +155,15 @@ type LazyLoadScreenshotThumbnail = {
     platform: string,
     videoId: string,
     no: number,
-    onLoad?: () => void,
+    onLoad: () => void,
+    onVisible: () => void,
 };
 
 const LazyLoadScreenshotThumbnail = React.memo(React.forwardRef<HTMLImageElement, LazyLoadScreenshotThumbnail>(
-    ({ platform, videoId, no, onLoad }, forwardedRef) => {
+    ({ platform, videoId, no, onLoad, onVisible }, forwardedRef) => {
+        const dispatch = useDispatch();
+        const thumbnail = useParameterizedSelector(selectCachedThumbnail, platform, videoId, no);
+
         const ref = React.useRef<HTMLImageElement>(null);
         const { ref: inViewRef, inView } = useInView({
             triggerOnce: true,
@@ -167,15 +171,30 @@ const LazyLoadScreenshotThumbnail = React.memo(React.forwardRef<HTMLImageElement
         const refs = useMergeRefs(ref, inViewRef, forwardedRef);
 
         React.useEffect(() => {
-            if (inView) {
-                storage.getScreenshotThumbnail(platform, videoId, no).then(image => {
-                    if (ref.current) {
-                        ref.current.onload = onLoad;
-                        ref.current.src = image;
-                    }
-                });
+            if (thumbnail !== null) {
+                if (ref.current && ref.current.src === '') {
+                    ref.current.onload = () => {
+                        onLoad();
+                        onVisible();
+                    };
+                    ref.current.src = thumbnail;
+                    dispatch(removeThumbnail({ platform, videoId, no }));
+                }
             }
-        }, [inView, onLoad]);
+            else {
+                if (ref.current && ref.current.src === '') {
+                    if (inView) {
+                        storage.getScreenshotThumbnail(platform, videoId, no).then(image => {
+                            if (ref.current) {
+                                ref.current.onload = onLoad;
+                                ref.current.src = image;
+                            }
+                        });
+                    }
+                    onVisible();
+                }
+            }
+        }, [platform, videoId, no, inView, onLoad]);
 
         return (
             <Image

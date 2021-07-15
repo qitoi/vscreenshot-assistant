@@ -31,11 +31,12 @@ type DeleteDialogProps = React.PropsWithChildren<{
     title?: string,
     okLabel?: string,
     cancelLabel?: string,
+    isButtonDisabled?: boolean,
     onOK?: () => void,
     onCancel?: () => void,
 }>;
 
-const Dialog = React.memo(({ isOpen, title, okLabel, cancelLabel, onOK, onCancel, children }: DeleteDialogProps) => {
+const Dialog = React.memo(({ isOpen, title, okLabel, cancelLabel, isButtonDisabled, onOK, onCancel, children }: DeleteDialogProps) => {
     const cancelRef = React.useRef<HTMLButtonElement>(null);
     return (
         <AlertDialog
@@ -43,6 +44,7 @@ const Dialog = React.memo(({ isOpen, title, okLabel, cancelLabel, onOK, onCancel
             isCentered
             leastDestructiveRef={cancelRef}
             closeOnOverlayClick={false}
+            closeOnEsc={isButtonDisabled !== true}
             onClose={onCancel}>
             <AlertDialogOverlay>
                 <AlertDialogContent>
@@ -54,10 +56,10 @@ const Dialog = React.memo(({ isOpen, title, okLabel, cancelLabel, onOK, onCancel
                     </AlertDialogBody>
                     <AlertDialogFooter>
                         <HStack>
-                            {okLabel && <Button colorScheme="red" onClick={onOK}>
+                            {okLabel && <Button colorScheme="red" disabled={isButtonDisabled} onClick={onOK}>
                                 {okLabel}
                             </Button>}
-                            {cancelLabel && <Button ref={cancelRef} onClick={onCancel}>
+                            {cancelLabel && <Button ref={cancelRef} disabled={isButtonDisabled} onClick={onCancel}>
                                 {cancelLabel}
                             </Button>}
                         </HStack>

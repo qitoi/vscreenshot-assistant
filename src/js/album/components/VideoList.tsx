@@ -15,37 +15,37 @@
  */
 
 import * as React from 'react';
-import { Box, Center, Divider, Fade, Image, Select, useBoolean, VStack } from '@chakra-ui/react';
-import { VideoInfo } from '../../lib/types';
+import { Box, Center, Fade, Image, Select, useBoolean, VStack } from '@chakra-ui/react';
 import { useInView } from 'react-intersection-observer';
+
+import { getVideoKey, VideoInfo } from '../../lib/types';
 import * as storage from '../../lib/background/storage';
-import { loadVideoSortOrder, saveVideoSortOrder, sortVideo, VideoSortOrder, VideoSortOrders } from '../lib/VideoSort';
+import { VideoSortOrder, VideoSortOrders } from '../lib/VideoSort';
 
-type VideoListProps = {
-    onSelect: (video: VideoInfo) => void
-};
+import { useDispatch, useSelector } from '../stores/store';
+import { selectVideoList, selectVideoSortOrder, setSortOrder, setVideoList } from '../stores/videoSlice';
+import { setActiveVideo } from '../stores/activeVideoAction';
 
-export default function VideoList({ onSelect }: VideoListProps) {
-    const [videos, setVideos] = React.useState<VideoInfo[]>([]);
-    const [order, setOrder] = React.useState<VideoSortOrder>(loadVideoSortOrder());
+const VideoList = React.memo(() => {
+    const dispatch = useDispatch();
+    const videos = useSelector(selectVideoList);
+    const order = useSelector(selectVideoSortOrder);
 
     React.useEffect(() => {
         storage.getVideoInfoList()
             .then(videos => {
-                setVideos(sortVideo(videos, order));
+                dispatch(setVideoList(videos));
             });
     }, []);
 
     const handleChangeSortOrder = e => {
-        const order = e.target.value;
-        saveVideoSortOrder(order);
-        setVideos(sortVideo(videos, order));
-        setOrder(order);
+        const order: VideoSortOrder = e.target.value;
+        dispatch(setSortOrder(order));
     };
 
-    const handleSelected = video => {
-        onSelect(video);
-    };
+    const handleSelected = React.useCallback((video: VideoInfo) => {
+        dispatch(setActiveVideo(video));
+    }, []);
 
     return (
         <>
@@ -60,22 +60,19 @@ export default function VideoList({ onSelect }: VideoListProps) {
             </Center>
             <VStack my={5}>
                 {videos.map((v) =>
-                    <>
-                        <VideoThumbnail key={`${v.platform}-${v.videoId}`} info={v} onSelected={handleSelected} />
-                        <Divider />
-                    </>
+                    <VideoThumbnail key={getVideoKey(v)} info={v} onSelected={handleSelected} />
                 )}
             </VStack>
         </>
     );
-}
+});
 
 type VideoThumbnailProps = {
     info: VideoInfo,
     onSelected: (info: VideoInfo) => void,
 };
 
-function VideoThumbnail({ info, onSelected }: VideoThumbnailProps) {
+const VideoThumbnail = React.memo(({ info, onSelected }: VideoThumbnailProps) => {
     const [isShown, setIsShown] = useBoolean(false);
 
     const handleClick = e => {
@@ -109,14 +106,14 @@ function VideoThumbnail({ info, onSelected }: VideoThumbnailProps) {
             </Box>
         </Box>
     );
-}
+});
 
 type LazyLoadVideoThumbnailProps = {
     platform: string,
     videoId: string,
 };
 
-function LazyLoadVideoThumbnail({ platform, videoId }: LazyLoadVideoThumbnailProps) {
+const LazyLoadVideoThumbnail = React.memo(({ platform, videoId }: LazyLoadVideoThumbnailProps) => {
     const [image, setImage] = React.useState<string>(null);
     const { ref, inView } = useInView({
         triggerOnce: true,
@@ -131,4 +128,6 @@ function LazyLoadVideoThumbnail({ platform, videoId }: LazyLoadVideoThumbnailPro
     return (
         <Image ref={ref} src={image} w="100%" minW="320px" minH="180px" draggable={false} />
     );
-}
+});
+
+export default VideoList;

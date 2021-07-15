@@ -14,18 +14,9 @@
  *  limitations under the License.
  */
 
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { createAction } from '@reduxjs/toolkit';
 
-import { App } from './album/App';
-import { store } from './album/stores/store';
+import { VideoInfo } from '../../lib/types';
 
-ReactDOM.render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <App />
-        </Provider>
-    </React.StrictMode>,
-    document.getElementById('root')
-);
+export type SetActiveVideoPayload = VideoInfo | null;
+export const setActiveVideo = createAction<SetActiveVideoPayload>('activeVideo/set');

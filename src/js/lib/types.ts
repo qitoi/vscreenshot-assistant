@@ -16,6 +16,11 @@
 
 export type ImageDataUrl = string;
 
+type VideoInfoKey = {
+    platform: string,
+    videoId: string,
+};
+
 export type VideoInfo = {
     platform: string,
     videoId: string,
@@ -27,9 +32,19 @@ export type VideoInfo = {
     lastUpdated: number,
 };
 
-export function getVideoKey(v: VideoInfo): string {
+export function getVideoKey(v: VideoInfoKey): string {
     return `v:${v.platform}:${v.videoId}`;
 }
+
+export function compareVideoInfo(v1: VideoInfoKey, v2: VideoInfoKey): boolean {
+    return v1.platform === v2.platform && v1.videoId === v2.videoId;
+}
+
+type ScreenshotInfoKey = {
+    platform: string,
+    videoId: string,
+    no: number,
+};
 
 export type ScreenshotInfo = {
     platform: string,
@@ -39,13 +54,12 @@ export type ScreenshotInfo = {
     datetime: number, // capture time
 };
 
-export type ScreenshotSummary = {
-    info: ScreenshotInfo,
-    thumbnail: ImageDataUrl,
-};
-
-export function getScreenshotKey(s: ScreenshotInfo): string {
+export function getScreenshotKey(s: ScreenshotInfoKey): string {
     return `s:${s.platform}:${s.videoId}:${s.no}`;
+}
+
+export function compareScreenshotInfo(s1: ScreenshotInfoKey, s2: ScreenshotInfoKey): boolean {
+    return s1.platform === s2.platform && s1.videoId === s2.videoId && s1.no === s2.no;
 }
 
 
@@ -71,7 +85,6 @@ export type CaptureParam = EventParam & {
 
 export type VideoThumbnailParam = EventParam & {
     type: 'video-thumbnail',
-    platform: string,
-    videoId: string,
+    videoInfo: VideoInfo,
     thumbnail: ImageDataUrl,
 };

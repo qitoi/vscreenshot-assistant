@@ -75,13 +75,12 @@ async function capture(platform: Platform) {
         image: image,
     };
 
-    chrome.runtime.sendMessage(param, async existsThumbnail => {
-        if (!existsThumbnail) {
+    chrome.runtime.sendMessage(param, async ({ existsVideoThumbnail, videoInfoParam }) => {
+        if (!existsVideoThumbnail) {
             const thumbnail = await downloadImage(platform.getVideoThumbnailUrl(videoId, videoInfo));
             const param: VideoThumbnailParam = {
                 type: 'video-thumbnail',
-                platform: platform.PLATFORM_ID,
-                videoId: videoId,
+                videoInfo: videoInfoParam,
                 thumbnail: thumbnail,
             };
             chrome.runtime.sendMessage(param);

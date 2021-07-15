@@ -25,14 +25,15 @@ import {
     useBoolean,
 } from '@chakra-ui/react';
 
-import { getScreenshotKey, ImageDataUrl, ScreenshotInfo, ScreenshotSummary, VideoInfo } from '../../lib/types';
+import { getScreenshotKey, ImageDataUrl, ScreenshotInfo, VideoInfo } from '../../lib/types';
 import { ShareScreenshot } from '../lib/Share';
+import { ScreenshotInfoWithThumbnail } from '../stores/selectedScreenshotSlice';
 
 type SelectedScreenshotListProps = {
     video: VideoInfo,
-    screenshots: ScreenshotSummary[],
+    screenshots: ScreenshotInfoWithThumbnail[],
     onResize: (height: number) => void,
-    onClick: (summary: ScreenshotSummary) => void,
+    onClick: (info: ScreenshotInfo) => void,
 };
 
 const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onClick }: SelectedScreenshotListProps) => {
@@ -60,8 +61,12 @@ const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onCli
 
     const handleClick = e => {
         e.preventDefault();
-        ShareScreenshot(video.platform, video.videoId, screenshots.map(s => s.info));
+        ShareScreenshot(video.platform, video.videoId, screenshots);
     };
+
+    if (screenshots.length === 0) {
+        return null;
+    }
 
     return (
         <HStack ref={ref}
@@ -78,8 +83,8 @@ const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onCli
                   justifyContent="center">
                 {screenshots.map(s =>
                     <SelectedScreenshot
-                        key={getScreenshotKey(s.info)}
-                        info={s.info}
+                        key={getScreenshotKey(s)}
+                        info={s}
                         screenshot={s.thumbnail}
                         onLoad={handleLoad}
                         onClick={onClick} />
@@ -96,7 +101,7 @@ export default SelectedScreenshotList;
 type SelectedScreenshotProps = React.PropsWithChildren<{
     info: ScreenshotInfo,
     screenshot: ImageDataUrl,
-    onClick: (summary: ScreenshotSummary) => void,
+    onClick: (info: ScreenshotInfo) => void,
     onLoad?: () => void,
 }>;
 
@@ -105,7 +110,7 @@ function SelectedScreenshot({ info, screenshot, onClick, onLoad }: SelectedScree
 
     const handleClick = e => {
         e.preventDefault();
-        onClick({ info, thumbnail: screenshot });
+        onClick(info);
     };
 
     return (

@@ -21,27 +21,27 @@ import { ScreenshotInfo } from '../../lib/types';
 import * as storage from '../../lib/background/storage';
 import * as Archive from '../lib/Archive';
 
-export type ArchiveFunc = () => Promise<Blob>;
+export type ArchiveFunc = (platform: string, videoId: string) => Promise<Blob>;
 export type CancelFunc = () => void;
 export type ProgressFunc = (progress: number) => void;
 export type SetProgressHandler = (ProgressFunc) => void;
 
-export default function useArchive(platform, videoId: string): [ArchiveFunc, CancelFunc, SetProgressHandler] {
+export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandler] {
     const [cancelable, setCancelable] = React.useState<PCancelable<any>>(null);
     const onProgressRef = React.useRef<ProgressFunc>(() => {
     });
 
     const setProgressHandler = React.useCallback((p: ProgressFunc) => {
         onProgressRef.current = p;
-    }, [platform, videoId]);
+    }, []);
 
     const cancel = React.useCallback(() => {
         if (cancelable !== null) {
             cancelable.cancel();
         }
-    }, [cancelable, platform, videoId]);
+    }, [cancelable]);
 
-    const archive = React.useCallback(async (): Promise<Blob> => {
+    const archive = React.useCallback(async (platform: string, videoId: string): Promise<Blob> => {
         // reset progress
         onProgressRef.current(0);
 
@@ -70,7 +70,7 @@ export default function useArchive(platform, videoId: string): [ArchiveFunc, Can
         setCancelable(null);
 
         return zipBlob;
-    }, [platform, videoId]);
+    }, []);
 
     return [archive, cancel, setProgressHandler];
 }
