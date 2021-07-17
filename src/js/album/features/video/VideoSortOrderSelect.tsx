@@ -31,9 +31,9 @@ export function VideoSortOrderSelect() {
     };
 
     return (
-        <Select onChange={handleChangeSortOrder}>
+        <Select value={order} onChange={handleChangeSortOrder}>
             {Object.entries(VideoSortOrders).map(([val, label]) => (
-                <option style={{ color: 'black' }} selected={+val === order} value={val}>
+                <option key={val} style={{ color: 'black' }} value={val}>
                     {label}
                 </option>
             ))}

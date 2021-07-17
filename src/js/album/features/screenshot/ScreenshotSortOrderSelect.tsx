@@ -31,9 +31,11 @@ export function ScreenshotSortOrderSelect() {
     };
 
     return (
-        <Select onChange={handleChangeSortOrder}>
+        <Select value={order} onChange={handleChangeSortOrder}>
             {Object.entries(ScreenshotSortOrders).map(([val, label]) => (
-                <option style={{ color: 'black' }} selected={+val === order} value={val}>{label}</option>
+                <option key={val} style={{ color: 'black' }} value={val}>
+                    {label}
+                </option>
             ))}
         </Select>
     );
