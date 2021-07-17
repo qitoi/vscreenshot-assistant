@@ -19,7 +19,7 @@ import { ImageDataUrl } from '../types';
 import * as pica from 'pica';
 
 const resizer = pica({
-    features: ['js', 'wasm'],
+    features: ['js', 'wasm', 'ww'],
 });
 
 export function createThumbnail(image: ImageDataUrl, width, height: number): Promise<ImageDataUrl> {
