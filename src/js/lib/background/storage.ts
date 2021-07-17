@@ -33,7 +33,7 @@ function getVideoPrimaryKeys(): Promise<VideoKey[]> {
     });
 }
 
-function registerVideo(platform, id: string): Promise<void> {
+function registerVideo(platform: string, id: string): Promise<void> {
     return execInSequence(async () => {
         const keymap = await getItemById<VideoKeyMap>(VIDEO_KEYMAP_KEY, {});
         keymap[`${platform}:${id}`] = 1;
@@ -41,7 +41,7 @@ function registerVideo(platform, id: string): Promise<void> {
     });
 }
 
-function unregisterVideo(platform, id: string): Promise<void> {
+function unregisterVideo(platform: string, id: string): Promise<void> {
     return execInSequence(async () => {
         const keymap = await getItemById<VideoKeyMap>(VIDEO_KEYMAP_KEY, {});
         delete keymap[`${platform}:${id}`];
@@ -66,7 +66,7 @@ export async function saveVideoInfo(info: VideoInfo): Promise<void> {
     return registerVideo(info.platform, info.videoId);
 }
 
-export async function removeVideoInfo(platform, videoId: string): Promise<void> {
+export async function removeVideoInfo(platform: string, videoId: string): Promise<void> {
     // video info/thumbnail ids
     const infoId = getVideoInfoId(platform, videoId);
     const thumbId = getVideoThumbnailId(platform, videoId);
@@ -87,14 +87,14 @@ export async function removeVideoInfo(platform, videoId: string): Promise<void> 
     ]);
 }
 
-export async function saveVideoThumbnail(platform, videoId: string, thumbnail: ImageDataUrl): Promise<void> {
+export async function saveVideoThumbnail(platform: string, videoId: string, thumbnail: ImageDataUrl): Promise<void> {
     const thumbId = getVideoThumbnailId(platform, videoId);
     return setItems({
         [thumbId]: thumbnail,
     });
 }
 
-export async function existsVideoThumbnail(platform, videoId: string): Promise<boolean> {
+export async function existsVideoThumbnail(platform: string, videoId: string): Promise<boolean> {
     const thumbId = getVideoThumbnailId(platform, videoId);
     return existsItem(thumbId);
 }
@@ -102,7 +102,7 @@ export async function existsVideoThumbnail(platform, videoId: string): Promise<b
 
 // screenshot info
 
-async function getScreenshotInfoIdList(platform, videoId: string): Promise<string[]> {
+async function getScreenshotInfoIdList(platform: string, videoId: string): Promise<string[]> {
     const maxNo = await getPublishedScreenshotNo(platform, videoId);
     let ids: string[] = [];
     for (let i = 1; i <= maxNo; ++i) {
@@ -111,7 +111,7 @@ async function getScreenshotInfoIdList(platform, videoId: string): Promise<strin
     return ids;
 }
 
-export async function saveScreenshot(platform, videoId: string, pos, datetime: number, image, thumbnail: ImageDataUrl): Promise<void> {
+export async function saveScreenshot(platform: string, videoId: string, pos: number, datetime: number, image: ImageDataUrl, thumbnail: ImageDataUrl): Promise<void> {
     const no = await publishScreenshotNo(platform, videoId);
     const infoId = getScreenshotInfoId(platform, videoId, no);
     const thumbId = getScreenshotThumbnailId(platform, videoId, no);
@@ -124,7 +124,7 @@ export async function saveScreenshot(platform, videoId: string, pos, datetime: n
     });
 }
 
-export async function getScreenshotInfoList(platform, videoId: string): Promise<ScreenshotInfo[]> {
+export async function getScreenshotInfoList(platform: string, videoId: string): Promise<ScreenshotInfo[]> {
     const ids = await getScreenshotInfoIdList(platform, videoId);
     return getItemListByIds(ids);
 }
@@ -132,17 +132,17 @@ export async function getScreenshotInfoList(platform, videoId: string): Promise<
 
 // screenshot image
 
-export async function getVideoThumbnail(platform, videoId: string): Promise<ImageDataUrl> {
+export async function getVideoThumbnail(platform: string, videoId: string): Promise<ImageDataUrl> {
     const id = getVideoThumbnailId(platform, videoId);
     return getItemById<ImageDataUrl>(id);
 }
 
-export async function getScreenshotThumbnail(platform, videoId: string, no: number): Promise<ImageDataUrl> {
+export async function getScreenshotThumbnail(platform: string, videoId: string, no: number): Promise<ImageDataUrl> {
     const id = getScreenshotThumbnailId(platform, videoId, no);
     return getItemById<ImageDataUrl>(id);
 }
 
-export async function getScreenshot(platform, videoId: string, no: number): Promise<ImageDataUrl> {
+export async function getScreenshot(platform: string, videoId: string, no: number): Promise<ImageDataUrl> {
     const id = getScreenshotId(platform, videoId, no);
     return getItemById<ImageDataUrl>(id);
 }
@@ -155,7 +155,7 @@ export async function getScreenshotList(infoList: ScreenshotInfo[]): Promise<Ima
 
 // screenshot no
 
-async function publishScreenshotNo(platform, videoId: string): Promise<number> {
+async function publishScreenshotNo(platform: string, videoId: string): Promise<number> {
     const id = getScreenshotNoId(platform, videoId);
     return execInSequence(async () => {
         const no = await getItemById<number>(id, 0) + 1;
@@ -164,12 +164,12 @@ async function publishScreenshotNo(platform, videoId: string): Promise<number> {
     });
 }
 
-async function getPublishedScreenshotNo(platform, videoId: string): Promise<number> {
+async function getPublishedScreenshotNo(platform: string, videoId: string): Promise<number> {
     const id = getScreenshotNoId(platform, videoId);
     return getItemById<number>(id, 0);
 }
 
-async function removePublishedScreenshotNo(platform, videoId: string): Promise<void> {
+async function removePublishedScreenshotNo(platform: string, videoId: string): Promise<void> {
     const id = getScreenshotNoId(platform, videoId);
     return removeItems([id]);
 }
@@ -177,27 +177,27 @@ async function removePublishedScreenshotNo(platform, videoId: string): Promise<v
 
 // object id
 
-function getVideoInfoId(platform, videoId: string): string {
+function getVideoInfoId(platform: string, videoId: string): string {
     return `v:i:${platform}:${videoId}`;
 }
 
-function getVideoThumbnailId(platform, videoId: string): string {
+function getVideoThumbnailId(platform: string, videoId: string): string {
     return `v:t:${platform}:${videoId}`;
 }
 
-function getScreenshotNoId(platform, videoId: string): string {
+function getScreenshotNoId(platform: string, videoId: string): string {
     return `v:n:${platform}:${videoId}`;
 }
 
-function getScreenshotInfoId(platform, videoId: string, no: number): string {
+function getScreenshotInfoId(platform: string, videoId: string, no: number): string {
     return `s:i:${platform}:${videoId}:${no}`;
 }
 
-function getScreenshotThumbnailId(platform, videoId: string, no: number): string {
+function getScreenshotThumbnailId(platform: string, videoId: string, no: number): string {
     return `s:t:${platform}:${videoId}:${no}`;
 }
 
-function getScreenshotId(platform, videoId: string, no: number): string {
+function getScreenshotId(platform: string, videoId: string, no: number): string {
     return `s:s:${platform}:${videoId}:${no}`;
 }
 
@@ -207,7 +207,7 @@ function getScreenshotId(platform, videoId: string, no: number): string {
 function getItemById<T>(id: string, defaultVal: any = null): Promise<T> {
     return new Promise(resolve => {
         chrome.storage.local.get({ [id]: defaultVal }, items => {
-            resolve(items[id] ?? null as T);
+            resolve(items[id] ?? null as T | null);
         });
     });
 }

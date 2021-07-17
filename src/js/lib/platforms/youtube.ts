@@ -27,7 +27,7 @@ const Youtube: Platform = {
         return document.location.pathname === '/watch';
     },
 
-    getVideoId(): string {
+    getVideoId(): string | null {
         const params = new URLSearchParams(document.location.search);
         return params.get('v');
     },
@@ -52,11 +52,11 @@ const Youtube: Platform = {
             // uploaded video
             dateStr = (document.querySelector('div#date>yt-formatted-string') as HTMLElement)?.innerText;
             // member only
-            if (dateStr === void 0) {
+            if (dateStr === undefined) {
                 dateStr = (document.querySelector('div#info-strings>yt-formatted-string') as HTMLElement)?.innerText;
             }
         }
-        return (dateStr !== null) ? (new Date(dateStr)).getTime() : null;
+        return (new Date(dateStr)).getTime();
     },
 
     getVideoThumbnailUrl(videoId: string, info: any): string {
@@ -73,7 +73,7 @@ const Youtube: Platform = {
 
     isPrivate(videoId: string, info: any): boolean {
         const label = (document.querySelector('ytd-video-primary-info-renderer .ytd-badge-supported-renderer > span') as HTMLElement)?.innerText;
-        return label !== void 0;
+        return label !== undefined;
     },
 };
 

@@ -16,7 +16,7 @@
 
 export type ImageDataUrl = string;
 
-type VideoInfoKey = {
+export type VideoInfoKey = {
     platform: string,
     videoId: string,
 };
@@ -40,7 +40,7 @@ export function compareVideoInfo(v1: VideoInfoKey, v2: VideoInfoKey): boolean {
     return v1.platform === v2.platform && v1.videoId === v2.videoId;
 }
 
-type ScreenshotInfoKey = {
+export type ScreenshotInfoKey = {
     platform: string,
     videoId: string,
     no: number,

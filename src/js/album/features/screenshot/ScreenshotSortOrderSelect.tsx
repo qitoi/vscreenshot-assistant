@@ -25,7 +25,7 @@ export function ScreenshotSortOrderSelect() {
     const dispatch = useDispatch();
     const order = useSelector(selectScreenshotSortOrder);
 
-    const handleChangeSortOrder = e => {
+    const handleChangeSortOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const order = (+e.target.value) as ScreenshotSortOrder;
         dispatch(setSortOrder({ order: order }));
     };

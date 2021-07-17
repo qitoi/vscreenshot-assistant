@@ -21,7 +21,7 @@ import { ScreenshotInfo } from '../types';
 import * as storage from './storage';
 import { decodeBase64, getFileExt, parseDataURL } from '../data-url';
 
-type ProgressCallback = (current, max: number) => void;
+type ProgressCallback = (current: number, max: number) => void;
 
 export function collectFiles(screenshots: ScreenshotInfo[], progress?: ProgressCallback): PCancelable<fflate.AsyncZippable> {
     return new PCancelable<fflate.AsyncZippable>(async (resolve, reject, onCancel) => {
@@ -37,7 +37,7 @@ export function collectFiles(screenshots: ScreenshotInfo[], progress?: ProgressC
                 return;
             }
 
-            if (progress !== null) {
+            if (progress !== undefined) {
                 progress(current, max);
             }
 
@@ -49,7 +49,7 @@ export function collectFiles(screenshots: ScreenshotInfo[], progress?: ProgressC
             current += 1;
         }
 
-        if (progress !== null) {
+        if (progress !== undefined) {
             progress(current, max);
         }
 
@@ -59,7 +59,7 @@ export function collectFiles(screenshots: ScreenshotInfo[], progress?: ProgressC
 
 export function zip(files: fflate.AsyncZippable): PCancelable<Blob> {
     return new PCancelable<Blob>((resolve, reject, onCancel) => {
-        let cancel: fflate.AsyncTerminable = null;
+        let cancel: fflate.AsyncTerminable | null = null;
         onCancel(() => {
             if (cancel !== null) {
                 cancel();

@@ -28,7 +28,7 @@ type VideoThumbnailProps = {
 export const VideoThumbnail = React.memo(({ info, onSelected }: VideoThumbnailProps) => {
     const [isShown, setIsShown] = useBoolean(false);
 
-    const handleClick = e => {
+    const handleClick = (e: React.MouseEvent<HTMLDivElement & HTMLButtonElement>) => {
         e.preventDefault();
         onSelected(info);
     };

@@ -18,7 +18,7 @@ import { ImageDataUrl, ScreenshotInfo } from '../types';
 import platforms from '../platforms';
 import * as storage from './storage';
 
-export function shareScreenshot(platform, videoId: string, screenshots: ScreenshotInfo[]) {
+export function shareScreenshot(platform: string, videoId: string, screenshots: ScreenshotInfo[]) {
     storage.getScreenshotList(screenshots).then(images => {
         shareScreenshotOnTwitter(platform, videoId, images);
     });
@@ -26,7 +26,7 @@ export function shareScreenshot(platform, videoId: string, screenshots: Screensh
 
 const TWITTER_SHARE_URL = 'https://twitter.com/intent/tweet';
 
-function shareScreenshotOnTwitter(platform, videoId: string, screenshots: ImageDataUrl[]): void {
+function shareScreenshotOnTwitter(platform: string, videoId: string, screenshots: ImageDataUrl[]): void {
     let url = new URL(TWITTER_SHARE_URL);
     url.search = new URLSearchParams({
         url: platforms.getVideoURL(platform, videoId),
@@ -36,12 +36,16 @@ function shareScreenshotOnTwitter(platform, videoId: string, screenshots: ImageD
         url: url.toString(),
         type: 'popup',
     }, window => {
-        const handler = (tabId, changeInfo, tab) => {
-            if (tabId == window.tabs[0].id && changeInfo.status === 'complete') {
-                chrome.tabs.onUpdated.removeListener(handler);
-                chrome.tabs.sendMessage(window.tabs[0].id, { event: 'share-screenshot', screenshots: screenshots });
-            }
-        };
-        chrome.tabs.onUpdated.addListener(handler);
+        if (window !== undefined) {
+            const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
+                if (window.tabs !== undefined && window.tabs.length > 0) {
+                    if (tabId == window.tabs[0].id && changeInfo.status === 'complete') {
+                        chrome.tabs.onUpdated.removeListener(handler);
+                        chrome.tabs.sendMessage(window.tabs[0].id, { event: 'share-screenshot', screenshots: screenshots });
+                    }
+                }
+            };
+            chrome.tabs.onUpdated.addListener(handler);
+        }
     });
 }

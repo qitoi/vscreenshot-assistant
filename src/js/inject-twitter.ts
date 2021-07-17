@@ -20,8 +20,8 @@
     });
 
     function share(files: File[]) {
-        const event = new DummyDragEvent('drop', new DummyDataTransfer(files), { bubbles: true, cancelable: true });
-        const dropArea = document.querySelector('div.public-DraftEditor-content');
+        const event = new DummyDragEvent('drop', new DummyDataTransfer(files) as any, { bubbles: true, cancelable: true });
+        const dropArea = document.querySelector('div.public-DraftEditor-content') as HTMLElement;
         dropArea.dispatchEvent(event);
     }
 
@@ -34,20 +34,29 @@
         }
     }
 
-    function DummyDataTransfer(files) {
-        this.dropEffect = 'none';
-        this.effectAllowed = 'all';
-        this.files = files;
-        this.items = files.map(f => ({ kind: 'file', type: f.type }));
-        this.types = ['Files'];
-    }
+    class DummyDataTransfer {
+        dropEffect = 'none';
+        effectAllowed = 'all';
+        types = ['Files'];
+        files: File[];
+        items: { kind: string, type: string }[];
 
-    DummyDataTransfer.prototype.clearData = (format) => {
-    };
-    DummyDataTransfer.prototype.getData = (format) => {
-    };
-    DummyDataTransfer.prototype.setData = (format, data) => {
-    };
-    DummyDataTransfer.prototype.setDragImage = (element, xOffset, yOffset) => {
-    };
+        constructor(files: File[]) {
+            this.files = files;
+            this.items = files.map(f => ({ kind: 'file', type: f.type }));
+        }
+
+        clearData(format?: string): void {
+        }
+
+        getData(format: string): string {
+            return '';
+        }
+
+        setData(format: string, data: string): void {
+        }
+
+        setDragImage(image: Element, xOffset: number, yOffset: number): void {
+        }
+    }
 })();

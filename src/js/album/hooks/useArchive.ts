@@ -24,10 +24,10 @@ import * as archive from '../../lib/background/archive';
 export type ArchiveFunc = (platform: string, videoId: string) => Promise<Blob>;
 export type CancelFunc = () => void;
 export type ProgressFunc = (progress: number) => void;
-export type SetProgressHandler = (ProgressFunc) => void;
+export type SetProgressHandler = (progressFunc: ProgressFunc) => void;
 
 export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandler] {
-    const [cancelable, setCancelable] = React.useState<PCancelable<any>>(null);
+    const [cancelable, setCancelable] = React.useState<PCancelable<any> | null>(null);
     const onProgressRef = React.useRef<ProgressFunc>(() => {
     });
 

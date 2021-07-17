@@ -25,8 +25,8 @@ export function VideoSortOrderSelect() {
     const dispatch = useDispatch();
     const order = useSelector(selectVideoSortOrder);
 
-    const handleChangeSortOrder = e => {
-        const order: VideoSortOrder = e.target.value;
+    const handleChangeSortOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const order: VideoSortOrder = +e.target.value as VideoSortOrder;
         dispatch(setSortOrder(order));
     };
 

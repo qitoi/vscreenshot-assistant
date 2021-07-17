@@ -21,7 +21,7 @@ export default interface Platform {
 
     checkVideoPage(): boolean;
 
-    getVideoId(): string;
+    getVideoId(): string | null;
 
     getVideoElement(): HTMLVideoElement;
 

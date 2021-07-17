@@ -34,7 +34,7 @@ const thumbWidth = 320;
 export default function ScreenshotList() {
     const dispatch = useDispatch();
     const video = useSelector(selectActiveVideo);
-    const screenshots = useSelector(selectScreenshotList(video?.platform, video?.videoId));
+    const screenshots = useSelector(selectScreenshotList(video?.platform ?? '', video?.videoId ?? ''));
     const selected = useSelector(selectSelectedScreenshot);
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
 
@@ -69,17 +69,19 @@ export default function ScreenshotList() {
                     <ScreenshotCard
                         key={getScreenshotKey(s)}
                         info={s}
-                        disabled={video.private}
+                        disabled={video?.private ?? true}
                         isChecked={selected.some(ss => compareScreenshotInfo(ss, s))}
                         onClick={handleClickScreenshot} />
                 ))}
             </Grid>
             <Box h="1rem" />
-            <SelectedScreenshotList
-                video={video}
-                screenshots={selected}
-                onResize={handleSelectedResize}
-                onClick={handleRemoveSelected} />
+            {video !== null && (
+                <SelectedScreenshotList
+                    video={video}
+                    screenshots={selected}
+                    onResize={handleSelectedResize}
+                    onClick={handleRemoveSelected} />
+            )}
         </Box>
     );
 }

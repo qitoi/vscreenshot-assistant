@@ -32,11 +32,11 @@ export const ScreenshotSortOrders = {
     [ScreenshotSortOrder.VideoPosDesc]: '再生位置 / 降順',
 } as const;
 
-const ScreenshotSorter: { [key: string]: (a, b: ScreenshotInfo) => number } = {
-    [ScreenshotSortOrder.CaptureDateAsc]: (a, b: ScreenshotInfo) => a.datetime - b.datetime,
-    [ScreenshotSortOrder.CaptureDateDesc]: (a, b: ScreenshotInfo) => b.datetime - a.datetime,
-    [ScreenshotSortOrder.VideoPosAsc]: (a, b: ScreenshotInfo) => a.pos - b.pos,
-    [ScreenshotSortOrder.VideoPosDesc]: (a, b: ScreenshotInfo) => b.pos - a.pos,
+const ScreenshotSorter: { [key: string]: (a: ScreenshotInfo, b: ScreenshotInfo) => number } = {
+    [ScreenshotSortOrder.CaptureDateAsc]: (a, b) => a.datetime - b.datetime,
+    [ScreenshotSortOrder.CaptureDateDesc]: (a, b) => b.datetime - a.datetime,
+    [ScreenshotSortOrder.VideoPosAsc]: (a, b) => a.pos - b.pos,
+    [ScreenshotSortOrder.VideoPosDesc]: (a, b) => b.pos - a.pos,
 };
 
 

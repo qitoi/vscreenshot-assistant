@@ -32,11 +32,11 @@ export const VideoSortOrders = {
     [VideoSortOrder.LastUpdateDesc]: '最終更新日時 / 降順',
 } as const;
 
-const VideoSorter: { [key: string]: (a, b: VideoInfo) => number } = {
-    [VideoSortOrder.VideoDateAsc]: (a, b: VideoInfo) => a.date - b.date,
-    [VideoSortOrder.VideoDateDesc]: (a, b: VideoInfo) => b.date - a.date,
-    [VideoSortOrder.LastUpdateAsc]: (a, b: VideoInfo) => a.lastUpdated - b.lastUpdated,
-    [VideoSortOrder.LastUpdateDesc]: (a, b: VideoInfo) => b.lastUpdated - a.lastUpdated,
+const VideoSorter: { [key: string]: (a: VideoInfo, b: VideoInfo) => number } = {
+    [VideoSortOrder.VideoDateAsc]: (a, b) => a.date - b.date,
+    [VideoSortOrder.VideoDateDesc]: (a, b) => b.date - a.date,
+    [VideoSortOrder.LastUpdateAsc]: (a, b) => a.lastUpdated - b.lastUpdated,
+    [VideoSortOrder.LastUpdateDesc]: (a, b) => b.lastUpdated - a.lastUpdated,
 };
 
 

@@ -16,7 +16,7 @@
 
 import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit';
 
-import { compareVideoInfo, getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
+import { compareVideoInfo, ImageDataUrl, ScreenshotInfo, VideoInfoKey } from '../../../lib/types';
 import * as storage from '../../../lib/background/storage';
 import { RootState } from '../../store';
 import { loadScreenshotSortOrder, saveScreenshotSortOrder, sortScreenshot, ScreenshotSortOrder } from './ScreenshotSort';
@@ -25,8 +25,7 @@ import { setActiveVideo, SetActiveVideoPayload } from '../activeVideo/activeVide
 
 type ScreenshotState = {
     order: ScreenshotSortOrder,
-    platform: string,
-    videoId: string,
+    videoInfoKey: VideoInfoKey | null,
     screenshots: ScreenshotInfo[],
     screenshotMap: { [no: number]: ScreenshotInfo },
     thumbnails: { [no: number]: ImageDataUrl },
@@ -34,8 +33,7 @@ type ScreenshotState = {
 
 const initialState: ScreenshotState = {
     order: loadScreenshotSortOrder(),
-    platform: null,
-    videoId: null,
+    videoInfoKey: null,
     screenshots: [],
     screenshotMap: {},
     thumbnails: {},
@@ -82,7 +80,7 @@ const slice = createSlice<ScreenshotState, SliceCaseReducers<ScreenshotState>>({
     reducers: {
         appendScreenshot: (state, action: PayloadAction<AppendScreenshotPayload>): void => {
             const p = action.payload;
-            if (state.platform === p.platform && state.videoId === p.videoId) {
+            if (state.videoInfoKey !== null && compareVideoInfo(state.videoInfoKey, p)) {
                 state.screenshotMap[p.target.no] = p.target;
                 state.screenshots = sortScreenshot(Object.values(state.screenshotMap), state.order);
                 state.thumbnails[p.target.no] = p.thumbnail;
@@ -90,7 +88,7 @@ const slice = createSlice<ScreenshotState, SliceCaseReducers<ScreenshotState>>({
         },
         removeScreenshot: (state, action: PayloadAction<RemoveScreenshotPayload>): void => {
             const p = action.payload;
-            if (state.platform === p.platform && state.videoId === p.videoId) {
+            if (state.videoInfoKey !== null && compareVideoInfo(state.videoInfoKey, p)) {
                 delete state.screenshotMap[p.target.no];
                 state.screenshots = sortScreenshot(Object.values(state.screenshotMap), state.order);
             }
@@ -102,24 +100,25 @@ const slice = createSlice<ScreenshotState, SliceCaseReducers<ScreenshotState>>({
             state.order = p.order;
         },
         removeThumbnail: (state, action) => {
-            if (state.platform === action.payload.platform && state.videoId === action.payload.videoId) {
-                delete state.thumbnails[action.payload.no];
+            const p = action.payload;
+            if (state.videoInfoKey !== null && compareVideoInfo(state.videoInfoKey, p)) {
+                delete state.thumbnails[p.no];
             }
         },
     },
     extraReducers: builder => {
         builder
             .addCase(setActiveVideo, (state, action: PayloadAction<SetActiveVideoPayload>): void => {
-                if (action.payload === null || !compareVideoInfo(state, action.payload)) {
-                    state.platform = action.payload?.platform ?? null;
-                    state.videoId = action.payload?.videoId ?? null;
+                const p = action.payload;
+                if (state.videoInfoKey === null || p === null || !compareVideoInfo(state.videoInfoKey, p)) {
+                    state.videoInfoKey = (p === null ? null : { platform: p.platform, videoId: p.videoId });
                     state.screenshots = [];
                     state.screenshotMap = {};
                     state.thumbnails = {};
                 }
             })
             .addCase(fetchScreenshotList.fulfilled, (state, action) => {
-                if (compareVideoInfo(state, action.payload)) {
+                if (state.videoInfoKey !== null && compareVideoInfo(state.videoInfoKey, action.payload)) {
                     state.screenshotMap = {};
                     for (const s of action.payload.screenshots) {
                         state.screenshotMap[s.no] = s;
@@ -136,14 +135,14 @@ export default slice.reducer;
 export const { appendScreenshot, removeScreenshot, setSortOrder, removeThumbnail } = slice.actions;
 
 export const selectScreenshotList = (platform: string, videoId: string) => (state: RootState) => {
-    if (state.screenshot.platform !== platform || state.screenshot.videoId !== videoId) {
-        return [];
+    if (state.screenshot.videoInfoKey !== null && compareVideoInfo(state.screenshot.videoInfoKey, { platform, videoId })) {
+        return state.screenshot.screenshots;
     }
-    return state.screenshot.screenshots ?? [];
+    return [];
 };
 export const selectScreenshotSortOrder = (state: RootState) => state.screenshot.order;
 export const selectCachedThumbnail = (state: RootState, platform: string, videoId: string, no: number): ImageDataUrl | null => {
-    if (state.screenshot.platform === platform && state.screenshot.videoId === videoId) {
+    if (state.screenshot.videoInfoKey !== null && compareVideoInfo(state.screenshot.videoInfoKey, { platform, videoId })) {
         return state.screenshot.thumbnails[no] ?? null;
     }
     return null;

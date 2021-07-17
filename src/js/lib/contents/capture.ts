@@ -42,8 +42,8 @@ export function Setup(platform: Platform): void {
 }
 
 
-let currentPlatform: Platform = null;
-let currentVideoId: string = null;
+let currentPlatform: Platform | null = null;
+let currentVideoId: string | null = null;
 let currentVideoInfo: any = null;
 
 async function capture(platform: Platform) {
@@ -52,6 +52,11 @@ async function capture(platform: Platform) {
 
     const videoId = platform.getVideoId();
     let videoInfo = currentVideoInfo;
+
+    if (videoId === null) {
+        return;
+    }
+
     if (currentPlatform !== platform || currentVideoId !== videoId) {
         videoInfo = await platform.initVideoInfo(videoId);
         currentPlatform = platform;
@@ -99,6 +104,6 @@ function screenshotVideo(image: CanvasImageSource, type: string, quality?: numbe
         canvas.height = image.height;
     }
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    ctx!.drawImage(image, 0, 0, canvas.width, canvas.height);
     return canvas.toDataURL(type, quality);
 }

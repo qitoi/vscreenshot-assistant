@@ -22,7 +22,7 @@ const platforms: { [key: string]: Platform } = {
 };
 
 export default {
-    getVideoURL(platform, videoId: string): string {
+    getVideoURL(platform: string, videoId: string): string {
         return platforms[platform]?.getVideoUrl(videoId);
     }
 };

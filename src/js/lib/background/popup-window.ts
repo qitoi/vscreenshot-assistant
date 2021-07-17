@@ -21,7 +21,7 @@ let windowByName: { [key: string]: PopupWindow } = {};
 export default class PopupWindow {
     readonly name: string;
     readonly url: string;
-    private window: chrome.windows.Window;
+    private window: chrome.windows.Window | null;
     private opening: boolean;
 
     static create(name: string, url: string): PopupWindow {
@@ -39,7 +39,7 @@ export default class PopupWindow {
         windowByName[name] = this;
     }
 
-    getWindow(): chrome.windows.Window {
+    getWindow(): chrome.windows.Window | null {
         return this.window;
     }
 
@@ -49,7 +49,7 @@ export default class PopupWindow {
         }
 
         if (this.window !== null) {
-            chrome.windows.update(this.window.id, { focused: true });
+            chrome.windows.update(this.window.id!, { focused: true });
             return;
         }
 
@@ -62,13 +62,15 @@ export default class PopupWindow {
                     width: size.width,
                     height: size.height,
                 }, window => {
-                    this.window = window;
-                    this.opening = false;
-                    const windowId = window.id;
-                    windowById[windowId] = this;
-                    onCloseById[windowId] = () => {
-                        this.onClose(windowId);
-                    };
+                    if (window) {
+                        this.window = window;
+                        this.opening = false;
+                        const windowId = window.id!;
+                        windowById[windowId] = this;
+                        onCloseById[windowId] = () => {
+                            this.onClose(windowId);
+                        };
+                    }
                 });
             });
     }
@@ -76,7 +78,7 @@ export default class PopupWindow {
     private onClose(windowId: number) {
         delete windowById[windowId];
         delete onCloseById[windowId];
-        if (this.window.id === windowId) {
+        if (this.window?.id === windowId) {
             this.window = null;
         }
     }
@@ -89,8 +91,10 @@ chrome.windows.onRemoved.addListener(windowId => {
 });
 
 chrome.windows.onBoundsChanged.addListener(window => {
-    if (window.id in windowById) {
-        saveWindowSize(windowById[window.id].name, window.width, window.height);
+    if (window.id !== undefined) {
+        if (window.id in windowById) {
+            saveWindowSize(windowById[window.id].name, window.width!, window.height!);
+        }
     }
 });
 

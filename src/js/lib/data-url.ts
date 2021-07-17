@@ -16,7 +16,7 @@
 
 import { ImageDataUrl } from './types';
 
-const mimeToExt = {
+const mimeToExt: Record<string, string> = {
     'image/jpeg': '.jpg',
     'image/png': '.png',
     'image/gif': '.gif',

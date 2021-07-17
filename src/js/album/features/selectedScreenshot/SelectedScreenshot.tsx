@@ -29,7 +29,7 @@ type SelectedScreenshotProps = React.PropsWithChildren<{
 export function SelectedScreenshot({ info, screenshot, onClick, onLoad }: SelectedScreenshotProps) {
     const [isShown, setIsShown] = useBoolean(false);
 
-    const handleClick = e => {
+    const handleClick = (e: React.MouseEvent<HTMLDivElement & HTMLButtonElement>) => {
         e.preventDefault();
         onClick(info);
     };

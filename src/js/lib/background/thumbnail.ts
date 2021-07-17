@@ -22,7 +22,7 @@ const resizer = pica({
     features: ['js', 'wasm', 'ww'],
 });
 
-export function createThumbnail(image: ImageDataUrl, width, height: number): Promise<ImageDataUrl> {
+export function createThumbnail(image: ImageDataUrl, width: number, height: number): Promise<ImageDataUrl> {
     return new Promise<string>((resolve) => {
         const img = document.createElement('img');
         img.onload = () => {
@@ -33,7 +33,7 @@ export function createThumbnail(image: ImageDataUrl, width, height: number): Pro
     });
 }
 
-export function resizeThumbnail(image: HTMLCanvasElement | HTMLImageElement | ImageBitmap, width, height: number): Promise<ImageDataUrl> {
+export function resizeThumbnail(image: HTMLCanvasElement | HTMLImageElement, width: number, height: number): Promise<ImageDataUrl> {
     return new Promise<ImageDataUrl>(resolve => {
         const canvas = document.createElement('canvas');
         [canvas.width, canvas.height] = calcThumbnailSize(image.width, image.height, width, height);
@@ -47,7 +47,7 @@ export function resizeThumbnail(image: HTMLCanvasElement | HTMLImageElement | Im
     });
 }
 
-function calcThumbnailSize(imgWidth, imgHeight, thumbWidth, thumbHeight: number): [number, number] {
+function calcThumbnailSize(imgWidth: number, imgHeight: number, thumbWidth: number, thumbHeight: number): [number, number] {
     const imgRatio = imgWidth / imgHeight;
     const thumbRatio = thumbWidth / thumbHeight;
     if (thumbRatio >= imgRatio) {

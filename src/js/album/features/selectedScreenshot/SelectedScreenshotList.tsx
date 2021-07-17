@@ -52,7 +52,7 @@ const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onCli
         setLoaded.on();
     };
 
-    const handleClick = e => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         shareScreenshot(video.platform, video.videoId, screenshots);
     };

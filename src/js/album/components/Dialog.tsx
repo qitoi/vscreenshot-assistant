@@ -33,7 +33,7 @@ type DeleteDialogProps = React.PropsWithChildren<{
     cancelLabel?: string,
     isButtonDisabled?: boolean,
     onOK?: () => void,
-    onCancel?: () => void,
+    onCancel: () => void,
 }>;
 
 const Dialog = React.memo(({ isOpen, title, okLabel, cancelLabel, isButtonDisabled, onOK, onCancel, children }: DeleteDialogProps) => {

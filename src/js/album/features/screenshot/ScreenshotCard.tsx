@@ -32,9 +32,9 @@ export const ScreenshotCard = React.memo(({ info, isChecked, disabled, onClick }
     const ref = React.useRef<HTMLImageElement>(null);
     const [visible, setVisible] = useBoolean(false);
 
-    const handleClick = e => {
+    const handleClick = (e: React.MouseEvent<HTMLDivElement & HTMLButtonElement>) => {
         e.preventDefault();
-        if (isClickable && !disabled) {
+        if (isClickable && !disabled && ref.current !== null) {
             onClick(info, ref.current.src);
         }
     };
@@ -49,7 +49,7 @@ export const ScreenshotCard = React.memo(({ info, isChecked, disabled, onClick }
 
     return (
         <Box as="button"
-             display={visible ? null : 'none'}
+             display={visible ? undefined : 'none'}
              position="relative"
              rounded="md"
              overflow="clip"
