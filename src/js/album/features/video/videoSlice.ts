@@ -16,23 +16,20 @@
 
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { RootState } from './store';
-import { getVideoKey, ScreenshotInfo, VideoInfo } from '../../lib/types';
-import { loadVideoSortOrder, saveVideoSortOrder, sortVideo, VideoSortOrder } from '../lib/VideoSort';
-import { setActiveVideo, SetActiveVideoPayload } from './activeVideoAction';
-import * as storage from '../../lib/background/storage';
+import { getVideoKey, VideoInfo } from '../../../lib/types';
+import * as storage from '../../../lib/background/storage';
+import { RootState } from '../../store';
+import { loadVideoSortOrder, saveVideoSortOrder, sortVideo, VideoSortOrder } from './VideoSort';
 
 type VideoState = {
     videos: VideoInfo[],
     videoMap: { [key: string]: VideoInfo },
-    activeVideo: VideoInfo | null,
     order: VideoSortOrder,
 };
 
 const initialState: VideoState = {
     videos: [],
     videoMap: {},
-    activeVideo: null,
     order: loadVideoSortOrder(),
 };
 
@@ -76,9 +73,6 @@ const slice = createSlice({
         },
     },
     extraReducers: builder => {
-        builder.addCase(setActiveVideo, (state, action: PayloadAction<SetActiveVideoPayload>): void => {
-            state.activeVideo = action.payload;
-        });
         builder.addCase(removeVideo.fulfilled, (state, action: PayloadAction<RemoveVideoPayload>): void => {
             delete state.videoMap[getVideoKey(action.payload)];
             state.videos = sortVideo(Object.values(state.videoMap), state.order);
@@ -90,5 +84,4 @@ export default slice.reducer;
 export const { appendVideo, setVideoList, setSortOrder } = slice.actions;
 
 export const selectVideoList = (state: RootState) => state.video.videos;
-export const selectActiveVideo = (state: RootState) => state.video.activeVideo;
 export const selectVideoSortOrder = (state: RootState) => state.video.order;

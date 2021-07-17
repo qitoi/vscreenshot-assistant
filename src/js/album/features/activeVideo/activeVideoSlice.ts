@@ -14,9 +14,31 @@
  *  limitations under the License.
  */
 
-import { createAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { VideoInfo } from '../../lib/types';
+import { VideoInfo } from '../../../lib/types';
+import { RootState } from '../../store';
 
 export type SetActiveVideoPayload = VideoInfo | null;
 export const setActiveVideo = createAction<SetActiveVideoPayload>('activeVideo/set');
+type ActiveVideoState = {
+    video: VideoInfo | null,
+};
+
+const initialState: ActiveVideoState = {
+    video: null,
+};
+
+const slice = createSlice({
+    name: 'activeVideo',
+    initialState,
+    reducers: {},
+    extraReducers: builder => {
+        builder.addCase(setActiveVideo, (state, action: PayloadAction<SetActiveVideoPayload>): void => {
+            state.video = action.payload;
+        });
+    },
+});
+
+export default slice.reducer;
+export const selectActiveVideo = (state: RootState) => state.activeVideo.video;

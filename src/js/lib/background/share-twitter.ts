@@ -14,14 +14,11 @@
  *  limitations under the License.
  */
 
-import {
-    ImageDataUrl,
-    ScreenshotInfo,
-} from '../../lib/types';
-import * as storage from '../../lib/background/storage';
-import platforms from '../../lib/platforms';
+import { ImageDataUrl, ScreenshotInfo } from '../types';
+import platforms from '../platforms';
+import * as storage from './storage';
 
-export function ShareScreenshot(platform, videoId: string, screenshots: ScreenshotInfo[]) {
+export function shareScreenshot(platform, videoId: string, screenshots: ScreenshotInfo[]) {
     storage.getScreenshotList(screenshots).then(images => {
         shareScreenshotOnTwitter(platform, videoId, images);
     });

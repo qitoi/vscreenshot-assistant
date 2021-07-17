@@ -17,13 +17,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import * as ReactRedux from 'react-redux';
 
-import videoReducer from './videoSlice';
-import screenshotReducer from './screenshotSlice';
-import selectedScreenshotReducer from './selectedScreenshotSlice';
+import videoReducer from './features/video/videoSlice';
+import activeVideoReducer from './features/activeVideo/activeVideoSlice';
+import screenshotReducer from './features/screenshot/screenshotSlice';
+import selectedScreenshotReducer from './features/selectedScreenshot/selectedScreenshotSlice';
 
 export const store = configureStore({
     reducer: {
         video: videoReducer,
+        activeVideo: activeVideoReducer,
         screenshot: screenshotReducer,
         selectedScreenshot: selectedScreenshotReducer,
     },

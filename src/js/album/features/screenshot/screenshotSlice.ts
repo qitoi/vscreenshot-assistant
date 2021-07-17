@@ -16,16 +16,11 @@
 
 import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit';
 
-import { compareVideoInfo, getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../lib/types';
-import { RootState } from './store';
-import {
-    loadScreenshotSortOrder,
-    saveScreenshotSortOrder,
-    sortScreenshot,
-    ScreenshotSortOrder
-} from '../lib/ScreenshotSort';
-import { setActiveVideo, SetActiveVideoPayload } from './activeVideoAction';
-import * as storage from '../../lib/background/storage';
+import { compareVideoInfo, getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
+import * as storage from '../../../lib/background/storage';
+import { RootState } from '../../store';
+import { loadScreenshotSortOrder, saveScreenshotSortOrder, sortScreenshot, ScreenshotSortOrder } from './ScreenshotSort';
+import { setActiveVideo, SetActiveVideoPayload } from '../activeVideo/activeVideoSlice';
 
 
 type ScreenshotState = {

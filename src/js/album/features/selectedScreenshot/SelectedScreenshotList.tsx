@@ -15,19 +15,12 @@
  */
 
 import * as React from 'react';
-import {
-    Box,
-    Button,
-    Fade,
-    Grid,
-    Image,
-    HStack,
-    useBoolean,
-} from '@chakra-ui/react';
+import { Box, Button, Grid, HStack, useBoolean } from '@chakra-ui/react';
 
-import { getScreenshotKey, ImageDataUrl, ScreenshotInfo, VideoInfo } from '../../lib/types';
-import { ShareScreenshot } from '../lib/Share';
-import { ScreenshotInfoWithThumbnail } from '../stores/selectedScreenshotSlice';
+import { getScreenshotKey, ScreenshotInfo, VideoInfo } from '../../../lib/types';
+import { shareScreenshot } from '../../../lib/background/share-twitter';
+import { ScreenshotInfoWithThumbnail } from './selectedScreenshotSlice';
+import { SelectedScreenshot } from './SelectedScreenshot';
 
 type SelectedScreenshotListProps = {
     video: VideoInfo,
@@ -61,7 +54,7 @@ const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onCli
 
     const handleClick = e => {
         e.preventDefault();
-        ShareScreenshot(video.platform, video.videoId, screenshots);
+        shareScreenshot(video.platform, video.videoId, screenshots);
     };
 
     if (screenshots.length === 0) {
@@ -97,36 +90,3 @@ const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onCli
     );
 });
 export default SelectedScreenshotList;
-
-type SelectedScreenshotProps = React.PropsWithChildren<{
-    info: ScreenshotInfo,
-    screenshot: ImageDataUrl,
-    onClick: (info: ScreenshotInfo) => void,
-    onLoad?: () => void,
-}>;
-
-function SelectedScreenshot({ info, screenshot, onClick, onLoad }: SelectedScreenshotProps) {
-    const [isShown, setIsShown] = useBoolean(false);
-
-    const handleClick = e => {
-        e.preventDefault();
-        onClick(info);
-    };
-
-    return (
-        <Box as="button"
-             position="relative"
-             rounded="md"
-             overflow="clip"
-             onClick={handleClick}
-             onMouseEnter={() => setIsShown.on()}
-             onMouseLeave={() => setIsShown.off()}>
-            <Box>
-                <Image src={screenshot} w="100%" draggable={false} onLoad={onLoad} />
-                <Fade in={isShown}>
-                    <Box w="100%" h="100%" position="absolute" top={0} left={0} bgColor="rgba(0, 0, 0, 0.5)" />
-                </Fade>
-            </Box>
-        </Box>
-    );
-}

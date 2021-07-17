@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { VideoInfo } from '../../lib/types';
+import { VideoInfo } from '../../../lib/types';
 
 const VideoSortOrder = {
     VideoDateAsc: 0,

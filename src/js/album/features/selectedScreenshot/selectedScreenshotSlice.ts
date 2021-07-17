@@ -16,9 +16,9 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { RootState } from './store';
-import { compareScreenshotInfo, compareVideoInfo, ImageDataUrl, ScreenshotInfo } from '../../lib/types';
-import { setActiveVideo, SetActiveVideoPayload } from './activeVideoAction';
+import { compareScreenshotInfo, compareVideoInfo, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
+import { RootState } from '../../store';
+import { setActiveVideo, SetActiveVideoPayload } from '../activeVideo/activeVideoSlice';
 
 export type ScreenshotInfoWithThumbnail = ScreenshotInfo & {
     thumbnail: ImageDataUrl,

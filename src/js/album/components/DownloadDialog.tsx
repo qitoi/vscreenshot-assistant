@@ -15,10 +15,8 @@
  */
 
 import * as React from 'react';
-import {
-    Center,
-    Progress,
-} from '@chakra-ui/react';
+import { Center, Progress } from '@chakra-ui/react';
+
 import { SetProgressHandler } from '../hooks/useArchive';
 import Dialog from './Dialog';
 

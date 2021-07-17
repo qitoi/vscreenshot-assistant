@@ -19,7 +19,7 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import { App } from './album/App';
-import { store } from './album/stores/store';
+import { store } from './album/store';
 
 ReactDOM.render(
     <React.StrictMode>

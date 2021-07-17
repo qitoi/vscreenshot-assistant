@@ -15,56 +15,17 @@
  */
 
 import * as React from 'react';
-import {
-    Box,
-    ChakraProvider,
-    Flex,
-} from '@chakra-ui/react';
+import { Box, ChakraProvider, Flex } from '@chakra-ui/react';
 
-import { useDispatch } from './stores/store';
-
-import VideoList from './components/VideoList';
+import { useWatchStorageChange } from './hooks/useWatchStorageChange';
 import Sidebar from './components/Sidebar';
-import { appendVideo, removeVideo } from './stores/videoSlice';
-import { appendScreenshot } from './stores/screenshotSlice';
-import VideoHeader from './components/VideoHeader';
-import ScreenshotList from './components/ScreenshotList';
+import VideoHeader from './features/video/VideoHeader';
+import VideoList from './features/video/VideoList';
+import ScreenshotList from './features/screenshot/ScreenshotList';
 
 export function App() {
-    const dispatch = useDispatch();
 
-    React.useEffect(() => {
-        const callback = (changes: { [key: string]: chrome.storage.StorageChange }, area: chrome.storage.AreaName) => {
-            if (area !== 'local') {
-                return;
-            }
-
-            for (const [key, change] of Object.entries(changes)) {
-                const type = key.substring(0, 3);
-                switch (type) {
-                    case 'v:i': {
-                        if ('newValue' in change) {
-                            dispatch(appendVideo(change.newValue));
-                        }
-                        else {
-                            dispatch(removeVideo(change.oldValue));
-                        }
-                        break;
-                    }
-                    case 's:i': {
-                        if ('newValue' in change) {
-                            const [, , platform, videoId] = key.split(':');
-                            const thumbnail = changes['s:t' + key.substring(3)].newValue;
-                            dispatch(appendScreenshot({ platform, videoId, target: change.newValue, thumbnail: thumbnail }));
-                        }
-                        break;
-                    }
-                }
-            }
-        };
-        chrome.storage.onChanged.addListener(callback);
-        return () => chrome.storage.onChanged.removeListener(callback);
-    }, []);
+    useWatchStorageChange();
 
     return (
         <ChakraProvider>

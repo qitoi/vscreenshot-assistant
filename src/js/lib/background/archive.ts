@@ -17,9 +17,9 @@
 import * as fflate from 'fflate';
 import PCancelable from 'p-cancelable';
 
-import { ScreenshotInfo } from '../../lib/types';
-import * as storage from '../../lib/background/storage';
-import { decodeBase64, getFileExt, parseDataURL } from '../../lib/data-url';
+import { ScreenshotInfo } from '../types';
+import * as storage from './storage';
+import { decodeBase64, getFileExt, parseDataURL } from '../data-url';
 
 type ProgressCallback = (current, max: number) => void;
 
@@ -57,7 +57,7 @@ export function collectFiles(screenshots: ScreenshotInfo[], progress?: ProgressC
     });
 }
 
-export function archive(files: fflate.AsyncZippable): PCancelable<Blob> {
+export function zip(files: fflate.AsyncZippable): PCancelable<Blob> {
     return new PCancelable<Blob>((resolve, reject, onCancel) => {
         let cancel: fflate.AsyncTerminable = null;
         onCancel(() => {

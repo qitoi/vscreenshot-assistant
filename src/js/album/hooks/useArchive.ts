@@ -19,7 +19,7 @@ import PCancelable from 'p-cancelable';
 
 import { ScreenshotInfo } from '../../lib/types';
 import * as storage from '../../lib/background/storage';
-import * as Archive from '../lib/Archive';
+import * as archive from '../../lib/background/archive';
 
 export type ArchiveFunc = (platform: string, videoId: string) => Promise<Blob>;
 export type CancelFunc = () => void;
@@ -41,7 +41,7 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
         }
     }, [cancelable]);
 
-    const archive = React.useCallback(async (platform: string, videoId: string): Promise<Blob> => {
+    const zip = React.useCallback(async (platform: string, videoId: string): Promise<Blob> => {
         // reset progress
         onProgressRef.current(0);
 
@@ -53,7 +53,7 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
         const screenshots = await listCancelable;
 
         // collect screenshot images
-        const collectCancelable = Archive.collectFiles(screenshots, (current, max) => {
+        const collectCancelable = archive.collectFiles(screenshots, (current, max) => {
             onProgressRef.current(100 * current / max);
         });
         setCancelable(collectCancelable);
@@ -63,7 +63,7 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
         onProgressRef.current(100);
 
         // archive images
-        const archiveCancelable = Archive.archive(files);
+        const archiveCancelable = archive.zip(files);
         setCancelable(archiveCancelable);
         const zipBlob = await archiveCancelable;
 
@@ -72,5 +72,5 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
         return zipBlob;
     }, []);
 
-    return [archive, cancel, setProgressHandler];
+    return [zip, cancel, setProgressHandler];
 }
