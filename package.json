@@ -7,7 +7,7 @@
     "build": "npm run clean && npm run build:compile && npm run build:package",
     "build:compile": "webpack --config webpack.prod.js",
     "build:package": "mkdir dist && cd build && bestzip ../dist/vscreenshot-assistant.zip vscreenshot-assistant",
-    "clean": "rimraf build dist"
+    "clean": "rimraf build dist && rimraf node_modules/.cache"
   },
   "author": "qitoi",
   "license": "Apache-2.0",
