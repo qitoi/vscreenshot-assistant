@@ -46,6 +46,17 @@ module.exports = [
     {
         ...commonConfig,
         entry: entries(tsx),
+        optimization: {
+            splitChunks: {
+                cacheGroups: {
+                    vendor: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: 'vendor',
+                        chunks: 'initial',
+                    },
+                },
+            },
+        },
         plugins: [
             new CopyPlugin({
                 patterns: [
