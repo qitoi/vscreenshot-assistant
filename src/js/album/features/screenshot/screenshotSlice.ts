@@ -134,7 +134,7 @@ const slice = createSlice<ScreenshotState, SliceCaseReducers<ScreenshotState>>({
 export default slice.reducer;
 export const { appendScreenshot, removeScreenshot, setSortOrder, removeThumbnail } = slice.actions;
 
-export const selectScreenshotList = (platform: string, videoId: string) => (state: RootState) => {
+export const selectScreenshotList = (state: RootState, platform: string, videoId: string) => {
     if (state.screenshot.videoInfoKey !== null && compareVideoInfo(state.screenshot.videoInfoKey, { platform, videoId })) {
         return state.screenshot.screenshots;
     }

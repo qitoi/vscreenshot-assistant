@@ -19,6 +19,7 @@ import { Box, Grid } from '@chakra-ui/react';
 
 import { compareScreenshotInfo, getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
 import { useDispatch, useSelector } from '../../store';
+import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import SelectedScreenshotList from '../selectedScreenshot/SelectedScreenshotList';
 import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
 import { fetchScreenshotList, selectScreenshotList } from './screenshotSlice';
@@ -34,7 +35,7 @@ const thumbWidth = 320;
 export default function ScreenshotList() {
     const dispatch = useDispatch();
     const video = useSelector(selectActiveVideo);
-    const screenshots = useSelector(selectScreenshotList(video?.platform ?? '', video?.videoId ?? ''));
+    const screenshots = useParameterizedSelector(selectScreenshotList, video?.platform ?? '', video?.videoId ?? '');
     const selected = useSelector(selectSelectedScreenshot);
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
 
