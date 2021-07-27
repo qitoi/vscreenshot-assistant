@@ -50,7 +50,7 @@ module.exports = [
             splitChunks: {
                 cacheGroups: {
                     vendor: {
-                        test: /[\\/]node_modules[\\/]/,
+                        test: /[\\/]node_modules[\\/](?!@chakra-ui[\\/]theme)/,
                         name: 'vendor',
                         chunks: 'initial',
                     },
