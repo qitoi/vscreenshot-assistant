@@ -70,11 +70,8 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
         }
         case 'video-thumbnail': {
             const p = param as VideoThumbnailParam;
-            createThumbnail(p.thumbnail, 320, 180)
-                .then(thumbnail => {
-                    storage.saveVideoThumbnail(p.videoInfo.platform, p.videoInfo.videoId, thumbnail);
-                    storage.saveVideoInfo(p.videoInfo);
-                });
+            storage.saveVideoThumbnail(p.videoInfo.platform, p.videoInfo.videoId, p.thumbnail);
+            storage.saveVideoInfo(p.videoInfo);
             break;
         }
     }
