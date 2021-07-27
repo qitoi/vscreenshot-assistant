@@ -17,15 +17,26 @@
 import * as React from 'react';
 import { Box, ChakraProvider, Flex } from '@chakra-ui/react';
 
+import { loadPreferences } from '../lib/background/preferences';
 import { useWatchStorageChange } from './hooks/useWatchStorageChange';
+import { setPreferences } from './features/preferences/preferencesSlice';
+import { useDispatch } from './store';
 import Sidebar from './components/Sidebar';
 import VideoHeader from './features/video/VideoHeader';
 import VideoList from './features/video/VideoList';
 import ScreenshotList from './features/screenshot/ScreenshotList';
 
+
 export function App() {
+    const dispatch = useDispatch();
 
     useWatchStorageChange();
+
+    React.useEffect(() => {
+        loadPreferences().then(preferences => {
+            dispatch(setPreferences(preferences));
+        });
+    }, []);
 
     return (
         <ChakraProvider>

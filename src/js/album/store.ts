@@ -17,6 +17,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import * as ReactRedux from 'react-redux';
 
+import preferencesReducer from './features/preferences/preferencesSlice';
 import videoReducer from './features/video/videoSlice';
 import activeVideoReducer from './features/activeVideo/activeVideoSlice';
 import screenshotReducer from './features/screenshot/screenshotSlice';
@@ -24,6 +25,7 @@ import selectedScreenshotReducer from './features/selectedScreenshot/selectedScr
 
 export const store = configureStore({
     reducer: {
+        preferences: preferencesReducer,
         video: videoReducer,
         activeVideo: activeVideoReducer,
         screenshot: screenshotReducer,
