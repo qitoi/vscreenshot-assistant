@@ -17,8 +17,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import * as ReactRedux from 'react-redux';
 
+import licensesReducer from './features/license/licenseSlice';
+
 export const store = configureStore({
-    reducer: {},
+    reducer: {
+        licenses: licensesReducer,
+    },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

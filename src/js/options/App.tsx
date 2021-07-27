@@ -15,11 +15,48 @@
  */
 
 import * as React from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
+import { Box, ChakraProvider, extendTheme, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+
+import { LicenseNoticeList } from './features/license/LicenseNoticeList';
+
+const theme = extendTheme({
+    boxShadow: 'none',
+    components: {
+        Accordion: {
+            baseStyle: {
+                button: {
+                    _focus: {
+                        boxShadow: 'none',
+                    },
+                }
+            },
+        },
+    }
+});
 
 export function App() {
     return (
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
+            <Box>
+                <Tabs>
+                    <TabList position="sticky" top={0} bg="white" justifyContent="center">
+                        <Tab>設定</Tab>
+                        <Tab>ライセンス</Tab>
+                    </TabList>
+                    <Box w="80%" maxW="100em" marginX="auto">
+                        <TabPanels>
+                            <TabPanel>
+                            </TabPanel>
+                            <TabPanel>
+                                <Box fontSize="md" pb="1em">
+                                    THE FOLLOWING SETS FORTH ATTRIBUTION NOTICES FOR THIRD PARTY SOFTWARE THAT MAY BE CONTAINED IN THIS APPLICATION.
+                                </Box>
+                                <LicenseNoticeList />
+                            </TabPanel>
+                        </TabPanels>
+                    </Box>
+                </Tabs>
+            </Box>
         </ChakraProvider>
     );
 }
