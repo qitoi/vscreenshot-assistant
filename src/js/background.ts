@@ -17,6 +17,12 @@
 // album window
 
 import PopupWindow from './lib/background/popup-window';
+import { CaptureParam, VideoInfo, VideoThumbnailParam, } from './lib/types';
+
+import * as storage from './lib/background/storage';
+import { createThumbnail } from './lib/background/thumbnail';
+import { loadPreferences } from './lib/background/preferences';
+
 
 const albumWindow = PopupWindow.create('album', 'album.html');
 
@@ -26,16 +32,6 @@ chrome.browserAction.onClicked.addListener(() => {
 
 
 // screenshot
-
-import {
-    CaptureParam,
-    VideoInfo,
-    VideoThumbnailParam,
-} from './lib/types';
-
-import * as storage from './lib/background/storage';
-import { createThumbnail } from './lib/background/thumbnail';
-
 
 chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
     switch (param.type) {
@@ -54,8 +50,12 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
                         sendResponse({ existsVideoThumbnail: exists, videoInfoParam: videoInfo });
                         return exists;
                     });
+
             // スクリーンショットのサムネイル作成
-            const createScreenshotThumbnail = createThumbnail(p.image, 480, 270);
+            const createScreenshotThumbnail =
+                loadPreferences().then(preferences => {
+                    return createThumbnail(p.image, preferences.thumbnail.width, preferences.thumbnail.height);
+                });
 
             Promise.all([
                 existsThumbnail,
