@@ -72,7 +72,7 @@ async function capture(platform: Platform) {
             title: platform.getVideoTitle(videoId, videoInfo),
             author: platform.getAuthor(videoId, videoInfo),
             date: platform.getVideoDate(videoId, videoInfo),
-            ratio: video.videoHeight / video.videoWidth,
+            ratio: video.videoWidth / video.videoHeight,
             private: platform.isPrivate(videoId, videoInfo),
         },
         pos: video.currentTime,
