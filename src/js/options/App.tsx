@@ -18,10 +18,20 @@ import * as React from 'react';
 import { Box, ChakraProvider, extendTheme, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { LicenseNoticeList } from './features/license/LicenseNoticeList';
+import { PreferenceForm } from './features/preference/PreferenceForm';
 
 const theme = extendTheme({
     boxShadow: 'none',
     components: {
+        Tabs: {
+            baseStyle: {
+                tab: {
+                    _focus: {
+                        boxShadow: 'none',
+                    },
+                }
+            },
+        },
         Accordion: {
             baseStyle: {
                 button: {
@@ -29,6 +39,24 @@ const theme = extendTheme({
                         boxShadow: 'none',
                     },
                 }
+            },
+        },
+        Radio: {
+            baseStyle: {
+                control: {
+                    _focus: {
+                        boxShadow: 'none',
+                    },
+                },
+            },
+        },
+        Switch: {
+            baseStyle: {
+                track: {
+                    _focus: {
+                        boxShadow: 'none',
+                    },
+                },
             },
         },
     }
@@ -46,6 +74,7 @@ export function App() {
                     <Box w="80%" maxW="100em" marginX="auto">
                         <TabPanels>
                             <TabPanel>
+                                <PreferenceForm />
                             </TabPanel>
                             <TabPanel>
                                 <Box fontSize="md" pb="1em">

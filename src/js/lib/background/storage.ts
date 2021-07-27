@@ -204,7 +204,7 @@ function getScreenshotId(platform: string, videoId: string, no: number): string 
 
 // util
 
-function getItemById<T>(id: string, defaultVal: any = null): Promise<T> {
+export function getItemById<T>(id: string, defaultVal: any = null): Promise<T> {
     return new Promise(resolve => {
         chrome.storage.local.get({ [id]: defaultVal }, items => {
             resolve(items[id] ?? null as T | null);
@@ -228,7 +228,7 @@ export function getItemListByIds<T>(ids: string[]): Promise<T[]> {
     });
 }
 
-function setItems(params: { [id: string]: any }): Promise<void> {
+export function setItems(params: { [id: string]: any }): Promise<void> {
     return new Promise(resolve => {
         chrome.storage.local.set(params, () => {
             resolve();
