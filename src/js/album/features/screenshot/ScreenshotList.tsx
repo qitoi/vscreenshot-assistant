@@ -29,8 +29,7 @@ import {
     toggleSelectedScreenshot,
 } from '../selectedScreenshot/selectedScreenshotSlice';
 import { ScreenshotCard } from './ScreenshotCard';
-
-const thumbWidth = 320;
+import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
 
 export default function ScreenshotList() {
     const dispatch = useDispatch();
@@ -38,6 +37,7 @@ export default function ScreenshotList() {
     const screenshots = useParameterizedSelector(selectScreenshotList, video?.platform ?? '', video?.videoId ?? '');
     const selected = useSelector(selectSelectedScreenshot);
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
+    const thumbnailPreferences = useSelector(selectThumbnailPreferences);
 
     React.useEffect(() => {
         if (video !== null) {
@@ -63,14 +63,14 @@ export default function ScreenshotList() {
                 w="100%"
                 minH={`calc(100% - 1rem - ${selectedHeight}px)`}
                 p="1rem 1rem 0 1rem"
-                templateColumns={`repeat(auto-fill, minmax(${thumbWidth}px, 1fr))`}
+                templateColumns={`repeat(auto-fill, minmax(${thumbnailPreferences.width}px, 1fr))`}
                 autoRows="min-content"
                 gap={2}>
-                {screenshots.map(s => (
+                {video !== null && screenshots.map(s => (
                     <ScreenshotCard
                         key={getScreenshotKey(s)}
                         info={s}
-                        disabled={video?.private ?? true}
+                        disabled={video.private}
                         isChecked={selected.some(ss => compareScreenshotInfo(ss, s))}
                         onClick={handleClickScreenshot} />
                 ))}

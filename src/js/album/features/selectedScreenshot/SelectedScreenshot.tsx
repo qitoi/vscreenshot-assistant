@@ -15,9 +15,11 @@
  */
 
 import * as React from 'react';
-import { Box, Fade, Image, useBoolean } from '@chakra-ui/react';
+import { AspectRatio, Box, Fade, Image, useBoolean } from '@chakra-ui/react';
 
 import { ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
+import { useSelector } from 'react-redux';
+import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
 
 type SelectedScreenshotProps = React.PropsWithChildren<{
     info: ScreenshotInfo,
@@ -28,6 +30,7 @@ type SelectedScreenshotProps = React.PropsWithChildren<{
 
 export function SelectedScreenshot({ info, screenshot, onClick, onLoad }: SelectedScreenshotProps) {
     const [isShown, setIsShown] = useBoolean(false);
+    const thumbnailPreferences = useSelector(selectThumbnailPreferences);
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement & HTMLButtonElement>) => {
         e.preventDefault();
@@ -43,7 +46,9 @@ export function SelectedScreenshot({ info, screenshot, onClick, onLoad }: Select
              onMouseEnter={() => setIsShown.on()}
              onMouseLeave={() => setIsShown.off()}>
             <Box>
-                <Image src={screenshot} w="100%" draggable={false} onLoad={onLoad} />
+                <AspectRatio w="100%" ratio={thumbnailPreferences.width / thumbnailPreferences.height}>
+                    <Image src={screenshot} w="100%" style={{ objectFit: 'contain' }} draggable={false} onLoad={onLoad} />
+                </AspectRatio>
                 <Fade in={isShown}>
                     <Box w="100%" h="100%" position="absolute" top={0} left={0} bgColor="rgba(0, 0, 0, 0.5)" />
                 </Fade>

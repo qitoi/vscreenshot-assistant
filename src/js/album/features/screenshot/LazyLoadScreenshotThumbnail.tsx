@@ -15,15 +15,15 @@
  */
 
 import * as React from 'react';
-import { Image, useMergeRefs } from '@chakra-ui/react';
+import { AspectRatio, Image, useMergeRefs } from '@chakra-ui/react';
 import { useInView } from 'react-intersection-observer';
 
 import * as storage from '../../../lib/background/storage';
 import { useDispatch } from '../../store';
 import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import { removeThumbnail, selectCachedThumbnail } from './screenshotSlice';
-
-const thumbWidth = 320;
+import { useSelector } from 'react-redux';
+import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
 
 export type LazyLoadScreenshotThumbnail = {
     platform: string,
@@ -37,6 +37,7 @@ export const LazyLoadScreenshotThumbnail = React.memo(React.forwardRef<HTMLImage
     ({ platform, videoId, no, onLoad, onVisible }, forwardedRef) => {
         const dispatch = useDispatch();
         const thumbnail = useParameterizedSelector(selectCachedThumbnail, platform, videoId, no);
+        const thumbnailPreferences = useSelector(selectThumbnailPreferences);
 
         const ref = React.useRef<HTMLImageElement>(null);
         const { ref: inViewRef, inView } = useInView({
@@ -71,14 +72,19 @@ export const LazyLoadScreenshotThumbnail = React.memo(React.forwardRef<HTMLImage
         }, [platform, videoId, no, inView, onLoad]);
 
         return (
-            <Image
-                ref={refs}
-                src=""
+            <AspectRatio
                 w="100%"
-                minW={`${thumbWidth}px`}
-                minH="180px"
-                draggable={false}
-                onLoad={onLoad} />
+                minW={`${thumbnailPreferences.width}px`}
+                minH={`${thumbnailPreferences.height}px`}
+                ratio={thumbnailPreferences.width / thumbnailPreferences.height}
+            >
+                <Image
+                    ref={refs}
+                    src=""
+                    style={{ objectFit: 'contain' }}
+                    draggable={false}
+                    onLoad={onLoad} />
+            </AspectRatio>
         );
     }
 ));

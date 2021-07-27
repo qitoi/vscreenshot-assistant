@@ -89,4 +89,5 @@ const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onCli
         </HStack>
     );
 });
+
 export default SelectedScreenshotList;
