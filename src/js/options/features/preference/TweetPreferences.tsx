@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 
-import { Preferences } from '../../../lib/background/preferences';
+import { Preferences } from '../../../lib/background/prefs';
 import { PreferenceBlock } from './PreferenceBlock';
 import { SwitchControl } from './SwitchControl';
 

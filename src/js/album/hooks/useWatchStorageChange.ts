@@ -16,11 +16,9 @@
 
 import * as React from 'react';
 
-import { Preferences, PREFERENCES_KEY } from '../../lib/background/preferences';
 import { useDispatch } from '../store';
 import { appendVideo, removeVideo } from '../features/video/videoSlice';
 import { appendScreenshot } from '../features/screenshot/screenshotSlice';
-import { setPreferences } from '../features/preferences/preferencesSlice';
 
 export function useWatchStorageChange() {
     const dispatch = useDispatch();
@@ -50,12 +48,6 @@ export function useWatchStorageChange() {
                             dispatch(appendScreenshot({ platform, videoId, target: change.newValue, thumbnail: thumbnail }));
                         }
                         break;
-                    }
-                }
-
-                if (key === PREFERENCES_KEY) {
-                    if ('newValue' in change) {
-                        dispatch(setPreferences(change.newValue as Preferences));
                     }
                 }
             }

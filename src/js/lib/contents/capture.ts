@@ -16,9 +16,10 @@
 
 import hotkeys from 'hotkeys-js';
 
-import { downloadImage } from './download';
 import { CaptureParam, VideoThumbnailParam } from '../types';
 import Platform from '../platforms/platform';
+import * as prefs from '../background/prefs';
+import { downloadImage } from './download';
 
 
 export function Setup(platform: Platform): void {
@@ -48,7 +49,8 @@ let currentVideoInfo: any = null;
 
 async function capture(platform: Platform) {
     const video = platform.getVideoElement();
-    const image = screenshotVideo(video, 'image/jpeg', 0.98);
+    const pos = video.currentTime;
+    const image = await screenshotVideo(video);
 
     const videoId = platform.getVideoId();
     let videoInfo = currentVideoInfo;
@@ -75,7 +77,7 @@ async function capture(platform: Platform) {
             ratio: video.videoWidth / video.videoHeight,
             private: platform.isPrivate(videoId, videoInfo),
         },
-        pos: video.currentTime,
+        pos: pos,
         datetime: (new Date()).getTime(),
         image: image,
     };
@@ -93,7 +95,14 @@ async function capture(platform: Platform) {
     });
 }
 
-function screenshotVideo(image: CanvasImageSource, type: string, quality?: number): string {
+function getImageType(type: string): string {
+    if (type === 'jpeg') {
+        return 'image/jpeg';
+    }
+    return 'image/png';
+}
+
+async function screenshotVideo(image: CanvasImageSource): Promise<string> {
     const canvas = document.createElement('canvas');
     if (image instanceof HTMLVideoElement) {
         canvas.width = image.videoWidth;
@@ -105,5 +114,7 @@ function screenshotVideo(image: CanvasImageSource, type: string, quality?: numbe
     }
     const ctx = canvas.getContext('2d');
     ctx!.drawImage(image, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL(type, quality);
+
+    const p = await prefs.loadPreferences();
+    return canvas.toDataURL(getImageType(p.screenshot.fileType), +p.screenshot.quality);
 }

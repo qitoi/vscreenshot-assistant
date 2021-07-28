@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Button, ButtonGroup, useBoolean, VStack, } from '@chakra-ui/react';
 
-import { DefaultPreferences, loadPreferences, Preferences, PREFERENCES_KEY, savePreferences } from '../../../lib/background/preferences';
+import * as prefs from '../../../lib/background/prefs';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ScreenshotPreferences } from './ScreenshotPreferences';
 import { ThumbnailPreferences } from './ThumbnailPreferences';
@@ -25,38 +25,31 @@ import { TweetPreferences } from './TweetPreferences';
 
 
 export function PreferenceForm() {
-    const methods = useForm<Preferences>({
-        defaultValues: DefaultPreferences,
+    const methods = useForm<prefs.Preferences>({
+        defaultValues: prefs.DefaultPreferences,
     });
     const { handleSubmit, formState: { isSubmitting, isDirty }, reset } = methods;
     const [isLoaded, setIsLoaded] = useBoolean(false);
 
     React.useEffect(() => {
-        loadPreferences().then(prefs => {
-            reset(prefs);
+        const onChanged = prefs.watch();
+
+        // 初期値取得
+        prefs.loadPreferences().then(p => {
+            reset(p);
             setIsLoaded.on();
         });
-    }, []);
 
-    React.useEffect(() => {
-        const callback = (changes: { [key: string]: chrome.storage.StorageChange }, area: chrome.storage.AreaName) => {
-            if (area !== 'local') {
-                return;
-            }
-            for (const [key, change] of Object.entries(changes)) {
-                if (key === PREFERENCES_KEY) {
-                    if ('newValue' in change) {
-                        reset(change.newValue);
-                    }
-                }
-            }
+        // 設定の変更監視
+        const callback = (p: prefs.Preferences) => {
+            reset(p);
         };
-        chrome.storage.onChanged.addListener(callback);
-        return () => chrome.storage.onChanged.removeListener(callback);
+        onChanged.addEventListener(callback);
+        return () => onChanged.removeEventListener(callback);
     }, []);
 
-    const onSubmit = async (values: Preferences) => {
-        await savePreferences(values);
+    const onSubmit = async (values: prefs.Preferences) => {
+        await prefs.savePreferences(values);
     };
 
     if (!isLoaded) {

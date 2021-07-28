@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Box, ChakraProvider, Flex } from '@chakra-ui/react';
 
-import { loadPreferences } from '../lib/background/preferences';
+import * as prefs from '../lib/background/prefs';
 import { useWatchStorageChange } from './hooks/useWatchStorageChange';
 import { setPreferences } from './features/preferences/preferencesSlice';
 import { useDispatch } from './store';
@@ -33,9 +33,13 @@ export function App() {
     useWatchStorageChange();
 
     React.useEffect(() => {
-        loadPreferences().then(preferences => {
-            dispatch(setPreferences(preferences));
-        });
+        const onChanged = prefs.watch();
+        const callback = (p: prefs.Preferences) => {
+            dispatch(setPreferences(p));
+        };
+        prefs.loadPreferences().then(callback);
+        onChanged.addEventListener(callback);
+        return () => onChanged.removeEventListener(callback);
     }, []);
 
     return (
