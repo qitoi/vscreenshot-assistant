@@ -18,7 +18,7 @@ import * as React from 'react';
 import { NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper } from '@chakra-ui/react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { Preferences } from '../../../lib/background/prefs';
+import { Preferences } from '../../../lib/prefs';
 import { PreferenceBlock } from './PreferenceBlock';
 import { PreferenceControl } from './PreferenceControl';
 

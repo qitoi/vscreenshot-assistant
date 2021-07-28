@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Button, ButtonGroup, useBoolean, VStack, } from '@chakra-ui/react';
 
-import * as prefs from '../../../lib/background/prefs';
+import * as prefs from '../../../lib/prefs';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ScreenshotPreferences } from './ScreenshotPreferences';
 import { ThumbnailPreferences } from './ThumbnailPreferences';

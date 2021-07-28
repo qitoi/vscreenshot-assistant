@@ -16,7 +16,7 @@
 
 import { ImageDataUrl, ScreenshotInfo } from '../types';
 import platforms from '../platforms';
-import * as storage from './storage';
+import * as storage from '../storage';
 
 export function shareScreenshot(platform: string, videoId: string, screenshots: ScreenshotInfo[]) {
     storage.getScreenshotList(screenshots).then(images => {

@@ -17,7 +17,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { getVideoKey, VideoInfo } from '../../../lib/types';
-import * as storage from '../../../lib/background/storage';
+import * as storage from '../../../lib/storage';
 import { RootState } from '../../store';
 import { loadVideoSortOrder, saveVideoSortOrder, sortVideo, VideoSortOrder } from './VideoSort';
 

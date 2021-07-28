@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Box, ChakraProvider, Flex } from '@chakra-ui/react';
 
-import * as prefs from '../lib/background/prefs';
+import * as prefs from '../lib/prefs';
 import { useWatchStorageChange } from './hooks/useWatchStorageChange';
 import { setPreferences } from './features/preferences/preferencesSlice';
 import { useDispatch } from './store';

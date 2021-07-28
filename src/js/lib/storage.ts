@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { ImageDataUrl, ScreenshotInfo, VideoInfo } from '../types';
+import { ImageDataUrl, ScreenshotInfo, VideoInfo } from './types';
 
 
 // video keys

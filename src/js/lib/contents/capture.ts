@@ -18,7 +18,7 @@ import hotkeys from 'hotkeys-js';
 
 import { CaptureParam, VideoThumbnailParam } from '../types';
 import Platform from '../platforms/platform';
-import * as prefs from '../background/prefs';
+import * as prefs from '../prefs';
 import { downloadImage } from './download';
 
 

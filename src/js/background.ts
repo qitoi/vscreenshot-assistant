@@ -19,9 +19,9 @@
 import PopupWindow from './lib/background/popup-window';
 import { CaptureParam, VideoInfo, VideoThumbnailParam, } from './lib/types';
 
-import * as storage from './lib/background/storage';
+import * as storage from './lib/storage';
+import * as prefs from './lib/prefs';
 import { createThumbnail } from './lib/background/thumbnail';
-import * as prefs from './lib/background/prefs';
 
 
 const albumWindow = PopupWindow.create('album', 'album.html');

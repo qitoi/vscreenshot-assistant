@@ -26,7 +26,7 @@ import {
 } from '@chakra-ui/react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import * as prefs from '../../../lib/background/prefs';
+import * as prefs from '../../../lib/prefs';
 import { PreferenceBlock } from './PreferenceBlock';
 import { PreferenceControl } from './PreferenceControl';
 import { RadioItem } from './RadioItem';

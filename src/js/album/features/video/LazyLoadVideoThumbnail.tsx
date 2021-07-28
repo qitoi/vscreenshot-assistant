@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Image } from '@chakra-ui/react';
 import { useInView } from 'react-intersection-observer';
 
-import * as storage from '../../../lib/background/storage';
+import * as storage from '../../../lib/storage';
 
 type LazyLoadVideoThumbnailProps = {
     platform: string,
