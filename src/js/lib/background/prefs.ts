@@ -19,8 +19,8 @@ import * as storage from './storage';
 
 const PREFERENCES_KEY = 'preferences';
 
-const FileTypes = ['jpeg', 'png'] as const;
-type FileType = typeof FileTypes[number];
+const FileTypes = ['image/jpeg', 'image/png'] as const;
+export type FileType = typeof FileTypes[number];
 const isFileType = (type: any): type is FileType => FileTypes.some(t => t === type);
 
 export type Preferences = {
@@ -43,7 +43,7 @@ export type Preferences = {
 export const DefaultPreferences: Preferences = {
     general: {},
     screenshot: {
-        fileType: 'jpeg',
+        fileType: 'image/jpeg',
         quality: 0.96,
     },
     thumbnail: {

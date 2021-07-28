@@ -95,13 +95,6 @@ async function capture(platform: Platform) {
     });
 }
 
-function getImageType(type: string): string {
-    if (type === 'jpeg') {
-        return 'image/jpeg';
-    }
-    return 'image/png';
-}
-
 async function screenshotVideo(image: CanvasImageSource): Promise<string> {
     const canvas = document.createElement('canvas');
     if (image instanceof HTMLVideoElement) {
@@ -116,5 +109,5 @@ async function screenshotVideo(image: CanvasImageSource): Promise<string> {
     ctx!.drawImage(image, 0, 0, canvas.width, canvas.height);
 
     const p = await prefs.loadPreferences();
-    return canvas.toDataURL(getImageType(p.screenshot.fileType), +p.screenshot.quality);
+    return canvas.toDataURL(p.screenshot.fileType, +p.screenshot.quality);
 }

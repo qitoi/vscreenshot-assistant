@@ -26,23 +26,27 @@ import {
 } from '@chakra-ui/react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { Preferences } from '../../../lib/background/prefs';
+import * as prefs from '../../../lib/background/prefs';
 import { PreferenceBlock } from './PreferenceBlock';
 import { PreferenceControl } from './PreferenceControl';
 import { RadioItem } from './RadioItem';
 
 export function ScreenshotPreferences() {
-    const { control, watch } = useFormContext<Preferences>();
+    const { control, watch } = useFormContext<prefs.Preferences>();
     const { field: fileTypeField } = useController({ name: 'screenshot.fileType', control });
     const { field: fileQualityField } = useController({ name: 'screenshot.quality', control });
     const fileType = watch('screenshot.fileType');
     return (
         <PreferenceBlock name="Screenshot">
-            <PreferenceControl<Preferences> name="screenshot.fileType" w="100%" isFitted>
+            <PreferenceControl<prefs.Preferences> name="screenshot.fileType" w="100%" isFitted>
                 <RadioGroup w="100%" {...fileTypeField}>
-                    <RadioItem value="jpeg" label="JPEG">
+                    <RadioItem<prefs.FileType> value="image/jpeg" label="JPEG">
                         <Spacer />
-                        <PreferenceControl<Preferences> name="screenshot.quality" label="quality" isFitted isDisabled={fileType !== 'jpeg'}>
+                        <PreferenceControl<prefs.Preferences>
+                            name="screenshot.quality"
+                            label="quality"
+                            isFitted
+                            isDisabled={fileType !== 'image/jpeg'}>
                             <NumberInput id="screenshot.quality" inputMode="numeric" min={0} max={1} step={0.01} {...fileQualityField}>
                                 <NumberInputField />
                                 <NumberInputStepper>
@@ -52,7 +56,7 @@ export function ScreenshotPreferences() {
                             </NumberInput>
                         </PreferenceControl>
                     </RadioItem>
-                    <RadioItem value="png" label="PNG" />
+                    <RadioItem<prefs.FileType> value="image/png" label="PNG" />
                 </RadioGroup>
             </PreferenceControl>
         </PreferenceBlock>

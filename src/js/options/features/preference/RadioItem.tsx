@@ -17,12 +17,12 @@
 import * as React from 'react';
 import { Box, BoxProps, FormLabel, HStack, Radio } from '@chakra-ui/react';
 
-type RadioItemProps = BoxProps & {
-    value: string,
+type RadioItemProps<T> = BoxProps & {
+    value: T,
     label: string,
 };
 
-export function RadioItem({ value, label, children }: RadioItemProps) {
+export function RadioItem<T extends string>({ value, label, children }: RadioItemProps<T>) {
     return (
         <HStack w="100%" px="1em" py="0.5em">
             <FormLabel w="100%" m={0}>
