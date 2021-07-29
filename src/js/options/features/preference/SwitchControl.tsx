@@ -16,13 +16,12 @@
 
 import * as React from 'react';
 import { Switch } from '@chakra-ui/react';
-import { FieldPath, FieldPathValue, UnpackNestedValue, useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 import { PreferenceControl } from './PreferenceControl';
-
-type BoolFieldPath<T, K extends FieldPath<T> = FieldPath<T>> = K extends FieldPath<T> ? UnpackNestedValue<FieldPathValue<T, K>> extends boolean ? K : never : never;
+import { TypedFieldPath } from './TypedFieldPath';
 
 type SwitchControlProps<T> = {
-    name: BoolFieldPath<T>,
+    name: TypedFieldPath<T, boolean>,
     label: string,
 };
 

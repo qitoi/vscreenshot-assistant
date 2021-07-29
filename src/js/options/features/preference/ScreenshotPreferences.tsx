@@ -30,11 +30,12 @@ import * as prefs from '../../../lib/prefs';
 import { PreferenceBlock } from './PreferenceBlock';
 import { PreferenceControl } from './PreferenceControl';
 import { RadioItem } from './RadioItem';
+import { NumberInputControl } from './NumberInputControl';
+import { Preferences } from '../../../lib/prefs';
 
 export function ScreenshotPreferences() {
     const { control, watch } = useFormContext<prefs.Preferences>();
     const { field: fileTypeField } = useController({ name: 'screenshot.fileType', control });
-    const { field: fileQualityField } = useController({ name: 'screenshot.quality', control });
     const fileType = watch('screenshot.fileType');
     return (
         <PreferenceBlock name="Screenshot">
@@ -47,13 +48,7 @@ export function ScreenshotPreferences() {
                             label="quality"
                             isFitted
                             isDisabled={fileType !== 'image/jpeg'}>
-                            <NumberInput id="screenshot.quality" inputMode="numeric" min={0} max={1} step={0.01} {...fileQualityField}>
-                                <NumberInputField />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
+                            <NumberInputControl<Preferences> name="screenshot.quality" min={0} max={1} step={0.01} precision={2} />
                         </PreferenceControl>
                     </RadioItem>
                     <RadioItem<prefs.FileType> value="image/png" label="PNG" />

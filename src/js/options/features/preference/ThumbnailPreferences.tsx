@@ -15,36 +15,20 @@
  */
 
 import * as React from 'react';
-import { NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper } from '@chakra-ui/react';
-import { useController, useFormContext } from 'react-hook-form';
 
 import { Preferences } from '../../../lib/prefs';
 import { PreferenceBlock } from './PreferenceBlock';
 import { PreferenceControl } from './PreferenceControl';
+import { NumberInputControl } from './NumberInputControl';
 
 export function ThumbnailPreferences() {
-    const { control } = useFormContext<Preferences>();
-    const { field: widthField } = useController({ name: 'thumbnail.width', control });
-    const { field: heightField } = useController({ name: 'thumbnail.height', control });
     return (
         <PreferenceBlock name="Thumbnail">
             <PreferenceControl<Preferences> name="thumbnail.width" label="width">
-                <NumberInput id="thumbnail.width" min={1} step={1} precision={0} {...widthField}>
-                    <NumberInputField />
-                    <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                    </NumberInputStepper>
-                </NumberInput>
+                <NumberInputControl<Preferences> name="thumbnail.width" min={1} step={1} precision={0} />
             </PreferenceControl>
             <PreferenceControl<Preferences> name="thumbnail.height" label="height">
-                <NumberInput id="thumbnail.height" min={1} step={1} precision={0} {...heightField}>
-                    <NumberInputField />
-                    <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                    </NumberInputStepper>
-                </NumberInput>
+                <NumberInputControl<Preferences> name="thumbnail.height" min={1} step={1} precision={0} />
             </PreferenceControl>
         </PreferenceBlock>
     );
