@@ -54,7 +54,7 @@ const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onCli
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        shareScreenshot(video.platform, video.videoId, screenshots);
+        shareScreenshot(video, screenshots);
     };
 
     if (screenshots.length === 0) {

@@ -14,23 +14,49 @@
  *  limitations under the License.
  */
 
-import { ImageDataUrl, ScreenshotInfo } from '../types';
+import { ImageDataUrl, ScreenshotInfo, VideoInfo } from '../types';
 import platforms from '../platforms';
 import * as storage from '../storage';
+import * as prefs from '../prefs';
 
-export function shareScreenshot(platform: string, videoId: string, screenshots: ScreenshotInfo[]) {
-    storage.getScreenshotList(screenshots).then(images => {
-        shareScreenshotOnTwitter(platform, videoId, images);
-    });
-}
 
 const TWITTER_SHARE_URL = 'https://twitter.com/intent/tweet';
 
-function shareScreenshotOnTwitter(platform: string, videoId: string, screenshots: ImageDataUrl[]): void {
-    let url = new URL(TWITTER_SHARE_URL);
-    url.search = new URLSearchParams({
-        url: platforms.getVideoURL(platform, videoId),
-    }).toString();
+type TweetOptions = {
+    url?: string,
+    text?: string,
+    hashtags?: string,
+};
+
+
+export function shareScreenshot(video: VideoInfo, screenshots: ScreenshotInfo[]) {
+    storage.getScreenshotList(screenshots).then(images => {
+        shareScreenshotOnTwitter(video, images);
+    });
+}
+
+async function shareScreenshotOnTwitter(video: VideoInfo, screenshots: ImageDataUrl[]): Promise<void> {
+    let options: any = {};
+    let text: string[] = [];
+
+    const tweetPrefs = (await prefs.loadPreferences()).tweet;
+
+    if (tweetPrefs.tweetTitle) {
+        text.push(video.title);
+    }
+    if (tweetPrefs.tweetAuthor) {
+        text.push(video.author);
+    }
+
+    if (tweetPrefs.tweetUrl) {
+        options.url = platforms.getVideoURL(video.platform, video.videoId);
+    }
+    if (text.length > 0) {
+        options.text = text.join(' / ');
+    }
+
+    const url = new URL(TWITTER_SHARE_URL);
+    url.search = new URLSearchParams(options).toString();
 
     chrome.windows.create({
         url: url.toString(),
