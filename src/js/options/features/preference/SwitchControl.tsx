@@ -17,25 +17,22 @@
 import * as React from 'react';
 import { Switch } from '@chakra-ui/react';
 import { useController, useFormContext } from 'react-hook-form';
-import { PreferenceControl } from './PreferenceControl';
+
 import { TypedFieldPath } from './TypedFieldPath';
 
 type SwitchControlProps<T> = {
     name: TypedFieldPath<T, boolean>,
-    label: string,
 };
 
-export function SwitchControl<T>({ name, label }: SwitchControlProps<T>) {
+export function SwitchControl<T>({ name }: SwitchControlProps<T>) {
     const { control } = useFormContext<T>();
     const { field } = useController<T>({ name, control });
     return (
-        <PreferenceControl<T> name={name} label={label} isEnabledHover>
-            <Switch ref={field.ref}
-                    id={field.name}
-                    name={field.name}
-                    isChecked={field.value as boolean}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur} />
-        </PreferenceControl>
+        <Switch ref={field.ref}
+                id={field.name}
+                name={field.name}
+                isChecked={field.value as boolean}
+                onChange={field.onChange}
+                onBlur={field.onBlur} />
     );
 }

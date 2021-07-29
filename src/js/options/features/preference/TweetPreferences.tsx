@@ -19,13 +19,20 @@ import * as React from 'react';
 import { Preferences } from '../../../lib/prefs';
 import { PreferenceBlock } from './PreferenceBlock';
 import { SwitchControl } from './SwitchControl';
+import { PreferenceControl } from './PreferenceControl';
 
 export function TweetPreferences() {
     return (
         <PreferenceBlock name="Tweet">
-            <SwitchControl<Preferences> name="tweet.tweetUrl" label="URL" />
-            <SwitchControl<Preferences> name="tweet.tweetTitle" label="Title" />
-            <SwitchControl<Preferences> name="tweet.tweetAuthor" label="Author" />
+            <PreferenceControl<Preferences> name="tweet.tweetUrl" label="URL">
+                <SwitchControl<Preferences> name="tweet.tweetUrl" />
+            </PreferenceControl>
+            <PreferenceControl<Preferences> name="tweet.tweetTitle" label="Title">
+                <SwitchControl<Preferences> name="tweet.tweetTitle" />
+            </PreferenceControl>
+            <PreferenceControl<Preferences> name="tweet.tweetAuthor" label="Author">
+                <SwitchControl<Preferences> name="tweet.tweetAuthor" />
+            </PreferenceControl>
         </PreferenceBlock>
     );
 }
