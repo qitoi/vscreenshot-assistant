@@ -36,6 +36,9 @@ export function NumberInputControl<T>({ ...rest }: NumberInputControlProps<T>) {
     const { field } = useController({ name: rest.name, control });
     const { ref, name, value, onChange, onBlur } = field;
     const handleChange = (valueAsString: string, valueAsNumber: number) => {
+        if (!Number.isInteger(valueAsNumber)) {
+            valueAsNumber = 0;
+        }
         onChange({ target: { value: valueAsNumber } });
     };
     return (

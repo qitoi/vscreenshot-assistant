@@ -44,7 +44,7 @@ export const DefaultPreferences: Preferences = {
     general: {},
     screenshot: {
         fileType: 'image/jpeg',
-        quality: 0.96,
+        quality: 90,
     },
     thumbnail: {
         width: 320,
@@ -63,11 +63,11 @@ function completePreferences(prefs: Preferences): Preferences {
         general: {},
         screenshot: {
             fileType: completeFileType(prefs?.screenshot?.fileType),
-            quality: Math.min(Math.max(+(prefs?.screenshot?.quality ?? DefaultPreferences.screenshot.quality), 0.01), 1.00),
+            quality: Math.min(Math.max(Math.round(+(prefs?.screenshot?.quality ?? DefaultPreferences.screenshot.quality)), 0), 100),
         },
         thumbnail: {
-            width: Math.min(Math.max(+(prefs?.thumbnail?.width ?? DefaultPreferences.thumbnail.width), 1), 9999),
-            height: Math.min(Math.max(+(prefs?.thumbnail?.height ?? DefaultPreferences.thumbnail.height), 1), 9999),
+            width: Math.min(Math.max(Math.round(+(prefs?.thumbnail?.width ?? DefaultPreferences.thumbnail.width)), 1), 9999),
+            height: Math.min(Math.max(Math.round(+(prefs?.thumbnail?.height ?? DefaultPreferences.thumbnail.height)), 1), 9999),
         },
         tweet: {
             tweetUrl: Boolean(prefs?.tweet?.tweetUrl ?? DefaultPreferences.tweet.tweetUrl),

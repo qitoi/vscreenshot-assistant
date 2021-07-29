@@ -48,7 +48,7 @@ export function ScreenshotPreferences() {
                             label="quality"
                             isFitted
                             isDisabled={fileType !== 'image/jpeg'}>
-                            <NumberInputControl<Preferences> name="screenshot.quality" min={0} max={1} step={0.01} precision={2} />
+                            <NumberInputControl<Preferences> name="screenshot.quality" min={0} max={100} step={1} precision={0} />
                         </PreferenceControl>
                     </RadioItem>
                     <RadioItem<prefs.FileType> value="image/png" label="PNG" />

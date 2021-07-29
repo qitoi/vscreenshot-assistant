@@ -109,5 +109,5 @@ async function screenshotVideo(image: CanvasImageSource): Promise<string> {
     ctx!.drawImage(image, 0, 0, canvas.width, canvas.height);
 
     const p = await prefs.loadPreferences();
-    return canvas.toDataURL(p.screenshot.fileType, +p.screenshot.quality);
+    return canvas.toDataURL(p.screenshot.fileType, (+p.screenshot.quality / 100));
 }
