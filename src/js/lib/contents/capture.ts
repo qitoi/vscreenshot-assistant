@@ -16,7 +16,7 @@
 
 import hotkeys from 'hotkeys-js';
 
-import { CaptureParam, VideoThumbnailParam } from '../types';
+import { CaptureParam, ImageDataUrl, VideoThumbnailParam } from '../types';
 import Platform from '../platforms/platform';
 import * as prefs from '../prefs';
 import { downloadImage } from './download';
@@ -50,7 +50,9 @@ let currentVideoInfo: any = null;
 async function capture(platform: Platform) {
     const video = platform.getVideoElement();
     const pos = video.currentTime;
-    const image = await screenshotVideo(video);
+    const canvas = captureVideo(video);
+
+    const p = await prefs.loadPreferences();
 
     const videoId = platform.getVideoId();
     let videoInfo = currentVideoInfo;
@@ -66,6 +68,35 @@ async function capture(platform: Platform) {
         currentVideoId = videoId;
     }
 
+    saveScreenshot(canvas, platform, videoId, videoInfo, pos, p);
+
+    if (p.general.copyClipboard) {
+        copyToClipboard(canvas);
+    }
+}
+
+function captureVideo(image: CanvasImageSource): HTMLCanvasElement {
+    const canvas = document.createElement('canvas');
+    if (image instanceof HTMLVideoElement) {
+        canvas.width = image.videoWidth;
+        canvas.height = image.videoHeight;
+    }
+    else if (!(image instanceof SVGElement)) {
+        canvas.width = image.width;
+        canvas.height = image.height;
+    }
+    const ctx = canvas.getContext('2d');
+    ctx!.drawImage(image, 0, 0, canvas.width, canvas.height);
+    return canvas;
+}
+
+function convertToDataURL(canvas: HTMLCanvasElement, p: prefs.Preferences): ImageDataUrl {
+    return canvas.toDataURL(p.screenshot.fileType, (+p.screenshot.quality / 100));
+}
+
+function saveScreenshot(canvas: HTMLCanvasElement, platform: Platform, videoId: string, videoInfo: any, pos: number, p: prefs.Preferences) {
+    const image = convertToDataURL(canvas, p);
+
     const param: CaptureParam = {
         type: 'capture',
         platform: platform.PLATFORM_ID,
@@ -74,7 +105,7 @@ async function capture(platform: Platform) {
             title: platform.getVideoTitle(videoId, videoInfo),
             author: platform.getAuthor(videoId, videoInfo),
             date: platform.getVideoDate(videoId, videoInfo),
-            ratio: video.videoWidth / video.videoHeight,
+            ratio: canvas.width / canvas.height,
             private: platform.isPrivate(videoId, videoInfo),
         },
         pos: pos,
@@ -95,19 +126,13 @@ async function capture(platform: Platform) {
     });
 }
 
-async function screenshotVideo(image: CanvasImageSource): Promise<string> {
-    const canvas = document.createElement('canvas');
-    if (image instanceof HTMLVideoElement) {
-        canvas.width = image.videoWidth;
-        canvas.height = image.videoHeight;
-    }
-    else if (!(image instanceof SVGElement)) {
-        canvas.width = image.width;
-        canvas.height = image.height;
-    }
-    const ctx = canvas.getContext('2d');
-    ctx!.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-    const p = await prefs.loadPreferences();
-    return canvas.toDataURL(p.screenshot.fileType, (+p.screenshot.quality / 100));
+async function copyToClipboard(canvas: HTMLCanvasElement): Promise<void> {
+    canvas.toBlob(blob => {
+        if (blob !== null) {
+            // @ts-ignore
+            const data = [new ClipboardItem({ [blob.type]: blob })];
+            // @ts-ignore
+            return navigator.clipboard.write(data);
+        }
+    }, 'image/png');
 }

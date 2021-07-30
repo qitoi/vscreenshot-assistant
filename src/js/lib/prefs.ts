@@ -24,6 +24,9 @@ export type FileType = typeof FileTypes[number];
 const isFileType = (type: any): type is FileType => FileTypes.some(t => t === type);
 
 export type Preferences = {
+    general: {
+        copyClipboard: boolean,
+    },
     screenshot: {
         fileType: FileType,
         quality: number,
@@ -40,6 +43,9 @@ export type Preferences = {
 };
 
 export const DefaultPreferences: Preferences = {
+    general: {
+        copyClipboard: false,
+    },
     screenshot: {
         fileType: 'image/jpeg',
         quality: 90,
@@ -58,6 +64,9 @@ export const DefaultPreferences: Preferences = {
 function completePreferences(prefs: Preferences): Preferences {
     const completeFileType = (type?: string): FileType => isFileType(type) ? type : DefaultPreferences.screenshot.fileType;
     return {
+        general: {
+            copyClipboard: Boolean(prefs?.general?.copyClipboard ?? DefaultPreferences.general.copyClipboard),
+        },
         screenshot: {
             fileType: completeFileType(prefs?.screenshot?.fileType),
             quality: Math.min(Math.max(Math.round(+(prefs?.screenshot?.quality ?? DefaultPreferences.screenshot.quality)), 0), 100),

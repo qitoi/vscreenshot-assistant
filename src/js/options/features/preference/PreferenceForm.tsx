@@ -22,6 +22,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { ScreenshotPreferences } from './ScreenshotPreferences';
 import { ThumbnailPreferences } from './ThumbnailPreferences';
 import { TweetPreferences } from './TweetPreferences';
+import { GeneralPreferences } from './GeneralPreferences';
 
 
 export function PreferenceForm() {
@@ -60,6 +61,7 @@ export function PreferenceForm() {
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <VStack w="50em" marginX="auto">
+                    <GeneralPreferences />
                     <ScreenshotPreferences />
                     <ThumbnailPreferences />
                     <TweetPreferences />
