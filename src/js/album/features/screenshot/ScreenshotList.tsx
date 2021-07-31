@@ -53,7 +53,7 @@ export default function ScreenshotList() {
         dispatch(removeSelectedScreenshot({ info }));
     }, []);
 
-    const handleSelectedResize = React.useCallback(height => {
+    const handleSelectedResize = React.useCallback((width, height) => {
         setSelectedHeight(height);
     }, []);
 

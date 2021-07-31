@@ -19,34 +19,20 @@ import { Box, Button, Grid, HStack, useBoolean } from '@chakra-ui/react';
 
 import { getScreenshotKey, ScreenshotInfo, VideoInfo } from '../../../lib/types';
 import { shareScreenshot } from '../../../lib/background/share-twitter';
+import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { ScreenshotInfoWithThumbnail } from './selectedScreenshotSlice';
 import { SelectedScreenshot } from './SelectedScreenshot';
 
 type SelectedScreenshotListProps = {
     video: VideoInfo,
     screenshots: ScreenshotInfoWithThumbnail[],
-    onResize: (height: number) => void,
+    onResize: (width: number, height: number) => void,
     onClick: (info: ScreenshotInfo) => void,
 };
 
 const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onClick }: SelectedScreenshotListProps) => {
     const [loaded, setLoaded] = useBoolean(false);
-    const ref = React.useRef<HTMLDivElement>(null);
-
-    React.useEffect(() => {
-        if (ref.current !== null) {
-            const observer = new ResizeObserver(entries => {
-                if (ref.current !== null) {
-                    const h = ref.current.offsetHeight;
-                    onResize(h);
-                }
-            });
-            observer.observe(ref.current);
-            return () => {
-                observer.disconnect();
-            };
-        }
-    }, [ref, onResize]);
+    const ref = useResizeObserver<HTMLDivElement>(onResize);
 
     const handleLoad = () => {
         setLoaded.on();
