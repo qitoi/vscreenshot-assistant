@@ -14,17 +14,7 @@
  *  limitations under the License.
  */
 
-import Platform from './platforms/platform';
-import Youtube from './platforms/youtube';
-import SPWN from './platforms/spwn';
+import * as capture from './lib/contents/capture';
+import SPWN from './lib/platforms/spwn';
 
-const platforms: { [key: string]: Platform } = {
-    [Youtube.PLATFORM_ID]: Youtube,
-    [SPWN.PLATFORM_ID]: SPWN,
-};
-
-export default {
-    getVideoURL(platform: string, videoId: string): string {
-        return platforms[platform]?.getVideoUrl(videoId);
-    }
-};
+capture.Setup(SPWN);

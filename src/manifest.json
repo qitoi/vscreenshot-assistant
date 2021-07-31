@@ -33,6 +33,14 @@
       "js": [
         "js/contents-twitter.js"
       ]
+    },
+    {
+      "matches": [
+        "https://*.spwn.jp/*"
+      ],
+      "js": [
+        "js/contents-spwn.js"
+      ]
     }
   ],
   "options_ui": {
