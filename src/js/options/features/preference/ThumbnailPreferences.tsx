@@ -25,10 +25,10 @@ export function ThumbnailPreferences() {
     return (
         <PreferenceBlock name="Thumbnail">
             <PreferenceControl<Preferences> name="thumbnail.width" label="width">
-                <NumberInputControl<Preferences> name="thumbnail.width" min={1} step={1} precision={0} />
+                <NumberInputControl<Preferences> name="thumbnail.width" w="12em" min={1} step={1} precision={0} />
             </PreferenceControl>
             <PreferenceControl<Preferences> name="thumbnail.height" label="height">
-                <NumberInputControl<Preferences> name="thumbnail.height" min={1} step={1} precision={0} />
+                <NumberInputControl<Preferences> name="thumbnail.height" w="12em" min={1} step={1} precision={0} />
             </PreferenceControl>
         </PreferenceBlock>
     );

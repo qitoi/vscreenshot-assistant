@@ -25,6 +25,7 @@ const isFileType = (type: any): type is FileType => FileTypes.some(t => t === ty
 
 export type Preferences = {
     general: {
+        captureHotkey: string,
         copyClipboard: boolean,
     },
     screenshot: {
@@ -44,6 +45,7 @@ export type Preferences = {
 
 export const DefaultPreferences: Preferences = {
     general: {
+        captureHotkey: 'alt+s',
         copyClipboard: false,
     },
     screenshot: {
@@ -65,6 +67,7 @@ function completePreferences(prefs: Preferences): Preferences {
     const completeFileType = (type?: string): FileType => isFileType(type) ? type : DefaultPreferences.screenshot.fileType;
     return {
         general: {
+            captureHotkey: prefs?.general?.captureHotkey || DefaultPreferences.general.captureHotkey,
             copyClipboard: Boolean(prefs?.general?.copyClipboard ?? DefaultPreferences.general.copyClipboard),
         },
         screenshot: {

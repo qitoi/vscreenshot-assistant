@@ -20,10 +20,14 @@ import { Preferences } from '../../../lib/prefs';
 import { PreferenceBlock } from './PreferenceBlock';
 import { SwitchControl } from './SwitchControl';
 import { PreferenceControl } from './PreferenceControl';
+import { HotkeyInputControl } from './HotkeyInputControl';
 
 export function GeneralPreferences() {
     return (
         <PreferenceBlock name="General">
+            <PreferenceControl<Preferences> name="general.captureHotkey" label="スクリーンショット撮影のキー設定">
+                <HotkeyInputControl<Preferences> name="general.captureHotkey" w="12em" />
+            </PreferenceControl>
             <PreferenceControl<Preferences> name="general.copyClipboard" label="スクリーンショットをクリップボードにコピーする">
                 <SwitchControl<Preferences> name="general.copyClipboard" />
             </PreferenceControl>

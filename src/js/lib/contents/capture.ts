@@ -23,23 +23,35 @@ import { downloadImage } from './download';
 
 
 export function Setup(platform: Platform): void {
+    prefs.watch().addEventListener(p => {
+        bindHotkey(p.general.captureHotkey, platform);
+    });
+    prefs.loadPreferences().then(p => {
+        bindHotkey(p.general.captureHotkey, platform);
+    });
+}
+
+function bindHotkey(key: string, platform: Platform) {
+    hotkeys.unbind();
+
     let pressed = false;
-    hotkeys('alt+s', { keyup: true }, (event, handler) => {
+    hotkeys(key, { keyup: true }, (event, handler) => {
         if (!pressed && event.type === 'keydown') {
             pressed = true;
-            exec();
+            exec(platform);
         }
         if (event.type === 'keyup') {
             pressed = false;
         }
     });
+}
 
-    async function exec(): Promise<void> {
-        if (!platform.checkVideoPage()) {
-            return;
-        }
-        capture(platform);
+
+function exec(platform: Platform) {
+    if (!platform.checkVideoPage()) {
+        return;
     }
+    return capture(platform);
 }
 
 
