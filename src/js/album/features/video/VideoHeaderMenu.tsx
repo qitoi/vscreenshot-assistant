@@ -15,8 +15,9 @@
  */
 
 import * as React from 'react';
-import { Box, Center, IconButton, Menu, MenuButton, MenuItem, MenuList, Progress, Text, useBoolean } from '@chakra-ui/react';
-import { DeleteIcon, DownloadIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { Box, Center, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Progress, Text, useBoolean } from '@chakra-ui/react';
+import { HamburgerIcon } from '@chakra-ui/icons';
+import { FcEmptyTrash, FcDownload, FcSettings } from 'react-icons/fc';
 import { CancelError } from 'p-cancelable';
 
 import { useDispatch, useSelector } from '../../store';
@@ -82,6 +83,10 @@ export function VideoHeaderMenu() {
         setIsDownloadOpen.off();
     }, [cancel]);
 
+    const handleOpenOptions = React.useCallback(() => {
+        chrome.runtime.openOptionsPage();
+    }, []);
+
     return (
         <>
             <Menu>
@@ -90,8 +95,10 @@ export function VideoHeaderMenu() {
                     rounded="md"
                     icon={<HamburgerIcon color="gray.500" />} />
                 <MenuList>
-                    <MenuItem isDisabled={video === null} icon={<DownloadIcon />} onClick={handleDownload}>ダウンロード</MenuItem>
-                    <MenuItem isDisabled={video === null} icon={<DeleteIcon />} onClick={handleDeleteConfirm}>削除</MenuItem>
+                    <MenuItem isDisabled={video === null} icon={<FcDownload size="1.5em" />} onClick={handleDownload}>ダウンロード</MenuItem>
+                    <MenuItem isDisabled={video === null} icon={<FcEmptyTrash size="1.5em" />} onClick={handleDeleteConfirm}>削除</MenuItem>
+                    <MenuDivider />
+                    <MenuItem icon={<FcSettings size="1.5em" />} onClick={handleOpenOptions}>設定</MenuItem>
                 </MenuList>
             </Menu>
 

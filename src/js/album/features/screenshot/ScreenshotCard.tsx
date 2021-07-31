@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { chakra, Box, Checkbox, Fade, useBoolean, HStack, Spacer } from '@chakra-ui/react';
-import { IoExpand } from 'react-icons/io5';
+import { MdFullscreen } from 'react-icons/md';
 
 import { ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
 import { LazyLoadScreenshotThumbnail } from './LazyLoadScreenshotThumbnail';
@@ -86,8 +86,12 @@ export const ScreenshotCard = React.memo(({ info, isChecked, disabled, onClick, 
             <Fade in={isShown}>
                 <HStack w="100%" position="absolute" bottom={0} left={0} bgColor="rgba(0, 0, 0, 0)">
                     <Spacer />
-                    <Box p="0.25rem" cursor="pointer" onClick={handleExpandClick}>
-                        <IoExpand color="white" size="2.5rem" />
+                    <Box p={1}
+                         cursor="pointer"
+                         onClick={handleExpandClick}
+                         transition="transform 0.05s ease-out"
+                         _hover={{ transform: 'scale(1.2)' }}>
+                        <MdFullscreen color="white" size="2rem" />
                     </Box>
                 </HStack>
             </Fade>
