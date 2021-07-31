@@ -6,8 +6,8 @@
     "src/lib"
   ],
   "compilerOptions": {
-    "target": "es6",
-    "module": "es6",
+    "target": "es2020",
+    "module": "es2020",
     "moduleResolution": "Node",
     "jsx": "react-jsx",
     "incremental": true,
