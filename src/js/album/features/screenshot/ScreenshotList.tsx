@@ -28,8 +28,9 @@ import {
     selectSelectedScreenshot,
     toggleSelectedScreenshot,
 } from '../selectedScreenshot/selectedScreenshotSlice';
-import { ScreenshotCard } from './ScreenshotCard';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
+import { ScreenshotCard } from './ScreenshotCard';
+import { ScreenshotLightbox } from './ScreenshotLightbox';
 
 export default function ScreenshotList() {
     const dispatch = useDispatch();
@@ -38,6 +39,7 @@ export default function ScreenshotList() {
     const selected = useSelector(selectSelectedScreenshot);
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
     const thumbnailPreferences = useSelector(selectThumbnailPreferences);
+    const [imageViewIndex, setImageViewIndex] = React.useState<number | null>(null);
 
     React.useEffect(() => {
         if (video !== null) {
@@ -48,6 +50,11 @@ export default function ScreenshotList() {
     const handleClickScreenshot = React.useCallback((info: ScreenshotInfo, thumbnail: ImageDataUrl) => {
         dispatch(toggleSelectedScreenshot({ info, thumbnail }));
     }, []);
+
+    const handleExpandScreenshot = React.useCallback((info: ScreenshotInfo) => {
+        const cur = screenshots.findIndex(s => compareScreenshotInfo(s, info));
+        setImageViewIndex(cur);
+    }, [screenshots]);
 
     const handleRemoveSelected = React.useCallback((info: ScreenshotInfo) => {
         dispatch(removeSelectedScreenshot({ info }));
@@ -72,7 +79,8 @@ export default function ScreenshotList() {
                         info={s}
                         disabled={video.private}
                         isChecked={selected.some(ss => compareScreenshotInfo(ss, s))}
-                        onClick={handleClickScreenshot} />
+                        onClick={handleClickScreenshot}
+                        onExpandClick={handleExpandScreenshot} />
                 ))}
             </Grid>
             <Box h="1rem" />
@@ -82,6 +90,13 @@ export default function ScreenshotList() {
                     screenshots={selected}
                     onResize={handleSelectedResize}
                     onClick={handleRemoveSelected} />
+            )}
+            {video !== null && imageViewIndex !== null && (
+                <ScreenshotLightbox
+                    video={video}
+                    screenshots={screenshots}
+                    index={imageViewIndex}
+                    onClose={() => setImageViewIndex(null)} />
             )}
         </Box>
     );
