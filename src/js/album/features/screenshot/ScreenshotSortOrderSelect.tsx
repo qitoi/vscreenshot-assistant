@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { Select } from '@chakra-ui/react';
 
+import { getLocalizedText } from '../../../lib/components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import { ScreenshotSortOrder, ScreenshotSortOrders } from './ScreenshotSort';
 import { selectScreenshotSortOrder, setSortOrder } from './screenshotSlice';
@@ -25,6 +26,13 @@ export function ScreenshotSortOrderSelect() {
     const dispatch = useDispatch();
     const order = useSelector(selectScreenshotSortOrder);
 
+    const screenshotSortOrderLabels = React.useMemo<Record<ScreenshotSortOrder, string>>(() => ({
+        [ScreenshotSortOrders.CaptureDateAsc]: getLocalizedText('albumScreenshotOrderCaptureDateAsc'),
+        [ScreenshotSortOrders.CaptureDateDesc]: getLocalizedText('albumScreenshotOrderCaptureDateDesc'),
+        [ScreenshotSortOrders.VideoPosAsc]: getLocalizedText('albumScreenshotOrderVideoPosAsc'),
+        [ScreenshotSortOrders.VideoPosDesc]: getLocalizedText('albumScreenshotOrderVideoPosDesc'),
+    }), []);
+
     const handleChangeSortOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const order = (+e.target.value) as ScreenshotSortOrder;
         dispatch(setSortOrder({ order: order }));
@@ -32,7 +40,7 @@ export function ScreenshotSortOrderSelect() {
 
     return (
         <Select value={order} onChange={handleChangeSortOrder}>
-            {Object.entries(ScreenshotSortOrders).map(([val, label]) => (
+            {Object.entries(screenshotSortOrderLabels).map(([val, label]) => (
                 <option key={val} style={{ color: 'black' }} value={val}>
                     {label}
                 </option>

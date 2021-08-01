@@ -17,6 +17,7 @@
 import * as React from 'react';
 
 import { Preferences } from '../../../lib/prefs';
+import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { PreferenceBlock } from './PreferenceBlock';
 import { PreferenceControl } from './PreferenceControl';
 import { NumberInputControl } from './NumberInputControl';
@@ -24,10 +25,10 @@ import { NumberInputControl } from './NumberInputControl';
 export function ThumbnailPreferences() {
     return (
         <PreferenceBlock name="Thumbnail">
-            <PreferenceControl<Preferences> name="thumbnail.width" label="width">
+            <PreferenceControl<Preferences> name="thumbnail.width" label={<LocalizedText messageId="prefsThumbnailWidth" />}>
                 <NumberInputControl<Preferences> name="thumbnail.width" w="12em" min={1} step={1} precision={0} />
             </PreferenceControl>
-            <PreferenceControl<Preferences> name="thumbnail.height" label="height">
+            <PreferenceControl<Preferences> name="thumbnail.height" label={<LocalizedText messageId="prefsThumbnailHeight" />}>
                 <NumberInputControl<Preferences> name="thumbnail.height" w="12em" min={1} step={1} precision={0} />
             </PreferenceControl>
         </PreferenceBlock>

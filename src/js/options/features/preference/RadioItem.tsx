@@ -19,7 +19,7 @@ import { Box, BoxProps, FormLabel, HStack, Radio } from '@chakra-ui/react';
 
 type RadioItemProps<T> = BoxProps & {
     value: T,
-    label: string,
+    label: React.ReactElement,
 };
 
 export function RadioItem<T extends string>({ value, label, children }: RadioItemProps<T>) {

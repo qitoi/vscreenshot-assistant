@@ -16,27 +16,20 @@
 
 import { VideoInfo } from '../../../lib/types';
 
-const VideoSortOrder = {
+export const VideoSortOrders = {
     VideoDateAsc: 0,
     VideoDateDesc: 1,
     LastUpdateAsc: 2,
     LastUpdateDesc: 3,
 } as const;
 
-export type VideoSortOrder = typeof VideoSortOrder[keyof typeof VideoSortOrder];
-
-export const VideoSortOrders = {
-    [VideoSortOrder.VideoDateAsc]: '公開日 / 昇順',
-    [VideoSortOrder.VideoDateDesc]: '公開日 / 降順',
-    [VideoSortOrder.LastUpdateAsc]: '最終更新日時 / 昇順',
-    [VideoSortOrder.LastUpdateDesc]: '最終更新日時 / 降順',
-} as const;
+export type VideoSortOrder = typeof VideoSortOrders[keyof typeof VideoSortOrders];
 
 const VideoSorter: { [key: string]: (a: VideoInfo, b: VideoInfo) => number } = {
-    [VideoSortOrder.VideoDateAsc]: (a, b) => a.date - b.date,
-    [VideoSortOrder.VideoDateDesc]: (a, b) => b.date - a.date,
-    [VideoSortOrder.LastUpdateAsc]: (a, b) => a.lastUpdated - b.lastUpdated,
-    [VideoSortOrder.LastUpdateDesc]: (a, b) => b.lastUpdated - a.lastUpdated,
+    [VideoSortOrders.VideoDateAsc]: (a, b) => a.date - b.date,
+    [VideoSortOrders.VideoDateDesc]: (a, b) => b.date - a.date,
+    [VideoSortOrders.LastUpdateAsc]: (a, b) => a.lastUpdated - b.lastUpdated,
+    [VideoSortOrders.LastUpdateDesc]: (a, b) => b.lastUpdated - a.lastUpdated,
 };
 
 
@@ -44,7 +37,7 @@ const VIDEO_SORT_ORDER_KEY = 'video:sort:order';
 
 export function loadVideoSortOrder(): VideoSortOrder {
     const order = localStorage.getItem(VIDEO_SORT_ORDER_KEY);
-    return (order !== null) ? +order as VideoSortOrder : VideoSortOrder.VideoDateAsc;
+    return (order !== null) ? +order as VideoSortOrder : VideoSortOrders.VideoDateAsc;
 }
 
 export function saveVideoSortOrder(order: VideoSortOrder) {

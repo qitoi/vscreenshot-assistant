@@ -17,6 +17,7 @@
 import * as React from 'react';
 
 import { Preferences } from '../../../lib/prefs';
+import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { PreferenceBlock } from './PreferenceBlock';
 import { SwitchControl } from './SwitchControl';
 import { PreferenceControl } from './PreferenceControl';
@@ -24,13 +25,13 @@ import { PreferenceControl } from './PreferenceControl';
 export function TweetPreferences() {
     return (
         <PreferenceBlock name="Tweet">
-            <PreferenceControl<Preferences> name="tweet.tweetUrl" label="URL">
+            <PreferenceControl<Preferences> name="tweet.tweetUrl" label={<LocalizedText messageId="prefsTweetURL" />}>
                 <SwitchControl<Preferences> name="tweet.tweetUrl" />
             </PreferenceControl>
-            <PreferenceControl<Preferences> name="tweet.tweetTitle" label="Title">
+            <PreferenceControl<Preferences> name="tweet.tweetTitle" label={<LocalizedText messageId="prefsTweetTitle" />}>
                 <SwitchControl<Preferences> name="tweet.tweetTitle" />
             </PreferenceControl>
-            <PreferenceControl<Preferences> name="tweet.tweetAuthor" label="Author">
+            <PreferenceControl<Preferences> name="tweet.tweetAuthor" label={<LocalizedText messageId="prefsTweetAuthor" />}>
                 <SwitchControl<Preferences> name="tweet.tweetAuthor" />
             </PreferenceControl>
         </PreferenceBlock>

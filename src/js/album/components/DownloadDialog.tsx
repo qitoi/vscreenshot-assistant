@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { Center, Progress } from '@chakra-ui/react';
 
+import { LocalizedText } from '../../lib/components/LocalizedText';
 import { SetProgressHandler } from '../hooks/useArchive';
 import Dialog from './Dialog';
 
@@ -28,8 +29,10 @@ type DownloadDialogProps = {
 
 const DownloadDialog = React.memo(({ isOpen, onCancel, setProgressHandler }: DownloadDialogProps) => {
     return (
-        <Dialog isOpen={isOpen} cancelLabel="キャンセル" onCancel={onCancel}>
-            <Center py="1em">ダウンロード準備中 ...</Center>
+        <Dialog isOpen={isOpen}
+                cancelLabel={<LocalizedText messageId="albumCancelButton" />}
+                onCancel={onCancel}>
+            <Center py="1em"><LocalizedText messageId="albumDownloadPreparingLabel" /></Center>
             <ProgressBar setProgressHandler={setProgressHandler} />
         </Dialog>
     );

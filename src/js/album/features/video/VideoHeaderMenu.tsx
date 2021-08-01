@@ -20,6 +20,7 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { FcEmptyTrash, FcDownload, FcSettings } from 'react-icons/fc';
 import { CancelError } from 'p-cancelable';
 
+import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import useArchive from '../../hooks/useArchive';
 import Dialog from '../../components/Dialog';
@@ -95,27 +96,33 @@ export function VideoHeaderMenu() {
                     rounded="md"
                     icon={<HamburgerIcon color="gray.500" />} />
                 <MenuList>
-                    <MenuItem isDisabled={video === null} icon={<FcDownload size="1.5em" />} onClick={handleDownload}>ダウンロード</MenuItem>
-                    <MenuItem isDisabled={video === null} icon={<FcEmptyTrash size="1.5em" />} onClick={handleDeleteConfirm}>削除</MenuItem>
+                    <MenuItem isDisabled={video === null} icon={<FcDownload size="1.5em" />} onClick={handleDownload}>
+                        <LocalizedText messageId="albumMenuDownload" />
+                    </MenuItem>
+                    <MenuItem isDisabled={video === null} icon={<FcEmptyTrash size="1.5em" />} onClick={handleDeleteConfirm}>
+                        <LocalizedText messageId="albumMenuDelete" />
+                    </MenuItem>
                     <MenuDivider />
-                    <MenuItem icon={<FcSettings size="1.5em" />} onClick={handleOpenOptions}>設定</MenuItem>
+                    <MenuItem icon={<FcSettings size="1.5em" />} onClick={handleOpenOptions}>
+                        <LocalizedText messageId="albumMenuPreferences" />
+                    </MenuItem>
                 </MenuList>
             </Menu>
 
             <Dialog isOpen={isDeleteOpen}
-                    okLabel="削除"
-                    cancelLabel="キャンセル"
+                    okLabel={<LocalizedText messageId="albumDeleteButton" />}
+                    cancelLabel={<LocalizedText messageId="albumCancelButton" />}
                     isButtonDisabled={isDeletingVideo}
                     onOK={handleDelete}
                     onCancel={handleDeleteCancel}>
                 {!isDeletingVideo
                     ? (
                         <Box>
-                            <Center><Text py="1em">スクリーンショットを削除しますか？</Text></Center>
+                            <Center><Text py="1em"><LocalizedText messageId="albumDeleteConfirmLabel" /></Text></Center>
                         </Box>
                     ) : (
                         <Box>
-                            <Center><Text py="1em">スクリーンショットを削除しています</Text></Center>
+                            <Center><Text py="1em"><LocalizedText messageId="albumDeletingLabel" /></Text></Center>
                             <Progress isIndeterminate />
                         </Box>
                     )

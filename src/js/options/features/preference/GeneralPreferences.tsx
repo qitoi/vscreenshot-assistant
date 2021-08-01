@@ -17,6 +17,7 @@
 import * as React from 'react';
 
 import { Preferences } from '../../../lib/prefs';
+import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { PreferenceBlock } from './PreferenceBlock';
 import { SwitchControl } from './SwitchControl';
 import { PreferenceControl } from './PreferenceControl';
@@ -25,10 +26,10 @@ import { HotkeyInputControl } from './HotkeyInputControl';
 export function GeneralPreferences() {
     return (
         <PreferenceBlock name="General">
-            <PreferenceControl<Preferences> name="general.captureHotkey" label="スクリーンショット撮影のキー設定">
+            <PreferenceControl<Preferences> name="general.captureHotkey" label={<LocalizedText messageId="prefsGeneralHotkey" />}>
                 <HotkeyInputControl<Preferences> name="general.captureHotkey" w="12em" />
             </PreferenceControl>
-            <PreferenceControl<Preferences> name="general.copyClipboard" label="スクリーンショットをクリップボードにコピーする">
+            <PreferenceControl<Preferences> name="general.copyClipboard" label={<LocalizedText messageId="prefsGeneralClipboardCopy" />}>
                 <SwitchControl<Preferences> name="general.copyClipboard" />
             </PreferenceControl>
         </PreferenceBlock>

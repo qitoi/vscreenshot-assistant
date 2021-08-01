@@ -16,27 +16,20 @@
 
 import { ScreenshotInfo } from '../../../lib/types';
 
-const ScreenshotSortOrder = {
+export const ScreenshotSortOrders = {
     CaptureDateAsc: 0,
     CaptureDateDesc: 1,
     VideoPosAsc: 2,
     VideoPosDesc: 3,
 } as const;
 
-export type ScreenshotSortOrder = typeof ScreenshotSortOrder[keyof typeof ScreenshotSortOrder];
-
-export const ScreenshotSortOrders = {
-    [ScreenshotSortOrder.CaptureDateAsc]: '撮影日時 / 昇順',
-    [ScreenshotSortOrder.CaptureDateDesc]: '撮影日時 / 降順',
-    [ScreenshotSortOrder.VideoPosAsc]: '再生位置 / 昇順',
-    [ScreenshotSortOrder.VideoPosDesc]: '再生位置 / 降順',
-} as const;
+export type ScreenshotSortOrder = typeof ScreenshotSortOrders[keyof typeof ScreenshotSortOrders];
 
 const ScreenshotSorter: { [key: string]: (a: ScreenshotInfo, b: ScreenshotInfo) => number } = {
-    [ScreenshotSortOrder.CaptureDateAsc]: (a, b) => a.datetime - b.datetime,
-    [ScreenshotSortOrder.CaptureDateDesc]: (a, b) => b.datetime - a.datetime,
-    [ScreenshotSortOrder.VideoPosAsc]: (a, b) => a.pos - b.pos,
-    [ScreenshotSortOrder.VideoPosDesc]: (a, b) => b.pos - a.pos,
+    [ScreenshotSortOrders.CaptureDateAsc]: (a, b) => a.datetime - b.datetime,
+    [ScreenshotSortOrders.CaptureDateDesc]: (a, b) => b.datetime - a.datetime,
+    [ScreenshotSortOrders.VideoPosAsc]: (a, b) => a.pos - b.pos,
+    [ScreenshotSortOrders.VideoPosDesc]: (a, b) => b.pos - a.pos,
 };
 
 
@@ -44,7 +37,7 @@ const SCREENSHOT_SORT_ORDER_KEY = 'screenshot:sort:order';
 
 export function loadScreenshotSortOrder(): ScreenshotSortOrder {
     const order = localStorage.getItem(SCREENSHOT_SORT_ORDER_KEY);
-    return (order !== null) ? +order as ScreenshotSortOrder : ScreenshotSortOrder.CaptureDateAsc;
+    return (order !== null) ? +order as ScreenshotSortOrder : ScreenshotSortOrders.CaptureDateAsc;
 }
 
 export function saveScreenshotSortOrder(order: ScreenshotSortOrder) {

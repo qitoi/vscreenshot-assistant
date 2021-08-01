@@ -18,6 +18,7 @@ import * as React from 'react';
 import { Button, ButtonGroup, useBoolean, VStack, } from '@chakra-ui/react';
 
 import * as prefs from '../../../lib/prefs';
+import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ScreenshotPreferences } from './ScreenshotPreferences';
 import { ThumbnailPreferences } from './ThumbnailPreferences';
@@ -66,7 +67,9 @@ export function PreferenceForm() {
                     <ThumbnailPreferences />
                     <TweetPreferences />
                     <ButtonGroup>
-                        <Button colorScheme="blue" isLoading={isSubmitting} isDisabled={!isDirty} type="submit">Save</Button>
+                        <Button colorScheme="blue" isLoading={isSubmitting} isDisabled={!isDirty} type="submit">
+                            <LocalizedText messageId="prefsSave" />
+                        </Button>
                     </ButtonGroup>
                 </VStack>
             </form>

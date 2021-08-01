@@ -18,9 +18,9 @@ import * as React from 'react';
 import { Box, FormControl, FormControlProps, FormLabel, HStack, Spacer, Text } from '@chakra-ui/react';
 import { FieldPath } from 'react-hook-form';
 
-type PreferenceControlProps<T> = FormControlProps & {
+type PreferenceControlProps<T> = Omit<FormControlProps, 'label'> & {
     name?: FieldPath<T>,
-    label?: string,
+    label?: React.ReactElement,
     isFitted?: boolean,
     isEnabledHover?: boolean,
 };

@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { Box, ChakraProvider, extendTheme, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
+import { LocalizedText } from '../lib/components/LocalizedText';
 import { LicenseNoticeList } from './features/license/LicenseNoticeList';
 import { PreferenceForm } from './features/preference/PreferenceForm';
 
@@ -68,8 +69,8 @@ export function App() {
             <Box>
                 <Tabs>
                     <TabList position="sticky" top={0} bg="white" justifyContent="center">
-                        <Tab>設定</Tab>
-                        <Tab>ライセンス</Tab>
+                        <Tab><LocalizedText messageId="prefsTabPreferences" /></Tab>
+                        <Tab><LocalizedText messageId="prefsTabLicense" /></Tab>
                     </TabList>
                     <Box w="80%" maxW="100em" marginX="auto">
                         <TabPanels>

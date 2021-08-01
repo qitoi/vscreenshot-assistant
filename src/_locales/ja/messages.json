@@ -1,0 +1,89 @@
+{
+  "prefsTabPreferences": {
+    "message": "設定"
+  },
+  "prefsTabLicense": {
+    "message": "ライセンス"
+  },
+  "prefsGeneralHotkey": {
+    "message": "スクリーンショット撮影のキー設定"
+  },
+  "prefsGeneralClipboardCopy": {
+    "message": "スクリーンショット撮影時にクリップボードにコピー"
+  },
+  "prefsScreenshotFormatJPEG": {
+    "message": "JPEG"
+  },
+  "prefsScreenshotFormatJPEGQuality": {
+    "message": "品質"
+  },
+  "prefsScreenshotFormatPNG": {
+    "message": "PNG"
+  },
+  "prefsThumbnailWidth": {
+    "message": "横幅"
+  },
+  "prefsThumbnailHeight": {
+    "message": "縦幅"
+  },
+  "prefsTweetURL": {
+    "message": "URL"
+  },
+  "prefsTweetTitle": {
+    "message": "タイトル"
+  },
+  "prefsTweetAuthor": {
+    "message": "チャンネル名"
+  },
+  "prefsSave": {
+    "message": "保存"
+  },
+  "albumMenuDownload": {
+    "message": "ダウンロード"
+  },
+  "albumMenuDelete": {
+    "message": "削除"
+  },
+  "albumMenuPreferences": {
+    "message": "設定"
+  },
+  "albumVideoOrderLastUpdateAsc": {
+    "message": "最終更新日時 / 昇順"
+  },
+  "albumVideoOrderLastUpdateDesc": {
+    "message": "最終更新日時 / 降順"
+  },
+  "albumVideoOrderVideoDateAsc": {
+    "message": "公開日 / 昇順"
+  },
+  "albumVideoOrderVideoDateDesc": {
+    "message": "公開日 / 降順"
+  },
+  "albumScreenshotOrderCaptureDateAsc": {
+    "message": "撮影日時 / 昇順"
+  },
+  "albumScreenshotOrderCaptureDateDesc": {
+    "message": "撮影日時 / 降順"
+  },
+  "albumScreenshotOrderVideoPosAsc": {
+    "message": "再生位置 / 昇順"
+  },
+  "albumScreenshotOrderVideoPosDesc": {
+    "message": "再生位置 / 降順"
+  },
+  "albumDeleteConfirmLabel": {
+    "message": "スクリーンショットを削除しますか？"
+  },
+  "albumDeletingLabel": {
+    "message": "スクリーンショットを削除しています..."
+  },
+  "albumDeleteButton": {
+    "message": "削除"
+  },
+  "albumCancelButton": {
+    "message": "キャンセル"
+  },
+  "albumDownloadPreparingLabel": {
+    "message": "ダウンロード準備中..."
+  }
+}
