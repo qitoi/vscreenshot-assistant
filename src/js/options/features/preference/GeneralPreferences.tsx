@@ -32,6 +32,9 @@ export function GeneralPreferences() {
             <PreferenceControl<Preferences> name="general.copyClipboard" label={<LocalizedText messageId="prefsGeneralClipboardCopy" />}>
                 <SwitchControl<Preferences> name="general.copyClipboard" />
             </PreferenceControl>
+            <PreferenceControl<Preferences> name="general.notifyToast" label={<LocalizedText messageId="prefsGeneralNotifyToast" />}>
+                <SwitchControl<Preferences> name="general.notifyToast" />
+            </PreferenceControl>
         </PreferenceBlock>
     );
 }

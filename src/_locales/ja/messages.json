@@ -11,6 +11,9 @@
   "prefsGeneralClipboardCopy": {
     "message": "スクリーンショット撮影時にクリップボードにコピー"
   },
+  "prefsGeneralNotifyToast": {
+    "message": "スクリーンショット撮影時に画面に通知"
+  },
   "prefsScreenshotFormatJPEG": {
     "message": "JPEG"
   },

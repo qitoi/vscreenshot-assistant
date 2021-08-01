@@ -27,6 +27,7 @@ export type Preferences = {
     general: {
         captureHotkey: string,
         copyClipboard: boolean,
+        notifyToast: boolean,
     },
     screenshot: {
         fileType: FileType,
@@ -47,6 +48,7 @@ export const DefaultPreferences: Preferences = {
     general: {
         captureHotkey: 'alt+s',
         copyClipboard: false,
+        notifyToast: true,
     },
     screenshot: {
         fileType: 'image/jpeg',
@@ -69,6 +71,7 @@ function completePreferences(prefs: Preferences): Preferences {
         general: {
             captureHotkey: prefs?.general?.captureHotkey || DefaultPreferences.general.captureHotkey,
             copyClipboard: Boolean(prefs?.general?.copyClipboard ?? DefaultPreferences.general.copyClipboard),
+            notifyToast: Boolean(prefs?.general?.notifyToast ?? DefaultPreferences.general.notifyToast),
         },
         screenshot: {
             fileType: completeFileType(prefs?.screenshot?.fileType),

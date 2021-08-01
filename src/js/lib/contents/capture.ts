@@ -15,6 +15,8 @@
  */
 
 import hotkeys from 'hotkeys-js';
+import * as Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 
 import { CaptureParam, ImageDataUrl, VideoThumbnailParam } from '../types';
 import Platform from '../platforms/platform';
@@ -80,10 +82,16 @@ async function capture(platform: Platform) {
         currentVideoId = videoId;
     }
 
-    saveScreenshot(canvas, platform, videoId, videoInfo, pos, p);
+    const screenshot = saveScreenshot(canvas, platform, videoId, videoInfo, pos, p);
 
     if (p.general.copyClipboard) {
         copyToClipboard(canvas);
+    }
+
+    if (p.general.notifyToast) {
+        screenshot.then(image => {
+            showToast(image, p);
+        });
     }
 }
 
@@ -106,7 +114,7 @@ function convertToDataURL(canvas: HTMLCanvasElement, p: prefs.Preferences): Imag
     return canvas.toDataURL(p.screenshot.fileType, (+p.screenshot.quality / 100));
 }
 
-function saveScreenshot(canvas: HTMLCanvasElement, platform: Platform, videoId: string, videoInfo: any, pos: number, p: prefs.Preferences) {
+function saveScreenshot(canvas: HTMLCanvasElement, platform: Platform, videoId: string, videoInfo: any, pos: number, p: prefs.Preferences): Promise<string> {
     const image = convertToDataURL(canvas, p);
 
     const param: CaptureParam = {
@@ -125,16 +133,19 @@ function saveScreenshot(canvas: HTMLCanvasElement, platform: Platform, videoId: 
         image: image,
     };
 
-    chrome.runtime.sendMessage(param, async ({ existsVideoThumbnail, videoInfoParam }) => {
-        if (!existsVideoThumbnail) {
-            const thumbnail = await downloadImage(platform.getVideoThumbnailUrl(videoId, videoInfo));
-            const param: VideoThumbnailParam = {
-                type: 'video-thumbnail',
-                videoInfo: videoInfoParam,
-                thumbnail: thumbnail,
-            };
-            chrome.runtime.sendMessage(param);
-        }
+    return new Promise(resolve => {
+        chrome.runtime.sendMessage(param, async ({ existsVideoThumbnail, videoInfoParam }) => {
+            if (!existsVideoThumbnail) {
+                const thumbnail = await downloadImage(platform.getVideoThumbnailUrl(videoId, videoInfo));
+                const param: VideoThumbnailParam = {
+                    type: 'video-thumbnail',
+                    videoInfo: videoInfoParam,
+                    thumbnail: thumbnail,
+                };
+                chrome.runtime.sendMessage(param);
+            }
+            resolve(image);
+        });
     });
 }
 
@@ -147,4 +158,48 @@ async function copyToClipboard(canvas: HTMLCanvasElement): Promise<void> {
             return navigator.clipboard.write(data);
         }
     }, 'image/png');
+}
+
+
+let toasts: ReturnType<typeof Toastify>[] = [];
+
+function showToast(image: string, p: prefs.Preferences) {
+    for (const t of toasts) {
+        // @ts-ignore
+        t.hideToast();
+    }
+    toasts = [];
+
+    const img = document.createElement('img') as HTMLImageElement;
+    img.src = image;
+    img.style['width'] = '100%';
+    img.style['height'] = '100%';
+    img.style['objectFit'] = 'contain';
+    img.onload = () => {
+        let toast = Toastify({
+            node: img,
+            duration: 1000,
+            gravity: 'bottom',
+            position: 'left',
+            stopOnFocus: false,
+            avatar: image,
+            callback: () => {
+                let idx = toasts.indexOf(toast);
+                if (idx !== -1) {
+                    // @ts-ignore
+                    toasts[idx].hideToast();
+                    toasts.splice(idx, 1);
+                }
+            },
+            // @ts-ignore
+            style: {
+                width: `${p.thumbnail.width}px`,
+                height: `${p.thumbnail.height}px`,
+                padding: '8px',
+                background: 'rgba(33, 33, 33, 0.94)',
+            },
+        });
+        toast.showToast();
+        toasts.push(toast);
+    };
 }
