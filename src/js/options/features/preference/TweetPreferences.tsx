@@ -20,20 +20,27 @@ import { Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { PreferenceBlock } from './PreferenceBlock';
 import { SwitchControl } from './SwitchControl';
-import { PreferenceControl } from './PreferenceControl';
+import { ControlGroup } from './ControlGroup';
+import { LabeledControl } from './LabeledControl';
 
 export function TweetPreferences() {
     return (
         <PreferenceBlock name="Tweet">
-            <PreferenceControl label={<LocalizedText messageId="prefsTweetURL" />}>
-                <SwitchControl<Preferences> name="tweet.tweetUrl" />
-            </PreferenceControl>
-            <PreferenceControl label={<LocalizedText messageId="prefsTweetTitle" />}>
-                <SwitchControl<Preferences> name="tweet.tweetTitle" />
-            </PreferenceControl>
-            <PreferenceControl label={<LocalizedText messageId="prefsTweetAuthor" />}>
-                <SwitchControl<Preferences> name="tweet.tweetAuthor" />
-            </PreferenceControl>
+            <ControlGroup isEnabledHover>
+                <LabeledControl label={<LocalizedText messageId="prefsTweetURL" />}>
+                    <SwitchControl<Preferences> name="tweet.tweetUrl" />
+                </LabeledControl>
+            </ControlGroup>
+            <ControlGroup isEnabledHover>
+                <LabeledControl label={<LocalizedText messageId="prefsTweetTitle" />}>
+                    <SwitchControl<Preferences> name="tweet.tweetTitle" />
+                </LabeledControl>
+            </ControlGroup>
+            <ControlGroup isEnabledHover>
+                <LabeledControl label={<LocalizedText messageId="prefsTweetAuthor" />}>
+                    <SwitchControl<Preferences> name="tweet.tweetAuthor" />
+                </LabeledControl>
+            </ControlGroup>
         </PreferenceBlock>
     );
 }

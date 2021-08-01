@@ -15,24 +15,21 @@
  */
 
 import * as React from 'react';
-import { Box, BoxProps, HStack, Radio } from '@chakra-ui/react';
+import { FormLabel, FormLabelProps, HStack, Spacer } from '@chakra-ui/react';
 
-import { LabeledControl } from './LabeledControl';
-
-type RadioItemProps<T> = BoxProps & {
-    value: T,
+type LabeledControlProps = FormLabelProps & {
     label: React.ReactElement,
 };
 
-export function RadioItem<T extends string>({ value, label, children }: RadioItemProps<T>) {
+export function LabeledControl({ label, children, ...rest }: LabeledControlProps) {
+    const padding = { py: '0.5em' };
     return (
-        <HStack w="100%">
-            <LabeledControl label={<></>}>
-                <Radio value={value} w="100%">{label}</Radio>
-            </LabeledControl>
-            <Box flexShrink={0}>
+        <FormLabel w="100%" m={0} {...padding} {...rest}>
+            <HStack minH={10}>
+                {label}
+                <Spacer />
                 {children}
-            </Box>
-        </HStack>
+            </HStack>
+        </FormLabel>
     );
 }

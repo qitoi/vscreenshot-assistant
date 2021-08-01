@@ -15,15 +15,16 @@
  */
 
 import * as React from 'react';
-import { RadioGroup, Spacer } from '@chakra-ui/react';
+import { RadioGroup, Text } from '@chakra-ui/react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { FileType, Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { PreferenceBlock } from './PreferenceBlock';
-import { PreferenceControl } from './PreferenceControl';
+import { ControlGroup } from './ControlGroup';
 import { RadioItem } from './RadioItem';
 import { NumberInputControl } from './NumberInputControl';
+import { LabeledControl } from './LabeledControl';
 
 export function ScreenshotPreferences() {
     const { control, watch } = useFormContext<Preferences>();
@@ -31,20 +32,24 @@ export function ScreenshotPreferences() {
     const fileType = watch('screenshot.fileType');
     return (
         <PreferenceBlock name="Screenshot">
-            <PreferenceControl w="100%" isFitted>
+            <ControlGroup w="100%" label={<Text>ファイルフォーマット</Text>}>
                 <RadioGroup w="100%" {...fileTypeField}>
                     <RadioItem<FileType> value="image/jpeg" label={<LocalizedText messageId="prefsScreenshotFormatJPEG" />}>
-                        <Spacer />
-                        <PreferenceControl
-                            label={<LocalizedText messageId="prefsScreenshotFormatJPEGQuality" />}
-                            isFitted
-                            isDisabled={fileType !== 'image/jpeg'}>
-                            <NumberInputControl<Preferences> name="screenshot.quality" w="12em" min={0} max={100} step={1} precision={0} />
-                        </PreferenceControl>
+                        <ControlGroup isDisabled={fileType !== 'image/jpeg'}>
+                            <LabeledControl label={<LocalizedText messageId="prefsScreenshotFormatJPEGQuality" />}>
+                                <NumberInputControl<Preferences>
+                                    name="screenshot.quality"
+                                    w="12em"
+                                    min={0}
+                                    max={100}
+                                    step={1}
+                                    precision={0} />
+                            </LabeledControl>
+                        </ControlGroup>
                     </RadioItem>
                     <RadioItem<FileType> value="image/png" label={<LocalizedText messageId="prefsScreenshotFormatPNG" />} />
                 </RadioGroup>
-            </PreferenceControl>
+            </ControlGroup>
         </PreferenceBlock>
     );
 }

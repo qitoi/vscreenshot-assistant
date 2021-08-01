@@ -19,18 +19,23 @@ import * as React from 'react';
 import { Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { PreferenceBlock } from './PreferenceBlock';
-import { PreferenceControl } from './PreferenceControl';
+import { ControlGroup } from './ControlGroup';
 import { NumberInputControl } from './NumberInputControl';
+import { LabeledControl } from './LabeledControl';
 
 export function ThumbnailPreferences() {
     return (
         <PreferenceBlock name="Thumbnail">
-            <PreferenceControl label={<LocalizedText messageId="prefsThumbnailWidth" />}>
-                <NumberInputControl<Preferences> name="thumbnail.width" w="12em" min={1} step={1} precision={0} unit="px" />
-            </PreferenceControl>
-            <PreferenceControl label={<LocalizedText messageId="prefsThumbnailHeight" />}>
-                <NumberInputControl<Preferences> name="thumbnail.height" w="12em" min={1} step={1} precision={0} unit="px" />
-            </PreferenceControl>
+            <ControlGroup>
+                <LabeledControl label={<LocalizedText messageId="prefsThumbnailWidth" />}>
+                    <NumberInputControl<Preferences> name="thumbnail.width" w="12em" min={1} step={1} precision={0} unit="px" />
+                </LabeledControl>
+            </ControlGroup>
+            <ControlGroup>
+                <LabeledControl label={<LocalizedText messageId="prefsThumbnailHeight" />}>
+                    <NumberInputControl<Preferences> name="thumbnail.height" w="12em" min={1} step={1} precision={0} unit="px" />
+                </LabeledControl>
+            </ControlGroup>
         </PreferenceBlock>
     );
 }

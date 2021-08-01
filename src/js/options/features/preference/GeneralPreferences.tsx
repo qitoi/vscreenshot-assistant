@@ -20,21 +20,28 @@ import { Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { PreferenceBlock } from './PreferenceBlock';
 import { SwitchControl } from './SwitchControl';
-import { PreferenceControl } from './PreferenceControl';
+import { ControlGroup } from './ControlGroup';
 import { HotkeyInputControl } from './HotkeyInputControl';
+import { LabeledControl } from './LabeledControl';
 
 export function GeneralPreferences() {
     return (
         <PreferenceBlock name="General">
-            <PreferenceControl label={<LocalizedText messageId="prefsGeneralHotkey" />}>
-                <HotkeyInputControl<Preferences> name="general.captureHotkey" w="12em" />
-            </PreferenceControl>
-            <PreferenceControl label={<LocalizedText messageId="prefsGeneralClipboardCopy" />}>
-                <SwitchControl<Preferences> name="general.copyClipboard" />
-            </PreferenceControl>
-            <PreferenceControl label={<LocalizedText messageId="prefsGeneralNotifyToast" />}>
-                <SwitchControl<Preferences> name="general.notifyToast" />
-            </PreferenceControl>
+            <ControlGroup>
+                <LabeledControl label={<LocalizedText messageId="prefsGeneralHotkey" />}>
+                    <HotkeyInputControl<Preferences> name="general.captureHotkey" w="12em" />
+                </LabeledControl>
+            </ControlGroup>
+            <ControlGroup isEnabledHover>
+                <LabeledControl label={<LocalizedText messageId="prefsGeneralClipboardCopy" />}>
+                    <SwitchControl<Preferences> name="general.copyClipboard" />
+                </LabeledControl>
+            </ControlGroup>
+            <ControlGroup isEnabledHover>
+                <LabeledControl label={<LocalizedText messageId="prefsGeneralNotifyToast" />}>
+                    <SwitchControl<Preferences> name="general.notifyToast" />
+                </LabeledControl>
+            </ControlGroup>
         </PreferenceBlock>
     );
 }
