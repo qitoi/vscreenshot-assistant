@@ -44,4 +44,3 @@ export default slice.reducer;
 export const { setPreferences } = slice.actions;
 
 export const selectThumbnailPreferences = (state: RootState) => state.preferences.preferences.thumbnail;
-export const selectTweetPreferences = (state: RootState) => state.preferences.preferences.tweet;

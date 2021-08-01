@@ -15,15 +15,7 @@
  */
 
 import * as React from 'react';
-import {
-    NumberDecrementStepper,
-    NumberIncrementStepper,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    RadioGroup,
-    Spacer
-} from '@chakra-ui/react';
+import { RadioGroup, Spacer } from '@chakra-ui/react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import * as prefs from '../../../lib/prefs';

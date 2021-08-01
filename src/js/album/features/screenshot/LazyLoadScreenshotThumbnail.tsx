@@ -19,11 +19,10 @@ import { AspectRatio, Image, useMergeRefs } from '@chakra-ui/react';
 import { useInView } from 'react-intersection-observer';
 
 import * as storage from '../../../lib/storage';
-import { useDispatch } from '../../store';
+import { useDispatch, useSelector } from '../../store';
 import useParameterizedSelector from '../../hooks/useParameterizedSelector';
-import { removeThumbnail, selectCachedThumbnail } from './screenshotSlice';
-import { useSelector } from 'react-redux';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
+import { removeThumbnail, selectCachedThumbnail } from './screenshotSlice';
 
 export type LazyLoadScreenshotThumbnail = {
     platform: string,
