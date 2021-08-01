@@ -26,13 +26,13 @@ import { HotkeyInputControl } from './HotkeyInputControl';
 export function GeneralPreferences() {
     return (
         <PreferenceBlock name="General">
-            <PreferenceControl<Preferences> name="general.captureHotkey" label={<LocalizedText messageId="prefsGeneralHotkey" />}>
+            <PreferenceControl label={<LocalizedText messageId="prefsGeneralHotkey" />}>
                 <HotkeyInputControl<Preferences> name="general.captureHotkey" w="12em" />
             </PreferenceControl>
-            <PreferenceControl<Preferences> name="general.copyClipboard" label={<LocalizedText messageId="prefsGeneralClipboardCopy" />}>
+            <PreferenceControl label={<LocalizedText messageId="prefsGeneralClipboardCopy" />}>
                 <SwitchControl<Preferences> name="general.copyClipboard" />
             </PreferenceControl>
-            <PreferenceControl<Preferences> name="general.notifyToast" label={<LocalizedText messageId="prefsGeneralNotifyToast" />}>
+            <PreferenceControl label={<LocalizedText messageId="prefsGeneralNotifyToast" />}>
                 <SwitchControl<Preferences> name="general.notifyToast" />
             </PreferenceControl>
         </PreferenceBlock>

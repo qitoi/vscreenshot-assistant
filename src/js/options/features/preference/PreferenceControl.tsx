@@ -16,16 +16,14 @@
 
 import * as React from 'react';
 import { Box, FormControl, FormControlProps, FormLabel, HStack, Spacer, Text } from '@chakra-ui/react';
-import { FieldPath } from 'react-hook-form';
 
-type PreferenceControlProps<T> = Omit<FormControlProps, 'label'> & {
-    name?: FieldPath<T>,
+type PreferenceControlProps = Omit<FormControlProps, 'label'> & {
     label?: React.ReactElement,
     isFitted?: boolean,
     isEnabledHover?: boolean,
 };
 
-export function PreferenceControl<T>({ name, label, isFitted, isEnabledHover, children, ...rest }: PreferenceControlProps<T>) {
+export function PreferenceControl({ label, isFitted, isEnabledHover, children, ...rest }: PreferenceControlProps) {
     const fit = (isFitted === true) ? { width: 'fit-content' } : {};
     const padding = (isFitted === true) ? {} : { px: '1em', py: '0.5em' };
     const spacer = (isFitted === true) ? null : <Spacer />;
@@ -33,9 +31,9 @@ export function PreferenceControl<T>({ name, label, isFitted, isEnabledHover, ch
     return (
         <FormControl fontSize="md" {...fit} {...rest}>
             <HStack>
-                {(name && label)
+                {label
                     ? (
-                        <FormLabel htmlFor={name} w="100%" m={0} {...padding} {...hover}>
+                        <FormLabel w="100%" m={0} {...padding} {...hover}>
                             <HStack minH={10}>
                                 <Text>{label}</Text>
                                 {spacer}

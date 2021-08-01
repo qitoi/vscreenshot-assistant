@@ -25,13 +25,13 @@ import { PreferenceControl } from './PreferenceControl';
 export function TweetPreferences() {
     return (
         <PreferenceBlock name="Tweet">
-            <PreferenceControl<Preferences> name="tweet.tweetUrl" label={<LocalizedText messageId="prefsTweetURL" />}>
+            <PreferenceControl label={<LocalizedText messageId="prefsTweetURL" />}>
                 <SwitchControl<Preferences> name="tweet.tweetUrl" />
             </PreferenceControl>
-            <PreferenceControl<Preferences> name="tweet.tweetTitle" label={<LocalizedText messageId="prefsTweetTitle" />}>
+            <PreferenceControl label={<LocalizedText messageId="prefsTweetTitle" />}>
                 <SwitchControl<Preferences> name="tweet.tweetTitle" />
             </PreferenceControl>
-            <PreferenceControl<Preferences> name="tweet.tweetAuthor" label={<LocalizedText messageId="prefsTweetAuthor" />}>
+            <PreferenceControl label={<LocalizedText messageId="prefsTweetAuthor" />}>
                 <SwitchControl<Preferences> name="tweet.tweetAuthor" />
             </PreferenceControl>
         </PreferenceBlock>

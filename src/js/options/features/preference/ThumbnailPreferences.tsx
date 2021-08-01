@@ -25,10 +25,10 @@ import { NumberInputControl } from './NumberInputControl';
 export function ThumbnailPreferences() {
     return (
         <PreferenceBlock name="Thumbnail">
-            <PreferenceControl<Preferences> name="thumbnail.width" label={<LocalizedText messageId="prefsThumbnailWidth" />}>
+            <PreferenceControl label={<LocalizedText messageId="prefsThumbnailWidth" />}>
                 <NumberInputControl<Preferences> name="thumbnail.width" w="12em" min={1} step={1} precision={0} unit="px" />
             </PreferenceControl>
-            <PreferenceControl<Preferences> name="thumbnail.height" label={<LocalizedText messageId="prefsThumbnailHeight" />}>
+            <PreferenceControl label={<LocalizedText messageId="prefsThumbnailHeight" />}>
                 <NumberInputControl<Preferences> name="thumbnail.height" w="12em" min={1} step={1} precision={0} unit="px" />
             </PreferenceControl>
         </PreferenceBlock>
