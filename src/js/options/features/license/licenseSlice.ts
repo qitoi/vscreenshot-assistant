@@ -42,7 +42,8 @@ function parseLicenseNotices(text: string): LicenseNotice[] {
     const notices: LicenseNotice[] = [];
     while (split.length > 0) {
         const name = split.shift()?.trim();
-        const license = split.shift()?.trim();
+        let license = split.shift();
+        license = license?.substring(1, license?.length - 1);
         if (name === undefined || license === undefined) {
             break;
         }
