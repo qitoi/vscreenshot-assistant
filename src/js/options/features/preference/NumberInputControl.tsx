@@ -17,6 +17,8 @@
 import * as React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import {
+    Box,
+    HStack,
     NumberDecrementStepper,
     NumberIncrementStepper,
     NumberInput,
@@ -29,9 +31,10 @@ import { TypedFieldPath } from './TypedFieldPath';
 
 type NumberInputControlProps<T> = Omit<NumberInputProps, 'ref' | 'name' | 'onChange' | 'onBlur'> & {
     name: TypedFieldPath<T, number>,
+    unit?: string,
 };
 
-export function NumberInputControl<T>({ ...rest }: NumberInputControlProps<T>) {
+export function NumberInputControl<T>({ unit, ...rest }: NumberInputControlProps<T>) {
     const { control } = useFormContext<T>();
     const { field } = useController({ name: rest.name, control });
     const { ref, name, value, onChange, onBlur } = field;
@@ -42,12 +45,15 @@ export function NumberInputControl<T>({ ...rest }: NumberInputControlProps<T>) {
         onChange({ target: { value: valueAsNumber } });
     };
     return (
-        <NumberInput {...rest} ref={ref} name={name} value={value} onChange={handleChange} onBlur={onBlur}>
-            <NumberInputField />
-            <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-            </NumberInputStepper>
-        </NumberInput>
+        <HStack w={rest.w} width={rest.width}>
+            <NumberInput {...rest} ref={ref} name={name} value={value} onChange={handleChange} onBlur={onBlur} flexShrink={1}>
+                <NumberInputField />
+                <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                </NumberInputStepper>
+            </NumberInput>
+            {unit && (<Box flexShrink={0}>{unit}</Box>)}
+        </HStack>
     );
 }
