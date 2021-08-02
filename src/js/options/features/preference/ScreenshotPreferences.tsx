@@ -16,7 +16,6 @@
 
 import * as React from 'react';
 import { Text } from '@chakra-ui/react';
-import { useFormContext } from 'react-hook-form';
 
 import { FileType, Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
@@ -28,15 +27,13 @@ import LabeledControl from './LabeledControl';
 import RadioGroupControl from './RadioGroupControl';
 
 const ScreenshotPreferences: React.FC = () => {
-    const { watch } = useFormContext<Preferences>();
-    const fileType = watch('screenshot.fileType');
     return (
         <PreferenceBlock name="Screenshot">
             <ControlGroup w="100%">
                 <LabeledControl isVertical label={<Text>ファイルフォーマット</Text>}>
                     <RadioGroupControl<Preferences> name="screenshot.fileType">
                         <RadioItem<FileType> value="image/jpeg" label={<LocalizedText messageId="prefsScreenshotFormatJPEG" />}>
-                            <ControlGroup isDisabled={fileType !== 'image/jpeg'}>
+                            <ControlGroup<Preferences> conditionKey="screenshot.fileType" conditionValue="image/jpeg">
                                 <LabeledControl label={<LocalizedText messageId="prefsScreenshotFormatJPEGQuality" />}>
                                     <NumberInputControl<Preferences>
                                         name="screenshot.quality"

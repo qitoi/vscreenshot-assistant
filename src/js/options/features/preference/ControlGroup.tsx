@@ -16,19 +16,30 @@
 
 import * as React from 'react';
 import { Box, FormControl, FormControlProps, FormLabel, useFormControlContext, VStack } from '@chakra-ui/react';
+import { FieldPath, FieldPathValue, UnpackNestedValue, useFormContext } from 'react-hook-form';
 
-type ControlGroupProps = Omit<FormControlProps, 'label'> & {
+type ControlGroupProps<T> = Omit<FormControlProps, 'label'> & {
     label?: React.ReactElement,
     isEnabledHover?: boolean,
+    conditionKey?: FieldPath<T>,
+    conditionValue?: UnpackNestedValue<FieldPathValue<T, FieldPath<T>>>,
 };
 
-const ControlGroup: React.FC<ControlGroupProps> = ({ label, isEnabledHover, children, ...rest }: ControlGroupProps) => {
+const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, conditionKey, conditionValue, children, ...rest }: ControlGroupProps<T>): React.ReactElement => {
+    const { watch } = useFormContext<T>();
     const context = useFormControlContext();
     const isNested = (context !== undefined);
     const hover = (isEnabledHover === true) ? { transition: 'background ease-out 200ms', _hover: { background: 'blackAlpha.50' } } : {};
     const padding = isNested ? {} : { px: '1em' };
+
+    let disabled = (context?.isDisabled === true) || (isDisabled === true);
+    if (conditionKey !== undefined) {
+        const condition = watch(conditionKey);
+        disabled = disabled || (condition !== conditionValue);
+    }
+
     return (
-        <FormControl fontSize="md" w="100%" {...hover} {...padding} {...rest}>
+        <FormControl fontSize="md" w="100%" isDisabled={disabled} {...hover} {...padding} {...rest}>
             {label
                 ? (
                     <VStack spacing={0}>
