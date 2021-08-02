@@ -32,23 +32,25 @@ const ScreenshotPreferences: React.FC = () => {
     const fileType = watch('screenshot.fileType');
     return (
         <PreferenceBlock name="Screenshot">
-            <ControlGroup w="100%" label={<Text>ファイルフォーマット</Text>}>
-                <RadioGroupControl<Preferences> name="screenshot.fileType">
-                    <RadioItem<FileType> value="image/jpeg" label={<LocalizedText messageId="prefsScreenshotFormatJPEG" />}>
-                        <ControlGroup isDisabled={fileType !== 'image/jpeg'}>
-                            <LabeledControl label={<LocalizedText messageId="prefsScreenshotFormatJPEGQuality" />}>
-                                <NumberInputControl<Preferences>
-                                    name="screenshot.quality"
-                                    w="12em"
-                                    min={0}
-                                    max={100}
-                                    step={1}
-                                    precision={0} />
-                            </LabeledControl>
-                        </ControlGroup>
-                    </RadioItem>
-                    <RadioItem<FileType> value="image/png" label={<LocalizedText messageId="prefsScreenshotFormatPNG" />} />
-                </RadioGroupControl>
+            <ControlGroup w="100%">
+                <LabeledControl isVertical label={<Text>ファイルフォーマット</Text>}>
+                    <RadioGroupControl<Preferences> name="screenshot.fileType">
+                        <RadioItem<FileType> value="image/jpeg" label={<LocalizedText messageId="prefsScreenshotFormatJPEG" />}>
+                            <ControlGroup isDisabled={fileType !== 'image/jpeg'}>
+                                <LabeledControl label={<LocalizedText messageId="prefsScreenshotFormatJPEGQuality" />}>
+                                    <NumberInputControl<Preferences>
+                                        name="screenshot.quality"
+                                        w="12em"
+                                        min={0}
+                                        max={100}
+                                        step={1}
+                                        precision={0} />
+                                </LabeledControl>
+                            </ControlGroup>
+                        </RadioItem>
+                        <RadioItem<FileType> value="image/png" label={<LocalizedText messageId="prefsScreenshotFormatPNG" />} />
+                    </RadioGroupControl>
+                </LabeledControl>
             </ControlGroup>
         </PreferenceBlock>
     );

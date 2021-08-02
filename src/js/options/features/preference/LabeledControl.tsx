@@ -15,22 +15,34 @@
  */
 
 import * as React from 'react';
-import { FormLabel, FormLabelProps, HStack, Spacer } from '@chakra-ui/react';
+import { Box, FormLabel, FormLabelProps, HStack, Spacer, Text, VStack } from '@chakra-ui/react';
 
 type LabeledControlProps = FormLabelProps & {
     label: React.ReactElement,
+    isVertical?: boolean,
 };
 
-const LabeledControl = ({ label, children, ...rest }: LabeledControlProps) => {
-    const padding = { py: '0.5em' };
+const LabeledControl = ({ label, isVertical, children, ...rest }: LabeledControlProps) => {
     return (
-        <FormLabel w="100%" m={0} {...padding} {...rest}>
-            <HStack minH={10}>
-                {label}
-                <Spacer />
-                {children}
-            </HStack>
-        </FormLabel>
+        isVertical
+            ? (
+                <FormLabel w="100%" m={0}>
+                    <VStack spacing={0}>
+                        <Box w="100%" paddingTop="1em" paddingBottom="0.5em">{label}</Box>
+                        <Box w="100%">
+                            {children}
+                        </Box>
+                    </VStack>
+                </FormLabel>
+            ) : (
+                <FormLabel w="100%" m={0} py="0.5em" {...rest}>
+                    <HStack minH={10}>
+                        <Text>{label}</Text>
+                        <Spacer />
+                        {children}
+                    </HStack>
+                </FormLabel>
+            )
     );
 };
 
