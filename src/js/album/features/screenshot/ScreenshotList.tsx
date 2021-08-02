@@ -18,6 +18,7 @@ import * as React from 'react';
 import { Box, Grid } from '@chakra-ui/react';
 
 import { compareScreenshotInfo, getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
+import * as storage from '../../../lib/storage';
 import { useDispatch, useSelector } from '../../store';
 import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import SelectedScreenshotList from '../selectedScreenshot/SelectedScreenshotList';
@@ -30,7 +31,7 @@ import {
 } from '../selectedScreenshot/selectedScreenshotSlice';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
 import { ScreenshotCard } from './ScreenshotCard';
-import { ScreenshotLightbox } from './ScreenshotLightbox';
+import { CustomLightbox } from '../../components/CustomLightbox';
 
 export default function ScreenshotList() {
     const dispatch = useDispatch();
@@ -64,6 +65,10 @@ export default function ScreenshotList() {
         setSelectedHeight(height);
     }, []);
 
+    const getKey = React.useCallback((s: ScreenshotInfo) => getScreenshotKey(s), []);
+    const loadImage = React.useCallback((s: ScreenshotInfo) => storage.getScreenshot(s.platform, s.videoId, s.no), []);
+    const handleLightboxClose = React.useCallback(() => setImageViewIndex(null), []);
+
     return (
         <Box w="100%" h="100%" minH="100%">
             <Grid
@@ -92,11 +97,12 @@ export default function ScreenshotList() {
                     onClick={handleRemoveSelected} />
             )}
             {video !== null && imageViewIndex !== null && (
-                <ScreenshotLightbox
-                    video={video}
-                    screenshots={screenshots}
+                <CustomLightbox
+                    list={screenshots}
                     index={imageViewIndex}
-                    onClose={() => setImageViewIndex(null)} />
+                    getKey={getKey}
+                    loadImage={loadImage}
+                    onClose={handleLightboxClose} />
             )}
         </Box>
     );

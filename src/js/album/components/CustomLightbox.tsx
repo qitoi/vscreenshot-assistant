@@ -18,8 +18,7 @@ import * as React from 'react';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
-import { getScreenshotKey, ScreenshotInfo, VideoInfo } from '../../../lib/types';
-import * as storage from '../../../lib/storage';
+import { ImageDataUrl } from '../../lib/types';
 
 
 type ExpandImage = {
@@ -79,54 +78,58 @@ function reducer(state: StateType, action: ActionType): StateType {
 }
 
 
-type ScreenshotLightboxProps = {
-    video: VideoInfo,
-    screenshots: ScreenshotInfo[],
+type LightboxProps<T> = {
+    list: T[],
     index: number,
+    getKey: (i: T) => string;
+    loadImage: (i: T) => Promise<ImageDataUrl>,
     onClose: () => void,
 };
 
-export function ScreenshotLightbox({ video, screenshots, index, onClose }: ScreenshotLightboxProps) {
+export function CustomLightbox<T>({ list, index, getKey, loadImage, onClose }: LightboxProps<T>) {
     const [state, dispatch] = React.useReducer(reducer, { images: [{ ...initialExpandImage }, { ...initialExpandImage }, { ...initialExpandImage }], cursor: 0 });
 
-    const loadImage = React.useCallback((platform: string, videoId: string, no: number) => {
-        storage.getScreenshot(platform, videoId, no)
-            .then(image => {
-                dispatch({ type: 'load', key: getScreenshotKey({ platform, videoId, no }), image: image });
-            });
-    }, []);
+    const load = React.useCallback((target: T) => {
+        loadImage(target).then(image => {
+            dispatch({ type: 'load', key: getKey(target), image });
+        });
+    }, [getKey, loadImage]);
 
     React.useEffect(() => {
-        if (screenshots.length > 0) {
+        if (list.length > 0) {
             let keys = ['', '', ''];
             for (const i of [0, -1, 1]) {
-                const no = screenshots[(index + i + screenshots.length) % screenshots.length].no;
-                keys[i + 1] = getScreenshotKey({ platform: video.platform, videoId: video.videoId, no: no });
-                loadImage(video.platform, video.videoId, no);
+                const target = list[(index + i + list.length) % list.length];
+                keys[i + 1] = getKey(target);
+                load(target);
             }
             dispatch({ type: 'init', keys: keys, cursor: index });
         }
-    }, [video, screenshots, index]);
+    }, [list, index, getKey, load]);
+
+    const handleMovePrevRequest = React.useCallback(() => {
+        const cursor = (state.cursor + list.length - 1) % list.length;
+        const target = list[(cursor + list.length - 1) % list.length];
+        const key = getKey(target);
+        dispatch({ type: 'prev', key, cursor });
+        load(target);
+    }, [state.cursor, load]);
+
+    const handleMoveNextRequest = React.useCallback(() => {
+        const cursor = (state.cursor + 1) % list.length;
+        const target = list[(cursor + 1) % list.length];
+        const key = getKey(target);
+        dispatch({ type: 'next', key, cursor });
+        load(target);
+    }, [state.cursor, load]);
 
     return (
         <Lightbox
             mainSrc={state.images[1].src}
             prevSrc={state.images[0].src}
             nextSrc={state.images[2].src}
-            onMovePrevRequest={() => {
-                const cursor = (state.cursor + screenshots.length - 1) % screenshots.length;
-                const no = screenshots[(cursor + screenshots.length - 1) % screenshots.length].no;
-                const key = getScreenshotKey({ platform: video.platform, videoId: video.videoId, no });
-                dispatch({ type: 'prev', key, cursor });
-                loadImage(video.platform, video.videoId, no);
-            }}
-            onMoveNextRequest={() => {
-                const cursor = (state.cursor + 1) % screenshots.length;
-                const no = screenshots[(cursor + 1) % screenshots.length].no;
-                const key = getScreenshotKey({ platform: video.platform, videoId: video.videoId, no });
-                dispatch({ type: 'next', key, cursor });
-                loadImage(video.platform, video.videoId, no);
-            }}
+            onMovePrevRequest={handleMovePrevRequest}
+            onMoveNextRequest={handleMoveNextRequest}
             onCloseRequest={onClose}
         />
     );
