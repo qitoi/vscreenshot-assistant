@@ -40,7 +40,7 @@ export function loadVideoSortOrder(): VideoSortOrder {
     return (order !== null) ? +order as VideoSortOrder : VideoSortOrders.VideoDateAsc;
 }
 
-export function saveVideoSortOrder(order: VideoSortOrder) {
+export function saveVideoSortOrder(order: VideoSortOrder): void {
     localStorage.setItem(VIDEO_SORT_ORDER_KEY, '' + order);
 }
 

@@ -66,7 +66,7 @@ function reducer(state: StateType, action: ActionType): StateType {
             break;
         }
         case 'load': {
-            for (let p of newState.images) {
+            for (const p of newState.images) {
                 if (p.key === action.key) {
                     p.src = action.image;
                 }
@@ -86,7 +86,7 @@ type LightboxProps<T> = {
     onClose: () => void,
 };
 
-export function CustomLightbox<T>({ list, index, getKey, loadImage, onClose }: LightboxProps<T>) {
+const CustomLightbox = <T, >({ list, index, getKey, loadImage, onClose }: LightboxProps<T>): React.ReactElement => {
     const [state, dispatch] = React.useReducer(reducer, { images: [{ ...initialExpandImage }, { ...initialExpandImage }, { ...initialExpandImage }], cursor: 0 });
 
     const load = React.useCallback((target: T) => {
@@ -97,7 +97,7 @@ export function CustomLightbox<T>({ list, index, getKey, loadImage, onClose }: L
 
     React.useEffect(() => {
         if (list.length > 0) {
-            let keys = ['', '', ''];
+            const keys = ['', '', ''];
             for (const i of [0, -1, 1]) {
                 const target = list[(index + i + list.length) % list.length];
                 keys[i + 1] = getKey(target);
@@ -113,7 +113,7 @@ export function CustomLightbox<T>({ list, index, getKey, loadImage, onClose }: L
         const key = getKey(target);
         dispatch({ type: 'prev', key, cursor });
         load(target);
-    }, [state.cursor, load]);
+    }, [state.cursor, list, getKey, load]);
 
     const handleMoveNextRequest = React.useCallback(() => {
         const cursor = (state.cursor + 1) % list.length;
@@ -121,7 +121,7 @@ export function CustomLightbox<T>({ list, index, getKey, loadImage, onClose }: L
         const key = getKey(target);
         dispatch({ type: 'next', key, cursor });
         load(target);
-    }, [state.cursor, load]);
+    }, [state.cursor, list, getKey, load]);
 
     return (
         <Lightbox
@@ -133,4 +133,6 @@ export function CustomLightbox<T>({ list, index, getKey, loadImage, onClose }: L
             onCloseRequest={onClose}
         />
     );
-}
+};
+
+export default CustomLightbox;

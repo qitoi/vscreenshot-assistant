@@ -70,7 +70,7 @@ export async function removeVideoInfo(platform: string, videoId: string): Promis
     // video info/thumbnail ids
     const infoId = getVideoInfoId(platform, videoId);
     const thumbId = getVideoThumbnailId(platform, videoId);
-    let ids: string[] = [infoId, thumbId];
+    const ids: string[] = [infoId, thumbId];
 
     // screenshot info/thumbnail/image ids
     const maxNo = await getPublishedScreenshotNo(platform, videoId);
@@ -104,7 +104,7 @@ export async function existsVideoThumbnail(platform: string, videoId: string): P
 
 async function getScreenshotInfoIdList(platform: string, videoId: string): Promise<string[]> {
     const maxNo = await getPublishedScreenshotNo(platform, videoId);
-    let ids: string[] = [];
+    const ids: string[] = [];
     for (let i = 1; i <= maxNo; ++i) {
         ids.push(getScreenshotInfoId(platform, videoId, i));
     }

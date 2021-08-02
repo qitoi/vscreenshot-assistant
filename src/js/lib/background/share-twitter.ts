@@ -29,15 +29,15 @@ type TweetOptions = {
 };
 
 
-export function shareScreenshot(video: VideoInfo, screenshots: ScreenshotInfo[]) {
+export function shareScreenshot(video: VideoInfo, screenshots: ScreenshotInfo[]): void {
     storage.getScreenshotList(screenshots).then(images => {
         shareScreenshotOnTwitter(video, images);
     });
 }
 
 async function shareScreenshotOnTwitter(video: VideoInfo, screenshots: ImageDataUrl[]): Promise<void> {
-    let options: any = {};
-    let text: string[] = [];
+    const options: TweetOptions = {};
+    const text: string[] = [];
 
     const tweetPrefs = (await prefs.loadPreferences()).tweet;
 
@@ -63,7 +63,7 @@ async function shareScreenshotOnTwitter(video: VideoInfo, screenshots: ImageData
         type: 'popup',
     }, window => {
         if (window !== undefined) {
-            const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
+            const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
                 if (window.tabs !== undefined && window.tabs.length > 0) {
                     if (tabId == window.tabs[0].id && changeInfo.status === 'complete') {
                         chrome.tabs.onUpdated.removeListener(handler);

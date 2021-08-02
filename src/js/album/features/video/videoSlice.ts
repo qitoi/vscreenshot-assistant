@@ -41,7 +41,7 @@ type RemoveVideoPayload = {
 export const removeVideo = createAsyncThunk<RemoveVideoPayload, { platform: string, videoId: string }>
 (
     'video/remove',
-    async ({ platform, videoId }, thunkAPI): Promise<RemoveVideoPayload> => {
+    async ({ platform, videoId }): Promise<RemoveVideoPayload> => {
         await storage.removeVideoInfo(platform, videoId);
         return {
             platform,
@@ -83,5 +83,5 @@ const slice = createSlice({
 export default slice.reducer;
 export const { appendVideo, setVideoList, setSortOrder } = slice.actions;
 
-export const selectVideoList = (state: RootState) => state.video.videos;
-export const selectVideoSortOrder = (state: RootState) => state.video.order;
+export const selectVideoList = (state: RootState): typeof state.video.videos => state.video.videos;
+export const selectVideoSortOrder = (state: RootState): typeof state.video.order => state.video.order;

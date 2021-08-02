@@ -41,4 +41,4 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-export const selectActiveVideo = (state: RootState) => state.activeVideo.video;
+export const selectActiveVideo = (state: RootState): typeof state.activeVideo.video => state.activeVideo.video;

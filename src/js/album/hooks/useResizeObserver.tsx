@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 
-export function useResizeObserver<T extends HTMLElement>(onResize: (width: number, height: number) => void) {
+export function useResizeObserver<T extends HTMLElement>(onResize: (width: number, height: number) => void): (node: T) => void {
     const refObserver = React.useRef<ResizeObserver | null>(null);
     return React.useCallback((node: T) => {
         if (node === null) {
@@ -26,9 +26,8 @@ export function useResizeObserver<T extends HTMLElement>(onResize: (width: numbe
             }
         }
         else {
-            refObserver.current = new ResizeObserver(entries => {
+            refObserver.current = new ResizeObserver(() => {
                 onResize(node.offsetWidth, node.offsetHeight);
-                const h = node.offsetHeight;
             });
             refObserver.current.observe(node);
         }

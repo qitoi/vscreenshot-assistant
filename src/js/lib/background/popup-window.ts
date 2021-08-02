@@ -14,9 +14,9 @@
  *  limitations under the License.
  */
 
-let windowById: { [key: number]: PopupWindow } = {};
-let onCloseById: { [key: number]: () => void } = {};
-let windowByName: { [key: string]: PopupWindow } = {};
+const windowById: { [key: number]: PopupWindow } = {};
+const onCloseById: { [key: number]: () => void } = {};
+const windowByName: { [key: string]: PopupWindow } = {};
 
 export default class PopupWindow {
     readonly name: string;
@@ -39,11 +39,7 @@ export default class PopupWindow {
         windowByName[name] = this;
     }
 
-    getWindow(): chrome.windows.Window | null {
-        return this.window;
-    }
-
-    show() {
+    show(): void {
         if (this.opening) {
             return;
         }

@@ -28,7 +28,7 @@ const SPWN: Platform = {
     },
 
     getVideoId(): string | null {
-        return document.location.pathname.match(/\/(?<videoId>[^\/]*?)\/streaming$/)?.groups?.videoId ?? null;
+        return document.location.pathname.match(/\/(?<videoId>[^/]*?)\/streaming$/)?.groups?.videoId ?? null;
     },
 
     getVideoElement(): HTMLVideoElement {
@@ -59,7 +59,7 @@ const SPWN: Platform = {
         return `https://public.spwn.jp/event-pages/${videoId}${info.basic_data.banner_img_path}`;
     },
 
-    isPrivate(videoId: string, info: any): boolean {
+    isPrivate(): boolean {
         return false;
     },
 };

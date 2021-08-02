@@ -40,7 +40,7 @@ export function loadScreenshotSortOrder(): ScreenshotSortOrder {
     return (order !== null) ? +order as ScreenshotSortOrder : ScreenshotSortOrders.CaptureDateAsc;
 }
 
-export function saveScreenshotSortOrder(order: ScreenshotSortOrder) {
+export function saveScreenshotSortOrder(order: ScreenshotSortOrder): void {
     localStorage.setItem(SCREENSHOT_SORT_ORDER_KEY, '' + order);
 }
 

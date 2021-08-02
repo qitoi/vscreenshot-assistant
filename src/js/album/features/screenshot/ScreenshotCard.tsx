@@ -15,11 +15,12 @@
  */
 
 import * as React from 'react';
-import { chakra, Box, Checkbox, Fade, useBoolean, HStack, Spacer } from '@chakra-ui/react';
+import { chakra, Box, Checkbox, Fade, HStack, Spacer } from '@chakra-ui/react';
 import { MdFullscreen } from 'react-icons/md';
 
 import { ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
-import { LazyLoadScreenshotThumbnail } from './LazyLoadScreenshotThumbnail';
+import LazyLoadScreenshotThumbnail from './LazyLoadScreenshotThumbnail';
+
 
 type ScreenshotCardProps = React.PropsWithChildren<{
     info: ScreenshotInfo,
@@ -28,11 +29,12 @@ type ScreenshotCardProps = React.PropsWithChildren<{
     onClick: (info: ScreenshotInfo, thumbnail: ImageDataUrl) => void,
     onExpandClick: (info: ScreenshotInfo) => void,
 }>;
-export const ScreenshotCard = React.memo(({ info, isChecked, disabled, onClick, onExpandClick }: ScreenshotCardProps) => {
-    const [isShown, setIsShown] = useBoolean(false);
-    const [isClickable, setIsClickable] = useBoolean(false);
+
+const ScreenshotCard = ({ info, isChecked, disabled, onClick, onExpandClick }: ScreenshotCardProps) => {
+    const [isShown, setIsShown] = React.useState<boolean>(false);
+    const [isClickable, setIsClickable] = React.useState<boolean>(false);
     const ref = React.useRef<HTMLImageElement>(null);
-    const [visible, setVisible] = useBoolean(false);
+    const [visible, setVisible] = React.useState<boolean>(false);
 
     const handleClick = React.useCallback((e: React.MouseEvent<HTMLDivElement & HTMLButtonElement>) => {
         e.preventDefault();
@@ -47,19 +49,19 @@ export const ScreenshotCard = React.memo(({ info, isChecked, disabled, onClick, 
     }, [info, onExpandClick]);
 
     const handleLoad = React.useCallback(() => {
-        setIsClickable.on();
+        setIsClickable(true);
     }, []);
 
     const handleVisible = React.useCallback(() => {
-        setVisible.on();
+        setVisible(true);
     }, []);
 
     const handleMouseOver = React.useCallback(() => {
-        setIsShown.on();
+        setIsShown(true);
     }, []);
 
     const handleMouseOut = React.useCallback(() => {
-        setIsShown.off();
+        setIsShown(false);
     }, []);
 
     return (
@@ -98,4 +100,6 @@ export const ScreenshotCard = React.memo(({ info, isChecked, disabled, onClick, 
             {!disabled && <Checkbox isChecked={isChecked} position="absolute" p={1} top={0} left={0} />}
         </chakra.div>
     );
-});
+};
+
+export default React.memo(ScreenshotCard);

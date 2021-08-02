@@ -33,9 +33,9 @@ export function useLocalizedText(messageId: MessageId, substitutions?: string[])
     return React.useMemo(() => getLocalizedText(messageId, substitutions), [messageId, ...(substitutions ?? [])]);
 }
 
-export function LocalizedText({ messageId, substitutions }: LocalizedTextProps) {
+export const LocalizedText: React.FC<LocalizedTextProps> = ({ messageId, substitutions }: LocalizedTextProps) => {
     const message = useLocalizedText(messageId, substitutions);
     return (
         <>{message}</>
     );
-}
+};

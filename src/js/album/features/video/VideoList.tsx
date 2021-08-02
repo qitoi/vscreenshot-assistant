@@ -22,10 +22,10 @@ import * as storage from '../../../lib/storage';
 import { useDispatch, useSelector } from '../../store';
 import { setActiveVideo } from '../activeVideo/activeVideoSlice';
 import { selectVideoList, setVideoList } from './videoSlice';
-import { VideoThumbnail } from './VideoThumbnail';
-import { VideoSortOrderSelect } from './VideoSortOrderSelect';
+import VideoThumbnail from './VideoThumbnail';
+import VideoSortOrderSelect from './VideoSortOrderSelect';
 
-const VideoList = React.memo(() => {
+const VideoList: React.FC = () => {
     const dispatch = useDispatch();
     const videos = useSelector(selectVideoList);
 
@@ -34,11 +34,11 @@ const VideoList = React.memo(() => {
             .then(videos => {
                 dispatch(setVideoList(videos));
             });
-    }, []);
+    }, [dispatch]);
 
     const handleSelected = React.useCallback((video: VideoInfo) => {
         dispatch(setActiveVideo(video));
-    }, []);
+    }, [dispatch]);
 
     return (
         <>
@@ -52,6 +52,6 @@ const VideoList = React.memo(() => {
             </VStack>
         </>
     );
-});
+};
 
-export default VideoList;
+export default React.memo(VideoList);

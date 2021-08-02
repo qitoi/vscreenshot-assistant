@@ -37,7 +37,7 @@ function bindHotkey(key: string, platform: Platform) {
     hotkeys.unbind();
 
     let pressed = false;
-    hotkeys(key, { keyup: true }, (event, handler) => {
+    hotkeys(key, { keyup: true }, event => {
         if (!pressed && event.type === 'keydown') {
             pressed = true;
             exec(platform);
@@ -106,7 +106,7 @@ function captureVideo(image: CanvasImageSource): HTMLCanvasElement {
         canvas.height = image.height;
     }
     const ctx = canvas.getContext('2d');
-    ctx!.drawImage(image, 0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(image, 0, 0, canvas.width, canvas.height);
     return canvas;
 }
 
@@ -176,7 +176,7 @@ function showToast(image: string, p: prefs.Preferences) {
     img.style['height'] = '100%';
     img.style['objectFit'] = 'contain';
     img.onload = () => {
-        let toast = Toastify({
+        const toast = Toastify({
             node: img,
             duration: 1000,
             gravity: 'bottom',
@@ -184,7 +184,7 @@ function showToast(image: string, p: prefs.Preferences) {
             stopOnFocus: false,
             avatar: image,
             callback: () => {
-                let idx = toasts.indexOf(toast);
+                const idx = toasts.indexOf(toast);
                 if (idx !== -1) {
                     // @ts-ignore
                     toasts[idx].hideToast();

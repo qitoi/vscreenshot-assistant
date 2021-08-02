@@ -30,13 +30,13 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from '../../store';
 import { fetchLicenses, selectLicenses } from './licenseSlice';
 
-export function LicenseNoticeList() {
+const LicenseNoticeList: React.FC = () => {
     const dispatch = useDispatch();
     const licenses = useSelector(selectLicenses);
 
     React.useEffect(() => {
         dispatch(fetchLicenses());
-    }, []);
+    }, [dispatch]);
 
     return (
         <Accordion allowMultiple>
@@ -57,4 +57,6 @@ export function LicenseNoticeList() {
             ))}
         </Accordion>
     );
-}
+};
+
+export default LicenseNoticeList;

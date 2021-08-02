@@ -18,14 +18,14 @@ import * as React from 'react';
 import { Box, Fade, useBoolean } from '@chakra-ui/react';
 
 import { VideoInfo } from '../../../lib/types';
-import { LazyLoadVideoThumbnail } from './LazyLoadVideoThumbnail';
+import LazyLoadVideoThumbnail from './LazyLoadVideoThumbnail';
 
 type VideoThumbnailProps = {
     info: VideoInfo,
     onSelected: (info: VideoInfo) => void,
 };
 
-export const VideoThumbnail = React.memo(({ info, onSelected }: VideoThumbnailProps) => {
+const VideoThumbnail = ({ info, onSelected }: VideoThumbnailProps) => {
     const [isShown, setIsShown] = useBoolean(false);
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement & HTMLButtonElement>) => {
@@ -59,4 +59,6 @@ export const VideoThumbnail = React.memo(({ info, onSelected }: VideoThumbnailPr
             </Box>
         </Box>
     );
-});
+};
+
+export default React.memo(VideoThumbnail);

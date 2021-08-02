@@ -21,28 +21,11 @@ import { LocalizedText } from '../../lib/components/LocalizedText';
 import { SetProgressHandler } from '../hooks/useArchive';
 import Dialog from './Dialog';
 
-type DownloadDialogProps = {
-    isOpen: boolean,
-    onCancel: () => void,
-    setProgressHandler: SetProgressHandler,
-};
-
-const DownloadDialog = React.memo(({ isOpen, onCancel, setProgressHandler }: DownloadDialogProps) => {
-    return (
-        <Dialog isOpen={isOpen}
-                cancelLabel={<LocalizedText messageId="albumCancelButton" />}
-                onCancel={onCancel}>
-            <Center py="1em"><LocalizedText messageId="albumDownloadPreparingLabel" /></Center>
-            <ProgressBar setProgressHandler={setProgressHandler} />
-        </Dialog>
-    );
-});
-
 type ProgressBarProps = {
     setProgressHandler: SetProgressHandler,
 };
 
-const ProgressBar = React.memo(({ setProgressHandler }: ProgressBarProps) => {
+const ProgressBar = ({ setProgressHandler }: ProgressBarProps) => {
     const [progress, setProgress] = React.useState<number>(0);
     const handleProgress = React.useCallback((p: number) => {
         setProgress(p);
@@ -53,6 +36,23 @@ const ProgressBar = React.memo(({ setProgressHandler }: ProgressBarProps) => {
     return (
         <Progress value={progress} max={100} />
     );
-});
+};
 
-export default DownloadDialog;
+type DownloadDialogProps = {
+    isOpen: boolean,
+    onCancel: () => void,
+    setProgressHandler: SetProgressHandler,
+};
+
+const DownloadDialog = ({ isOpen, onCancel, setProgressHandler }: DownloadDialogProps) => {
+    return (
+        <Dialog isOpen={isOpen}
+                cancelLabel={<LocalizedText messageId="albumCancelButton" />}
+                onCancel={onCancel}>
+            <Center py="1em"><LocalizedText messageId="albumDownloadPreparingLabel" /></Center>
+            <ProgressBar setProgressHandler={setProgressHandler} />
+        </Dialog>
+    );
+};
+
+export default React.memo(DownloadDialog);

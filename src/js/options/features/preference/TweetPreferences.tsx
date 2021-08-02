@@ -18,12 +18,12 @@ import * as React from 'react';
 
 import { Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
-import { PreferenceBlock } from './PreferenceBlock';
-import { SwitchControl } from './SwitchControl';
-import { ControlGroup } from './ControlGroup';
-import { LabeledControl } from './LabeledControl';
+import PreferenceBlock from './PreferenceBlock';
+import SwitchControl from './SwitchControl';
+import ControlGroup from './ControlGroup';
+import LabeledControl from './LabeledControl';
 
-export function TweetPreferences() {
+const TweetPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="Tweet">
             <ControlGroup isEnabledHover>
@@ -43,4 +43,6 @@ export function TweetPreferences() {
             </ControlGroup>
         </PreferenceBlock>
     );
-}
+};
+
+export default TweetPreferences;

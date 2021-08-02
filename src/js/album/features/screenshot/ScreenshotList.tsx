@@ -30,10 +30,10 @@ import {
     toggleSelectedScreenshot,
 } from '../selectedScreenshot/selectedScreenshotSlice';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
-import { ScreenshotCard } from './ScreenshotCard';
-import { CustomLightbox } from '../../components/CustomLightbox';
+import ScreenshotCard from './ScreenshotCard';
+import CustomLightbox from '../../components/CustomLightbox';
 
-export default function ScreenshotList() {
+const ScreenshotList: React.FC = () => {
     const dispatch = useDispatch();
     const video = useSelector(selectActiveVideo);
     const screenshots = useParameterizedSelector(selectScreenshotList, video?.platform ?? '', video?.videoId ?? '');
@@ -46,11 +46,11 @@ export default function ScreenshotList() {
         if (video !== null) {
             dispatch(fetchScreenshotList({ platform: video.platform, videoId: video.videoId }));
         }
-    }, [video]);
+    }, [dispatch, video]);
 
     const handleClickScreenshot = React.useCallback((info: ScreenshotInfo, thumbnail: ImageDataUrl) => {
         dispatch(toggleSelectedScreenshot({ info, thumbnail }));
-    }, []);
+    }, [dispatch]);
 
     const handleExpandScreenshot = React.useCallback((info: ScreenshotInfo) => {
         const cur = screenshots.findIndex(s => compareScreenshotInfo(s, info));
@@ -59,7 +59,7 @@ export default function ScreenshotList() {
 
     const handleRemoveSelected = React.useCallback((info: ScreenshotInfo) => {
         dispatch(removeSelectedScreenshot({ info }));
-    }, []);
+    }, [dispatch]);
 
     const handleSelectedResize = React.useCallback((width, height) => {
         setSelectedHeight(height);
@@ -106,4 +106,6 @@ export default function ScreenshotList() {
             )}
         </Box>
     );
-}
+};
+
+export default ScreenshotList;

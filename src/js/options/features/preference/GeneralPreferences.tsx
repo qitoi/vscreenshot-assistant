@@ -18,13 +18,13 @@ import * as React from 'react';
 
 import { Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
-import { PreferenceBlock } from './PreferenceBlock';
-import { SwitchControl } from './SwitchControl';
-import { ControlGroup } from './ControlGroup';
-import { HotkeyInputControl } from './HotkeyInputControl';
-import { LabeledControl } from './LabeledControl';
+import PreferenceBlock from './PreferenceBlock';
+import SwitchControl from './SwitchControl';
+import ControlGroup from './ControlGroup';
+import HotkeyInputControl from './HotkeyInputControl';
+import LabeledControl from './LabeledControl';
 
-export function GeneralPreferences() {
+const GeneralPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="General">
             <ControlGroup>
@@ -44,4 +44,6 @@ export function GeneralPreferences() {
             </ControlGroup>
         </PreferenceBlock>
     );
-}
+};
+
+export default GeneralPreferences;

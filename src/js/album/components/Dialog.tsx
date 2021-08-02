@@ -36,7 +36,7 @@ type DeleteDialogProps = React.PropsWithChildren<{
     onCancel: () => void,
 }>;
 
-const Dialog = React.memo(({ isOpen, title, okLabel, cancelLabel, isButtonDisabled, onOK, onCancel, children }: DeleteDialogProps) => {
+const Dialog = ({ isOpen, title, okLabel, cancelLabel, isButtonDisabled, onOK, onCancel, children }: DeleteDialogProps) => {
     const cancelRef = React.useRef<HTMLButtonElement>(null);
     return (
         <AlertDialog
@@ -68,6 +68,6 @@ const Dialog = React.memo(({ isOpen, title, okLabel, cancelLabel, isButtonDisabl
             </AlertDialogOverlay>
         </AlertDialog>
     );
-});
+};
 
-export default Dialog;
+export default React.memo(Dialog);

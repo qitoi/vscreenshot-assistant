@@ -18,12 +18,12 @@ import * as React from 'react';
 
 import { Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
-import { PreferenceBlock } from './PreferenceBlock';
-import { ControlGroup } from './ControlGroup';
-import { NumberInputControl } from './NumberInputControl';
-import { LabeledControl } from './LabeledControl';
+import PreferenceBlock from './PreferenceBlock';
+import ControlGroup from './ControlGroup';
+import NumberInputControl from './NumberInputControl';
+import LabeledControl from './LabeledControl';
 
-export function ThumbnailPreferences() {
+const ThumbnailPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="Thumbnail">
             <ControlGroup>
@@ -38,4 +38,6 @@ export function ThumbnailPreferences() {
             </ControlGroup>
         </PreferenceBlock>
     );
-}
+};
+
+export default ThumbnailPreferences;

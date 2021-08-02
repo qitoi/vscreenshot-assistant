@@ -22,7 +22,7 @@ type ControlGroupProps = Omit<FormControlProps, 'label'> & {
     isEnabledHover?: boolean,
 };
 
-export function ControlGroup({ label, isEnabledHover, children, ...rest }: ControlGroupProps) {
+const ControlGroup: React.FC<ControlGroupProps> = ({ label, isEnabledHover, children, ...rest }: ControlGroupProps) => {
     const context = useFormControlContext();
     const isNested = (context !== undefined);
     const hover = (isEnabledHover === true) ? { transition: 'background ease-out 200ms', _hover: { background: 'blackAlpha.50' } } : {};
@@ -42,4 +42,6 @@ export function ControlGroup({ label, isEnabledHover, children, ...rest }: Contr
             }
         </FormControl>
     );
-}
+};
+
+export default ControlGroup;

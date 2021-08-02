@@ -30,7 +30,7 @@ type SelectedScreenshotListProps = {
     onClick: (info: ScreenshotInfo) => void,
 };
 
-const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onClick }: SelectedScreenshotListProps) => {
+const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: SelectedScreenshotListProps) => {
     const [loaded, setLoaded] = useBoolean(false);
     const ref = useResizeObserver<HTMLDivElement>(onResize);
 
@@ -74,6 +74,6 @@ const SelectedScreenshotList = React.memo(({ video, screenshots, onResize, onCli
             </Box>
         </HStack>
     );
-});
+};
 
-export default SelectedScreenshotList;
+export default React.memo(SelectedScreenshotList);

@@ -15,23 +15,23 @@
  */
 
 import * as React from 'react';
-import { Button, ButtonGroup, useBoolean, VStack, } from '@chakra-ui/react';
+import { Button, ButtonGroup, VStack } from '@chakra-ui/react';
 
 import * as prefs from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { FormProvider, useForm } from 'react-hook-form';
-import { ScreenshotPreferences } from './ScreenshotPreferences';
-import { ThumbnailPreferences } from './ThumbnailPreferences';
-import { TweetPreferences } from './TweetPreferences';
-import { GeneralPreferences } from './GeneralPreferences';
+import ScreenshotPreferences from './ScreenshotPreferences';
+import ThumbnailPreferences from './ThumbnailPreferences';
+import TweetPreferences from './TweetPreferences';
+import GeneralPreferences from './GeneralPreferences';
 
 
-export function PreferenceForm() {
+const PreferenceForm: React.FC = () => {
     const methods = useForm<prefs.Preferences>({
         defaultValues: prefs.DefaultPreferences,
     });
     const { handleSubmit, formState: { isSubmitting, isDirty }, reset } = methods;
-    const [isLoaded, setIsLoaded] = useBoolean(false);
+    const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         const onChanged = prefs.watch();
@@ -39,7 +39,7 @@ export function PreferenceForm() {
         // 初期値取得
         prefs.loadPreferences().then(p => {
             reset(p);
-            setIsLoaded.on();
+            setIsLoaded(true);
         });
 
         // 設定の変更監視
@@ -48,7 +48,7 @@ export function PreferenceForm() {
         };
         onChanged.addEventListener(callback);
         return () => onChanged.removeEventListener(callback);
-    }, []);
+    }, [reset]);
 
     const onSubmit = async (values: prefs.Preferences) => {
         await prefs.savePreferences(values);
@@ -75,4 +75,6 @@ export function PreferenceForm() {
             </form>
         </FormProvider>
     );
-}
+};
+
+export default PreferenceForm;

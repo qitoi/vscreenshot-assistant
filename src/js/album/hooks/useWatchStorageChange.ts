@@ -20,7 +20,7 @@ import { useDispatch } from '../store';
 import { appendVideo, removeVideo } from '../features/video/videoSlice';
 import { appendScreenshot } from '../features/screenshot/screenshotSlice';
 
-export function useWatchStorageChange() {
+export function useWatchStorageChange(): void {
     const dispatch = useDispatch();
 
     React.useEffect(() => {
@@ -54,5 +54,5 @@ export function useWatchStorageChange() {
         };
         chrome.storage.onChanged.addListener(callback);
         return () => chrome.storage.onChanged.removeListener(callback);
-    }, []);
+    }, [dispatch]);
 }

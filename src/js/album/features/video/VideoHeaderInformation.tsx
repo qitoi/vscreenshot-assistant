@@ -22,7 +22,7 @@ import platforms from '../../../lib/platforms';
 import { useSelector } from '../../store';
 import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
 
-export function VideoHeaderInformation() {
+const VideoHeaderInformation: React.FC = () => {
     const video = useSelector(selectActiveVideo);
 
     if (video === null) {
@@ -41,4 +41,6 @@ export function VideoHeaderInformation() {
             <Box>{(new Date(video.date)).toDateString()}</Box>
         </Box>
     );
-}
+};
+
+export default VideoHeaderInformation;

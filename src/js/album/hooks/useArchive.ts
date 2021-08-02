@@ -27,9 +27,8 @@ export type ProgressFunc = (progress: number) => void;
 export type SetProgressHandler = (progressFunc: ProgressFunc) => void;
 
 export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandler] {
-    const [cancelable, setCancelable] = React.useState<PCancelable<any> | null>(null);
-    const onProgressRef = React.useRef<ProgressFunc>(() => {
-    });
+    const [cancelable, setCancelable] = React.useState<PCancelable<unknown> | null>(null);
+    const onProgressRef = React.useRef<ProgressFunc | null>(null);
 
     const setProgressHandler = React.useCallback((p: ProgressFunc) => {
         onProgressRef.current = p;
@@ -43,7 +42,7 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
 
     const zip = React.useCallback(async (platform: string, videoId: string): Promise<Blob> => {
         // reset progress
-        onProgressRef.current(0);
+        onProgressRef.current && onProgressRef.current(0);
 
         // screenshot info list
         const listCancelable = new PCancelable<ScreenshotInfo[]>(async resolve => {
@@ -54,13 +53,13 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
 
         // collect screenshot images
         const collectCancelable = archive.collectFiles(screenshots, (current, max) => {
-            onProgressRef.current(100 * current / max);
+            onProgressRef.current && onProgressRef.current(100 * current / max);
         });
         setCancelable(collectCancelable);
         const files = await collectCancelable;
 
         // complete progress
-        onProgressRef.current(100);
+        onProgressRef.current && onProgressRef.current(100);
 
         // archive images
         const archiveCancelable = archive.zip(files);

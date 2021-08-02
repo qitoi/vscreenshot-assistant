@@ -43,4 +43,4 @@ const slice = createSlice({
 export default slice.reducer;
 export const { setPreferences } = slice.actions;
 
-export const selectThumbnailPreferences = (state: RootState) => state.preferences.preferences.thumbnail;
+export const selectThumbnailPreferences = (state: RootState): typeof state.preferences.preferences.thumbnail => state.preferences.preferences.thumbnail;

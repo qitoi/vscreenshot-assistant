@@ -18,8 +18,8 @@ import * as React from 'react';
 import { Box, ChakraProvider, extendTheme, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { LocalizedText } from '../lib/components/LocalizedText';
-import { LicenseNoticeList } from './features/license/LicenseNoticeList';
-import { PreferenceForm } from './features/preference/PreferenceForm';
+import LicenseNoticeList from './features/license/LicenseNoticeList';
+import PreferenceForm from './features/preference/PreferenceForm';
 
 const theme = extendTheme({
     boxShadow: 'none',
@@ -63,7 +63,7 @@ const theme = extendTheme({
     }
 });
 
-export function App() {
+const App: React.FC = () => {
     return (
         <ChakraProvider theme={theme}>
             <Box>
@@ -89,4 +89,6 @@ export function App() {
             </Box>
         </ChakraProvider>
     );
-}
+};
+
+export default App;

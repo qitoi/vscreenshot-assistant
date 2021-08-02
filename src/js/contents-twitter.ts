@@ -17,7 +17,7 @@
 import { ImageDataUrl } from './lib/types';
 import { convertScreenshotToFile } from './lib/data-url';
 
-chrome.runtime.onMessage.addListener((message, sender) => {
+chrome.runtime.onMessage.addListener(message => {
     switch (message.event) {
         case 'share-screenshot': {
             pasteScreenshot(message.screenshots);
@@ -33,7 +33,7 @@ function pasteScreenshot(screenshots: ImageDataUrl[]): void {
         if (dropArea !== null) {
             clearInterval(id);
 
-            let script = document.createElement('script');
+            const script = document.createElement('script');
             script.src = chrome.runtime.getURL('js/inject-twitter.js');
             script.onload = () => {
                 document.dispatchEvent(new CustomEvent('paste-screenshot', { detail: files }));

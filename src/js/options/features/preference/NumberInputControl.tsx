@@ -34,7 +34,7 @@ type NumberInputControlProps<T> = Omit<NumberInputProps, 'ref' | 'name' | 'onCha
     unit?: string,
 };
 
-export function NumberInputControl<T>({ unit, ...rest }: NumberInputControlProps<T>) {
+const NumberInputControl = <T, >({ unit, ...rest }: NumberInputControlProps<T>): React.ReactElement => {
     const { control } = useFormContext<T>();
     const { field } = useController({ name: rest.name, control });
     const { ref, name, value, onChange, onBlur } = field;
@@ -56,4 +56,6 @@ export function NumberInputControl<T>({ unit, ...rest }: NumberInputControlProps
             {unit && (<Box flexShrink={0}>{unit}</Box>)}
         </HStack>
     );
-}
+};
+
+export default NumberInputControl;

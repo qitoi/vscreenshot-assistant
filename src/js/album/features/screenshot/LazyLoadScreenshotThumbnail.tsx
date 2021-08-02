@@ -32,8 +32,8 @@ export type LazyLoadScreenshotThumbnail = {
     onVisible: () => void,
 };
 
-export const LazyLoadScreenshotThumbnail = React.memo(React.forwardRef<HTMLImageElement, LazyLoadScreenshotThumbnail>(
-    ({ platform, videoId, no, onLoad, onVisible }, forwardedRef) => {
+const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadScreenshotThumbnail>(
+    ({ platform, videoId, no, onLoad, onVisible }: LazyLoadScreenshotThumbnail, forwardedRef) => {
         const dispatch = useDispatch();
         const thumbnail = useParameterizedSelector(selectCachedThumbnail, platform, videoId, no);
         const thumbnailPreferences = useSelector(selectThumbnailPreferences);
@@ -68,7 +68,7 @@ export const LazyLoadScreenshotThumbnail = React.memo(React.forwardRef<HTMLImage
                     onVisible();
                 }
             }
-        }, [platform, videoId, no, inView, onLoad]);
+        }, [dispatch, thumbnail, platform, videoId, no, inView, onLoad, onVisible]);
 
         return (
             <AspectRatio
@@ -86,4 +86,6 @@ export const LazyLoadScreenshotThumbnail = React.memo(React.forwardRef<HTMLImage
             </AspectRatio>
         );
     }
-));
+);
+
+export default React.memo(LazyLoadScreenshotThumbnail);

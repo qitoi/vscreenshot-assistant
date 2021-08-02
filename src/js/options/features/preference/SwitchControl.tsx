@@ -24,7 +24,7 @@ type SwitchControlProps<T> = {
     name: TypedFieldPath<T, boolean>,
 };
 
-export function SwitchControl<T>({ name }: SwitchControlProps<T>) {
+const SwitchControl = <T, >({ name }: SwitchControlProps<T>): React.ReactElement => {
     const { control } = useFormContext<T>();
     const { field } = useController<T>({ name, control });
     const input = useFormControlProps<HTMLInputElement>(field);
@@ -34,4 +34,6 @@ export function SwitchControl<T>({ name }: SwitchControlProps<T>) {
             {...input}
             isChecked={field.value as boolean} />
     );
-}
+};
+
+export default SwitchControl;

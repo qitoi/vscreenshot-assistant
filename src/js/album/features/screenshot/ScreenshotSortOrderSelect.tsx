@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from '../../store';
 import { ScreenshotSortOrder, ScreenshotSortOrders } from './ScreenshotSort';
 import { selectScreenshotSortOrder, setSortOrder } from './screenshotSlice';
 
-export function ScreenshotSortOrderSelect() {
+const ScreenshotSortOrderSelect: React.FC = () => {
     const dispatch = useDispatch();
     const order = useSelector(selectScreenshotSortOrder);
 
@@ -47,4 +47,6 @@ export function ScreenshotSortOrderSelect() {
             ))}
         </Select>
     );
-}
+};
+
+export default ScreenshotSortOrderSelect;

@@ -18,7 +18,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import { App } from './album/App';
+import App from './album/App';
 import { store } from './album/store';
 
 ReactDOM.render(

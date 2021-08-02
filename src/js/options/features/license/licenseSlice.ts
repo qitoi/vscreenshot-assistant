@@ -55,7 +55,7 @@ function parseLicenseNotices(text: string): LicenseNotice[] {
 export const fetchLicenses = createAsyncThunk<FetchLicensesPayload>
 (
     'licenses/fetch',
-    async (arg, thunkAPI): Promise<FetchLicensesPayload> => {
+    async (): Promise<FetchLicensesPayload> => {
         const res = await fetch(chrome.runtime.getURL('THIRD-PARTY-NOTICES'));
         const text = await res.text();
         return {
@@ -78,6 +78,5 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-export const {} = slice.actions;
 
-export const selectLicenses = (state: RootState) => state.licenses.licenses;
+export const selectLicenses = (state: RootState): typeof state.licenses.licenses => state.licenses.licenses;

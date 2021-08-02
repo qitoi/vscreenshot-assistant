@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Box, Center, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Progress, Text, useBoolean } from '@chakra-ui/react';
+import { Box, Center, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Progress, Text } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { FcEmptyTrash, FcDownload, FcSettings } from 'react-icons/fc';
 import { CancelError } from 'p-cancelable';
@@ -28,36 +28,36 @@ import DownloadDialog from '../../components/DownloadDialog';
 import { selectActiveVideo, setActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from './videoSlice';
 
-export function VideoHeaderMenu() {
+const VideoHeaderMenu: React.FC = () => {
     const dispatch = useDispatch();
     const video = useSelector(selectActiveVideo);
 
-    const [isDeleteOpen, setIsDeleteOpen] = useBoolean(false);
+    const [isDeleteOpen, setIsDeleteOpen] = React.useState<boolean>(false);
 
     const [archive, cancel, setProgressHandler] = useArchive();
-    const [isDownloadOpen, setIsDownloadOpen] = useBoolean(false);
-    const [isDeletingVideo, setIsDeletingVideo] = useBoolean(false);
+    const [isDownloadOpen, setIsDownloadOpen] = React.useState<boolean>(false);
+    const [isDeletingVideo, setIsDeletingVideo] = React.useState<boolean>(false);
 
     const handleDeleteConfirm = () => {
-        setIsDeleteOpen.on();
+        setIsDeleteOpen(true);
     };
 
     const handleDeleteCancel = () => {
-        setIsDeleteOpen.off();
+        setIsDeleteOpen(false);
     };
 
     const handleDelete = async () => {
         if (video !== null) {
-            setIsDeletingVideo.on();
+            setIsDeletingVideo(true);
             await dispatch(removeVideo({ platform: video.platform, videoId: video.videoId }));
             dispatch(setActiveVideo(null));
         }
-        setIsDeleteOpen.off();
-        setIsDeletingVideo.off();
+        setIsDeleteOpen(false);
+        setIsDeletingVideo(false);
     };
 
-    const handleDownload = React.useCallback(async e => {
-        setIsDownloadOpen.on();
+    const handleDownload = React.useCallback(async () => {
+        setIsDownloadOpen(true);
 
         if (video === null) {
             return;
@@ -76,12 +76,12 @@ export function VideoHeaderMenu() {
             }
         }
 
-        setIsDownloadOpen.off();
+        setIsDownloadOpen(false);
     }, [archive, video]);
 
     const handleDownloadCancel = React.useCallback(() => {
         cancel();
-        setIsDownloadOpen.off();
+        setIsDownloadOpen(false);
     }, [cancel]);
 
     const handleOpenOptions = React.useCallback(() => {
@@ -132,4 +132,6 @@ export function VideoHeaderMenu() {
             <DownloadDialog isOpen={isDownloadOpen} onCancel={handleDownloadCancel} setProgressHandler={setProgressHandler} />
         </>
     );
-}
+};
+
+export default VideoHeaderMenu;

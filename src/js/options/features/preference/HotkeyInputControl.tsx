@@ -21,52 +21,6 @@ import hotkeys, { KeyHandler } from 'hotkeys-js';
 
 import { TypedFieldPath } from './TypedFieldPath';
 
-type HotkeyInputControlProps<T> = Omit<InputProps, 'ref' | 'name'> & {
-    name: TypedFieldPath<T, string>,
-};
-
-export function HotkeyInputControl<T>({ name, ...rest }: HotkeyInputControlProps<T>) {
-    const { control, setValue } = useFormContext<T>();
-    const { field: { ref: fieldRef, ...field } } = useController({ name, control });
-    const handlerRef = React.useRef<KeyHandler | null>(null);
-
-    const hotkeyRef = React.useCallback((node: HTMLInputElement) => {
-        if (node === null && handlerRef.current !== null) {
-            hotkeys.unbind('*', handlerRef.current);
-        }
-        else {
-            handlerRef.current = e => {
-                let keys: string[] = [];
-                if (hotkeys.command) {
-                    keys.push('command');
-                }
-                if (hotkeys.ctrl) {
-                    keys.push('ctrl');
-                }
-                if (hotkeys.alt) {
-                    keys.push('alt');
-                }
-                if (hotkeys.shift) {
-                    keys.push('shift');
-                }
-                const key = codeToKeyName(e.code);
-                if (key !== '') {
-                    keys.push(key);
-                    setValue(name, (keys.join('+')) as any, { shouldDirty: true });
-                }
-            };
-            hotkeys.filter = () => true;
-            hotkeys('*', { element: node }, handlerRef.current);
-        }
-    }, []);
-
-    const refs = useMergeRefs(hotkeyRef, fieldRef);
-
-    return (
-        <Input ref={refs} {...field} {...rest} readOnly />
-    );
-}
-
 function codeToKeyName(code: string): string {
     if (code.startsWith('Key') && code.length === 4) {
         return code[3].toLowerCase();
@@ -97,3 +51,51 @@ function codeToKeyName(code: string): string {
     }
     return '';
 }
+
+type HotkeyInputControlProps<T> = Omit<InputProps, 'ref' | 'name'> & {
+    name: TypedFieldPath<T, string>,
+};
+
+const HotkeyInputControl = <T, >({ name, ...rest }: HotkeyInputControlProps<T>): React.ReactElement => {
+    const { control, setValue } = useFormContext<T>();
+    const { field: { ref: fieldRef, ...field } } = useController({ name, control });
+    const handlerRef = React.useRef<KeyHandler | null>(null);
+
+    const hotkeyRef = React.useCallback((node: HTMLInputElement) => {
+        if (node === null && handlerRef.current !== null) {
+            hotkeys.unbind('*', handlerRef.current);
+        }
+        else {
+            handlerRef.current = e => {
+                const keys: string[] = [];
+                if (hotkeys.command) {
+                    keys.push('command');
+                }
+                if (hotkeys.ctrl) {
+                    keys.push('ctrl');
+                }
+                if (hotkeys.alt) {
+                    keys.push('alt');
+                }
+                if (hotkeys.shift) {
+                    keys.push('shift');
+                }
+                const key = codeToKeyName(e.code);
+                if (key !== '') {
+                    keys.push(key);
+                    setValue(name, (keys.join('+')) as any, { shouldDirty: true });
+                }
+            };
+            hotkeys.filter = () => true;
+            hotkeys('*', { element: node }, handlerRef.current);
+        }
+    }, [name, setValue]);
+
+    const refs = useMergeRefs(hotkeyRef, fieldRef);
+
+    return (
+        <Input ref={refs} {...field} {...rest} readOnly />
+    );
+};
+
+export default HotkeyInputControl;

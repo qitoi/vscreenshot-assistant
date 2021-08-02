@@ -15,11 +15,11 @@
  */
 
 import * as React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, BoxProps } from '@chakra-ui/react';
 
-type SidebarProps = React.PropsWithChildren<{}>;
+type SidebarProps = BoxProps;
 
-export default function Sidebar(props: SidebarProps) {
+const Sidebar: React.FC<BoxProps> = (props: SidebarProps) => {
     return (
         <Box
             as="nav"
@@ -35,4 +35,6 @@ export default function Sidebar(props: SidebarProps) {
             {props.children}
         </Box>
     );
-}
+};
+
+export default Sidebar;

@@ -17,11 +17,17 @@
 import * as React from 'react';
 import { Box, chakra, Heading, StackProps, VStack } from '@chakra-ui/react';
 
+function Border() {
+    return (
+        <chakra.hr w="100%" m={0} p={0} borderBottomWidth={0} borderColor="gray.200" />
+    );
+}
+
 type PreferenceBlockProps = StackProps & {
     name: string,
 };
 
-export function PreferenceBlock({ name, children, ...rest }: PreferenceBlockProps) {
+const PreferenceBlock: React.FC<PreferenceBlockProps> = ({ name, children, ...rest }: PreferenceBlockProps) => {
     return (
         <Box w="100%" paddingBottom="1em">
             <Heading as="h2" fontSize="lg" py="1em">{name}</Heading>
@@ -30,10 +36,6 @@ export function PreferenceBlock({ name, children, ...rest }: PreferenceBlockProp
             </VStack>
         </Box>
     );
-}
+};
 
-function Border() {
-    return (
-        <chakra.hr w="100%" m={0} p={0} borderBottomWidth={0} borderColor="gray.200" />
-    );
-}
+export default PreferenceBlock;

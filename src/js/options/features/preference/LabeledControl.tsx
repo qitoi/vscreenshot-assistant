@@ -21,7 +21,7 @@ type LabeledControlProps = FormLabelProps & {
     label: React.ReactElement,
 };
 
-export function LabeledControl({ label, children, ...rest }: LabeledControlProps) {
+const LabeledControl = ({ label, children, ...rest }: LabeledControlProps) => {
     const padding = { py: '0.5em' };
     return (
         <FormLabel w="100%" m={0} {...padding} {...rest}>
@@ -32,4 +32,6 @@ export function LabeledControl({ label, children, ...rest }: LabeledControlProps
             </HStack>
         </FormLabel>
     );
-}
+};
+
+export default LabeledControl;

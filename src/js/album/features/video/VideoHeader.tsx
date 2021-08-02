@@ -17,9 +17,9 @@
 import * as React from 'react';
 import { Box, HStack, Spacer } from '@chakra-ui/react';
 
-import { ScreenshotSortOrderSelect } from '../screenshot/ScreenshotSortOrderSelect';
-import { VideoHeaderMenu } from './VideoHeaderMenu';
-import { VideoHeaderInformation } from './VideoHeaderInformation';
+import ScreenshotSortOrderSelect from '../screenshot/ScreenshotSortOrderSelect';
+import VideoHeaderMenu from './VideoHeaderMenu';
+import VideoHeaderInformation from './VideoHeaderInformation';
 
 export default function VideoHeader() {
     return (

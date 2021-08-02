@@ -17,14 +17,14 @@
 import * as React from 'react';
 import { Box, BoxProps, HStack, Radio } from '@chakra-ui/react';
 
-import { LabeledControl } from './LabeledControl';
+import LabeledControl from './LabeledControl';
 
 type RadioItemProps<T> = BoxProps & {
     value: T,
     label: React.ReactElement,
 };
 
-export function RadioItem<T extends string>({ value, label, children }: RadioItemProps<T>) {
+const RadioItem = <T extends string>({ value, label, children }: RadioItemProps<T>): React.ReactElement => {
     return (
         <HStack w="100%">
             <LabeledControl label={<></>}>
@@ -35,4 +35,6 @@ export function RadioItem<T extends string>({ value, label, children }: RadioIte
             </Box>
         </HStack>
     );
-}
+};
+
+export default RadioItem;

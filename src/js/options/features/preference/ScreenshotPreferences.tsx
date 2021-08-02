@@ -20,13 +20,13 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { FileType, Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
-import { PreferenceBlock } from './PreferenceBlock';
-import { ControlGroup } from './ControlGroup';
-import { RadioItem } from './RadioItem';
-import { NumberInputControl } from './NumberInputControl';
-import { LabeledControl } from './LabeledControl';
+import PreferenceBlock from './PreferenceBlock';
+import ControlGroup from './ControlGroup';
+import RadioItem from './RadioItem';
+import NumberInputControl from './NumberInputControl';
+import LabeledControl from './LabeledControl';
 
-export function ScreenshotPreferences() {
+const ScreenshotPreferences: React.FC = () => {
     const { control, watch } = useFormContext<Preferences>();
     const { field: fileTypeField } = useController({ name: 'screenshot.fileType', control });
     const fileType = watch('screenshot.fileType');
@@ -52,4 +52,6 @@ export function ScreenshotPreferences() {
             </ControlGroup>
         </PreferenceBlock>
     );
-}
+};
+
+export default ScreenshotPreferences;

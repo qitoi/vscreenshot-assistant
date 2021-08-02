@@ -36,7 +36,7 @@ const Youtube: Platform = {
         return document.querySelector('video.video-stream') as HTMLVideoElement;
     },
 
-    async initVideoInfo(videoId: string): Promise<any> {
+    async initVideoInfo(): Promise<any> {
         return new Promise(resolve => {
             resolve(JSON.parse((document.querySelector('script#scriptTag') as HTMLElement)?.innerText));
         });
@@ -71,7 +71,7 @@ const Youtube: Platform = {
         return info?.author;
     },
 
-    isPrivate(videoId: string, info: any): boolean {
+    isPrivate(): boolean {
         const label = (document.querySelector('ytd-video-primary-info-renderer .ytd-badge-supported-renderer > span') as HTMLElement)?.innerText;
         return label !== undefined;
     },

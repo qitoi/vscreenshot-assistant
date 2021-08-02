@@ -76,4 +76,4 @@ const slice = createSlice({
 export default slice.reducer;
 export const { toggleSelectedScreenshot, removeSelectedScreenshot } = slice.actions;
 
-export const selectSelectedScreenshot = (state: RootState) => state.selectedScreenshot.selected;
+export const selectSelectedScreenshot = (state: RootState): typeof state.selectedScreenshot.selected => state.selectedScreenshot.selected;

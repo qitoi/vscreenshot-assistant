@@ -63,7 +63,7 @@ type FetchScreenshotListPayload = {
 export const fetchScreenshotList = createAsyncThunk<FetchScreenshotListPayload, { platform: string, videoId: string }>
 (
     'screenshot/fetchScreenshotList',
-    async ({ platform, videoId }, thunkAPI): Promise<FetchScreenshotListPayload> => {
+    async ({ platform, videoId }): Promise<FetchScreenshotListPayload> => {
         const screenshots = await storage.getScreenshotInfoList(platform, videoId);
         return {
             platform,
@@ -132,15 +132,15 @@ const slice = createSlice<ScreenshotState, SliceCaseReducers<ScreenshotState>>({
 });
 
 export default slice.reducer;
-export const { appendScreenshot, removeScreenshot, setSortOrder, removeThumbnail } = slice.actions;
+export const { appendScreenshot, setSortOrder, removeThumbnail } = slice.actions;
 
-export const selectScreenshotList = (state: RootState, platform: string, videoId: string) => {
+export const selectScreenshotList = (state: RootState, platform: string, videoId: string): typeof state.screenshot.screenshots => {
     if (state.screenshot.videoInfoKey !== null && compareVideoInfo(state.screenshot.videoInfoKey, { platform, videoId })) {
         return state.screenshot.screenshots;
     }
     return [];
 };
-export const selectScreenshotSortOrder = (state: RootState) => state.screenshot.order;
+export const selectScreenshotSortOrder = (state: RootState): typeof state.screenshot.order => state.screenshot.order;
 export const selectCachedThumbnail = (state: RootState, platform: string, videoId: string, no: number): ImageDataUrl | null => {
     if (state.screenshot.videoInfoKey !== null && compareVideoInfo(state.screenshot.videoInfoKey, { platform, videoId })) {
         return state.screenshot.thumbnails[no] ?? null;

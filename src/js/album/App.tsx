@@ -27,7 +27,7 @@ import VideoList from './features/video/VideoList';
 import ScreenshotList from './features/screenshot/ScreenshotList';
 
 
-export function App() {
+const App: React.FC = () => {
     const dispatch = useDispatch();
 
     useWatchStorageChange();
@@ -59,4 +59,6 @@ export function App() {
             </Flex>
         </ChakraProvider>
     );
-}
+};
+
+export default App;

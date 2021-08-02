@@ -28,7 +28,7 @@ type SelectedScreenshotProps = React.PropsWithChildren<{
     onLoad?: () => void,
 }>;
 
-export function SelectedScreenshot({ info, screenshot, onClick, onLoad }: SelectedScreenshotProps) {
+export const SelectedScreenshot: React.FC<SelectedScreenshotProps> = ({ info, screenshot, onClick, onLoad }: SelectedScreenshotProps) => {
     const [isShown, setIsShown] = useBoolean(false);
     const thumbnailPreferences = useSelector(selectThumbnailPreferences);
 
@@ -55,4 +55,4 @@ export function SelectedScreenshot({ info, screenshot, onClick, onLoad }: Select
             </Box>
         </Box>
     );
-}
+};

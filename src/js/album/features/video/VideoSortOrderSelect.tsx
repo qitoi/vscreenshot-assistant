@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from '../../store';
 import { VideoSortOrder, VideoSortOrders } from './VideoSort';
 import { selectVideoSortOrder, setSortOrder } from './videoSlice';
 
-export function VideoSortOrderSelect() {
+const VideoSortOrderSelect: React.FC = () => {
     const dispatch = useDispatch();
     const order = useSelector(selectVideoSortOrder);
 
@@ -47,4 +47,6 @@ export function VideoSortOrderSelect() {
             ))}
         </Select>
     );
-}
+};
+
+export default VideoSortOrderSelect;

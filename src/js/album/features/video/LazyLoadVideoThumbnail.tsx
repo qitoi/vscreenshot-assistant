@@ -24,7 +24,8 @@ type LazyLoadVideoThumbnailProps = {
     platform: string,
     videoId: string,
 };
-export const LazyLoadVideoThumbnail = React.memo(({ platform, videoId }: LazyLoadVideoThumbnailProps) => {
+
+const LazyLoadVideoThumbnail = ({ platform, videoId }: LazyLoadVideoThumbnailProps) => {
     const [image, setImage] = React.useState<string | undefined>(undefined);
     const { ref, inView } = useInView({
         triggerOnce: true,
@@ -34,9 +35,11 @@ export const LazyLoadVideoThumbnail = React.memo(({ platform, videoId }: LazyLoa
         storage.getVideoThumbnail(platform, videoId).then(image => {
             setImage(image);
         });
-    }, [inView]);
+    }, [inView, platform, videoId]);
 
     return (
         <Image ref={ref} src={image} w="100%" minW="320px" minH="180px" draggable={false} />
     );
-});
+};
+
+export default React.memo(LazyLoadVideoThumbnail);
