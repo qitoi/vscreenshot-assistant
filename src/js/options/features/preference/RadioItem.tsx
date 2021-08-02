@@ -24,7 +24,7 @@ type RadioItemProps<T> = BoxProps & {
     label: React.ReactElement,
 };
 
-const RadioItem = <T extends string>({ value, label, children }: RadioItemProps<T>): React.ReactElement => {
+const RadioItem = <T extends string | number>({ value, label, children }: RadioItemProps<T>): React.ReactElement => {
     return (
         <HStack w="100%">
             <LabeledControl label={<></>}>

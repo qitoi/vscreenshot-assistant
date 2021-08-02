@@ -33,7 +33,7 @@ const ControlGroup: React.FC<ControlGroupProps> = ({ label, isEnabledHover, chil
                 ? (
                     <VStack spacing={0}>
                         <FormLabel w="100%" m={0} paddingTop="1em" paddingBottom="0.5em">{label}</FormLabel>
-                        <Box w="100%" paddingLeft="2em">
+                        <Box w="100%">
                             {children}
                         </Box>
                     </VStack>

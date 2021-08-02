@@ -15,8 +15,8 @@
  */
 
 import * as React from 'react';
-import { RadioGroup, Text } from '@chakra-ui/react';
-import { useController, useFormContext } from 'react-hook-form';
+import { Text } from '@chakra-ui/react';
+import { useFormContext } from 'react-hook-form';
 
 import { FileType, Preferences } from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
@@ -25,15 +25,15 @@ import ControlGroup from './ControlGroup';
 import RadioItem from './RadioItem';
 import NumberInputControl from './NumberInputControl';
 import LabeledControl from './LabeledControl';
+import RadioGroupControl from './RadioGroupControl';
 
 const ScreenshotPreferences: React.FC = () => {
-    const { control, watch } = useFormContext<Preferences>();
-    const { field: fileTypeField } = useController({ name: 'screenshot.fileType', control });
+    const { watch } = useFormContext<Preferences>();
     const fileType = watch('screenshot.fileType');
     return (
         <PreferenceBlock name="Screenshot">
             <ControlGroup w="100%" label={<Text>ファイルフォーマット</Text>}>
-                <RadioGroup w="100%" {...fileTypeField}>
+                <RadioGroupControl<Preferences> name="screenshot.fileType">
                     <RadioItem<FileType> value="image/jpeg" label={<LocalizedText messageId="prefsScreenshotFormatJPEG" />}>
                         <ControlGroup isDisabled={fileType !== 'image/jpeg'}>
                             <LabeledControl label={<LocalizedText messageId="prefsScreenshotFormatJPEGQuality" />}>
@@ -48,7 +48,7 @@ const ScreenshotPreferences: React.FC = () => {
                         </ControlGroup>
                     </RadioItem>
                     <RadioItem<FileType> value="image/png" label={<LocalizedText messageId="prefsScreenshotFormatPNG" />} />
-                </RadioGroup>
+                </RadioGroupControl>
             </ControlGroup>
         </PreferenceBlock>
     );
