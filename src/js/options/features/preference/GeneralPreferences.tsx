@@ -15,16 +15,26 @@
  */
 
 import * as React from 'react';
+import { HStack } from '@chakra-ui/react';
 
-import { Preferences } from '../../../lib/prefs';
-import { LocalizedText } from '../../../lib/components/LocalizedText';
+import { Preferences, ToastPosition, ToastPositions } from '../../../lib/prefs';
+import { LocalizedText, MessageId } from '../../../lib/components/LocalizedText';
 import PreferenceBlock from './PreferenceBlock';
 import SwitchControl from './SwitchControl';
 import ControlGroup from './ControlGroup';
 import HotkeyInputControl from './HotkeyInputControl';
 import LabeledControl from './LabeledControl';
+import RadioItem from './RadioItem';
+import RadioGroupControl from './RadioGroupControl';
+import NumberInputControl from './NumberInputControl';
 
 const GeneralPreferences: React.FC = () => {
+    const toastPositionItems: Record<ToastPosition, MessageId> = {
+        [ToastPositions.LeftBottom]: 'prefsGeneralNotifyPositionBottomLeft',
+        [ToastPositions.RightBottom]: 'prefsGeneralNotifyPositionBottomRight',
+        [ToastPositions.LeftTop]: 'prefsGeneralNotifyPositionTopLeft',
+        [ToastPositions.RightTop]: 'prefsGeneralNotifyPositionTopRight',
+    };
     return (
         <PreferenceBlock name="General">
             <ControlGroup>
@@ -37,10 +47,38 @@ const GeneralPreferences: React.FC = () => {
                     <SwitchControl<Preferences> name="general.copyClipboard" />
                 </LabeledControl>
             </ControlGroup>
-            <ControlGroup isEnabledHover>
+            <ControlGroup>
                 <LabeledControl label={<LocalizedText messageId="prefsGeneralNotifyToast" />}>
                     <SwitchControl<Preferences> name="general.notifyToast" />
                 </LabeledControl>
+                <ControlGroup<Preferences> conditionKey="general.notifyToast" conditionValue={true}>
+                    <ControlGroup>
+                        <LabeledControl label={<LocalizedText messageId="prefsGeneralNotifyDuration" />}>
+                            <NumberInputControl<Preferences>
+                                name="general.notifyDuration"
+                                w="12em"
+                                min={100}
+                                max={60000}
+                                step={100}
+                                precision={0}
+                                unit="ms" />
+                        </LabeledControl>
+                    </ControlGroup>
+                    <ControlGroup>
+                        <LabeledControl isVertical label={<LocalizedText messageId="prefsGeneralNotifyPosition" />}>
+                            <RadioGroupControl<Preferences> w="100%" name="general.notifyPosition">
+                                <HStack>
+                                    {Object.values(ToastPositions).map(pos => (
+                                        <RadioItem<ToastPosition>
+                                            key={pos}
+                                            value={pos}
+                                            label={<LocalizedText messageId={toastPositionItems[pos]} />} />
+                                    ))}
+                                </HStack>
+                            </RadioGroupControl>
+                        </LabeledControl>
+                    </ControlGroup>
+                </ControlGroup>
             </ControlGroup>
         </PreferenceBlock>
     );

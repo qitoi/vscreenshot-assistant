@@ -14,6 +14,24 @@
   "prefsGeneralNotifyToast": {
     "message": "スクリーンショット撮影時に画面に通知"
   },
+  "prefsGeneralNotifyPosition": {
+    "message": "通知の表示位置"
+  },
+  "prefsGeneralNotifyPositionBottomLeft": {
+    "message": "左下"
+  },
+  "prefsGeneralNotifyPositionBottomRight": {
+    "message": "右下"
+  },
+  "prefsGeneralNotifyPositionTopLeft": {
+    "message": "左上"
+  },
+  "prefsGeneralNotifyPositionTopRight": {
+    "message": "右上"
+  },
+  "prefsGeneralNotifyDuration": {
+    "message": "通知の表示時間"
+  },
   "prefsScreenshotFormatJPEG": {
     "message": "JPEG"
   },

@@ -178,9 +178,9 @@ function showToast(image: string, p: prefs.Preferences) {
     img.onload = () => {
         const toast = Toastify({
             node: img,
-            duration: 1000,
-            gravity: 'bottom',
-            position: 'left',
+            duration: p.general.notifyDuration,
+            gravity: (p.general.notifyPosition === prefs.ToastPositions.LeftTop || p.general.notifyPosition === prefs.ToastPositions.RightTop) ? 'top' : 'bottom',
+            position: (p.general.notifyPosition === prefs.ToastPositions.LeftTop || p.general.notifyPosition === prefs.ToastPositions.LeftBottom) ? 'left' : 'right',
             stopOnFocus: false,
             avatar: image,
             callback: () => {

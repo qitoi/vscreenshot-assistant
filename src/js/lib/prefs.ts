@@ -23,11 +23,22 @@ const FileTypes = ['image/jpeg', 'image/png'] as const;
 export type FileType = typeof FileTypes[number];
 const isFileType = (type: any): type is FileType => FileTypes.some(t => t === type);
 
+export const ToastPositions = {
+    LeftBottom: 0,
+    RightBottom: 1,
+    LeftTop: 2,
+    RightTop: 3,
+} as const;
+export type ToastPosition = typeof ToastPositions[keyof typeof ToastPositions];
+const isToastPosition = (type: any): type is ToastPosition => Object.values(ToastPositions).includes(type);
+
 export type Preferences = {
     general: {
         captureHotkey: string,
         copyClipboard: boolean,
         notifyToast: boolean,
+        notifyPosition: ToastPosition,
+        notifyDuration: number,
     },
     screenshot: {
         fileType: FileType,
@@ -49,6 +60,8 @@ export const DefaultPreferences: Preferences = {
         captureHotkey: 'alt+s',
         copyClipboard: false,
         notifyToast: true,
+        notifyPosition: ToastPositions.LeftBottom,
+        notifyDuration: 1000,
     },
     screenshot: {
         fileType: 'image/jpeg',
@@ -66,12 +79,15 @@ export const DefaultPreferences: Preferences = {
 };
 
 function completePreferences(prefs: Preferences): Preferences {
-    const completeFileType = (type?: string): FileType => isFileType(type) ? type : DefaultPreferences.screenshot.fileType;
+    const completeFileType = (value?: any): FileType => isFileType(value) ? value : DefaultPreferences.screenshot.fileType;
+    const completeToastPosition = (value?: any): ToastPosition => isToastPosition(value) ? value : DefaultPreferences.general.notifyPosition;
     return {
         general: {
             captureHotkey: prefs?.general?.captureHotkey || DefaultPreferences.general.captureHotkey,
             copyClipboard: Boolean(prefs?.general?.copyClipboard ?? DefaultPreferences.general.copyClipboard),
             notifyToast: Boolean(prefs?.general?.notifyToast ?? DefaultPreferences.general.notifyToast),
+            notifyPosition: completeToastPosition(prefs?.general?.notifyPosition),
+            notifyDuration: Math.min(Math.max(Math.round(+(prefs?.general?.notifyDuration ?? DefaultPreferences.general.notifyDuration)), 100), 60000),
         },
         screenshot: {
             fileType: completeFileType(prefs?.screenshot?.fileType),
