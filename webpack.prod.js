@@ -8,6 +8,10 @@ module.exports = config.map(c => merge(c, {
         minimizer: [
             new TerserPlugin({
                 terserOptions: {
+                    compress: {
+                        defaults: false,
+                        unused: true,
+                    },
                     format: {
                         comments: false,
                     },
