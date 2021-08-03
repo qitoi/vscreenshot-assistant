@@ -53,6 +53,9 @@
   "prefsThumbnailHeight": {
     "message": "縦幅"
   },
+  "prefsTweetEnabled": {
+    "message": "Twitterへの投稿機能の有効化"
+  },
   "prefsTweetURL": {
     "message": "URL"
   },

@@ -15,6 +15,7 @@
  */
 
 import * as React from 'react';
+import { Box } from '@chakra-ui/react';
 
 import { Preferences } from '../../../lib/prefs';
 import PreferenceBlock from './PreferenceBlock';
@@ -25,21 +26,30 @@ import LabeledControl from './LabeledControl';
 const TweetPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="Tweet">
-            <ControlGroup isEnabledHover>
-                <LabeledControl messageId="prefsTweetURL">
-                    <SwitchControl<Preferences> name="tweet.tweetUrl" />
-                </LabeledControl>
-            </ControlGroup>
-            <ControlGroup isEnabledHover>
-                <LabeledControl messageId="prefsTweetTitle">
-                    <SwitchControl<Preferences> name="tweet.tweetTitle" />
-                </LabeledControl>
-            </ControlGroup>
-            <ControlGroup isEnabledHover>
-                <LabeledControl messageId="prefsTweetAuthor">
-                    <SwitchControl<Preferences> name="tweet.tweetAuthor" />
-                </LabeledControl>
-            </ControlGroup>
+            <Box w="100%">
+                <ControlGroup isEnabledHover>
+                    <LabeledControl messageId="prefsTweetEnabled">
+                        <SwitchControl<Preferences> name="tweet.enabled" />
+                    </LabeledControl>
+                </ControlGroup>
+                <ControlGroup<Preferences> indent="left" conditionKey="tweet.enabled" conditionValue={true} hideIfDisabled>
+                    <ControlGroup indent="both">
+                        <LabeledControl messageId="prefsTweetURL">
+                            <SwitchControl<Preferences> name="tweet.tweetUrl" />
+                        </LabeledControl>
+                    </ControlGroup>
+                    <ControlGroup indent="both">
+                        <LabeledControl messageId="prefsTweetTitle">
+                            <SwitchControl<Preferences> name="tweet.tweetTitle" />
+                        </LabeledControl>
+                    </ControlGroup>
+                    <ControlGroup indent="both">
+                        <LabeledControl messageId="prefsTweetAuthor">
+                            <SwitchControl<Preferences> name="tweet.tweetAuthor" />
+                        </LabeledControl>
+                    </ControlGroup>
+                </ControlGroup>
+            </Box>
         </PreferenceBlock>
     );
 };

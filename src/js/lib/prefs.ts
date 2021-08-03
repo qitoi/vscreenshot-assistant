@@ -49,6 +49,7 @@ export type Preferences = {
         height: number,
     },
     tweet: {
+        enabled: boolean,
         tweetUrl: boolean,
         tweetTitle: boolean,
         tweetAuthor: boolean,
@@ -72,6 +73,7 @@ export const DefaultPreferences: Preferences = {
         height: 180,
     },
     tweet: {
+        enabled: true,
         tweetUrl: true,
         tweetTitle: true,
         tweetAuthor: false,
@@ -98,6 +100,7 @@ function completePreferences(prefs: Preferences): Preferences {
             height: Math.min(Math.max(Math.round(+(prefs?.thumbnail?.height ?? DefaultPreferences.thumbnail.height)), 1), 9999),
         },
         tweet: {
+            enabled: Boolean(prefs?.tweet?.enabled ?? DefaultPreferences.tweet.enabled),
             tweetUrl: Boolean(prefs?.tweet?.tweetUrl ?? DefaultPreferences.tweet.tweetUrl),
             tweetTitle: Boolean(prefs?.tweet?.tweetTitle ?? DefaultPreferences.tweet.tweetTitle),
             tweetAuthor: Boolean(prefs?.tweet?.tweetAuthor ?? DefaultPreferences.tweet.tweetAuthor),

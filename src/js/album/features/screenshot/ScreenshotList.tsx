@@ -29,7 +29,7 @@ import {
     selectSelectedScreenshot,
     toggleSelectedScreenshot,
 } from '../selectedScreenshot/selectedScreenshotSlice';
-import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
+import { selectThumbnailPreferences, selectTweetEnabled } from '../preferences/preferencesSlice';
 import ScreenshotCard from './ScreenshotCard';
 import CustomLightbox from '../../components/CustomLightbox';
 
@@ -41,6 +41,7 @@ const ScreenshotList: React.FC = () => {
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
     const thumbnailPreferences = useSelector(selectThumbnailPreferences);
     const [imageViewIndex, setImageViewIndex] = React.useState<number | null>(null);
+    const tweetEnabled = useSelector(selectTweetEnabled);
 
     React.useEffect(() => {
         if (video !== null) {
@@ -82,7 +83,7 @@ const ScreenshotList: React.FC = () => {
                     <ScreenshotCard
                         key={getScreenshotKey(s)}
                         info={s}
-                        disabled={video.private}
+                        disabled={video.private || !tweetEnabled}
                         isChecked={selected.some(ss => compareScreenshotInfo(ss, s))}
                         onClick={handleClickScreenshot}
                         onExpandClick={handleExpandScreenshot} />
