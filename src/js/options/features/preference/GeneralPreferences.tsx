@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { HStack } from '@chakra-ui/react';
+import { Box, HStack } from '@chakra-ui/react';
 
 import { Preferences, ToastPosition, ToastPositions } from '../../../lib/prefs';
 import { MessageId } from '../../../lib/components/LocalizedText';
@@ -47,12 +47,14 @@ const GeneralPreferences: React.FC = () => {
                     <SwitchControl<Preferences> name="general.copyClipboard" />
                 </LabeledControl>
             </ControlGroup>
-            <ControlGroup>
-                <LabeledControl messageId="prefsGeneralNotifyToast">
-                    <SwitchControl<Preferences> name="general.notifyToast" />
-                </LabeledControl>
-                <ControlGroup<Preferences> conditionKey="general.notifyToast" conditionValue={true}>
-                    <ControlGroup>
+            <Box w="100%">
+                <ControlGroup isEnabledHover>
+                    <LabeledControl messageId="prefsGeneralNotifyToast">
+                        <SwitchControl<Preferences> name="general.notifyToast" />
+                    </LabeledControl>
+                </ControlGroup>
+                <ControlGroup<Preferences> conditionKey="general.notifyToast" conditionValue={true} hideIfDisabled>
+                    <ControlGroup indent="left">
                         <LabeledControl messageId="prefsGeneralNotifyDuration">
                             <NumberInputControl<Preferences>
                                 name="general.notifyDuration"
@@ -64,7 +66,7 @@ const GeneralPreferences: React.FC = () => {
                                 unit="ms" />
                         </LabeledControl>
                     </ControlGroup>
-                    <ControlGroup>
+                    <ControlGroup indent="left">
                         <LabeledControl isVertical messageId="prefsGeneralNotifyPosition">
                             <RadioGroupControl<Preferences> w="100%" name="general.notifyPosition">
                                 <HStack>
@@ -79,7 +81,7 @@ const GeneralPreferences: React.FC = () => {
                         </LabeledControl>
                     </ControlGroup>
                 </ControlGroup>
-            </ControlGroup>
+            </Box>
         </PreferenceBlock>
     );
 };

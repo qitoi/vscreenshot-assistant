@@ -44,6 +44,9 @@
   "prefsScreenshotFormatPNG": {
     "message": "PNG"
   },
+  "prefsThumbnailSize": {
+    "message": "サムネイルのサイズ"
+  },
   "prefsThumbnailWidth": {
     "message": "横幅"
   },

@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Box, FormLabel, FormLabelProps, HStack, Spacer, Text, VStack } from '@chakra-ui/react';
+import { Box, FormLabel, FormLabelProps, HStack, Spacer, VStack } from '@chakra-ui/react';
 
 import { LocalizedText, MessageId } from '../../../lib/components/LocalizedText';
 
@@ -24,7 +24,7 @@ type LabeledControlProps = FormLabelProps & {
     isVertical?: boolean,
 };
 
-const LabeledControl = ({ messageId, isVertical, children, ...rest }: LabeledControlProps) => {
+const LabeledControl: React.FC<LabeledControlProps> = ({ messageId, isVertical, children, ...rest }: LabeledControlProps) => {
     return (
         isVertical
             ? (
@@ -39,7 +39,7 @@ const LabeledControl = ({ messageId, isVertical, children, ...rest }: LabeledCon
             ) : (
                 <FormLabel w="100%" m={0} py="0.5em" {...rest}>
                     <HStack minH={10}>
-                        <Box><LocalizedText messageId={messageId} /></Box>
+                        <Box flexShrink={0}><LocalizedText messageId={messageId} /></Box>
                         <Spacer />
                         {children}
                     </HStack>

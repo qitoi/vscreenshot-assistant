@@ -15,22 +15,26 @@
  */
 
 import * as React from 'react';
-import { Box, FormControl, FormControlProps, FormLabel, useFormControlContext, VStack } from '@chakra-ui/react';
+import { Box, Collapse, FormControl, FormControlProps, FormLabel, useFormControlContext, VStack } from '@chakra-ui/react';
 import { FieldPath, FieldPathValue, UnpackNestedValue, useFormContext } from 'react-hook-form';
 
+import { LocalizedText, MessageId } from '../../../lib/components/LocalizedText';
+
 type ControlGroupProps<T> = Omit<FormControlProps, 'label'> & {
-    label?: React.ReactElement,
+    label?: MessageId,
     isEnabledHover?: boolean,
+    indent?: 'none' | 'left' | 'right' | 'both',
     conditionKey?: FieldPath<T>,
     conditionValue?: UnpackNestedValue<FieldPathValue<T, FieldPath<T>>>,
+    hideIfDisabled?: boolean;
 };
 
-const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, conditionKey, conditionValue, children, ...rest }: ControlGroupProps<T>): React.ReactElement => {
+const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, indent, conditionKey, conditionValue, hideIfDisabled, children, ...rest }: ControlGroupProps<T>): React.ReactElement => {
     const { watch } = useFormContext<T>();
     const context = useFormControlContext();
     const isNested = (context !== undefined);
     const hover = (isEnabledHover === true) ? { transition: 'background ease-out 200ms', _hover: { background: 'blackAlpha.50' } } : {};
-    const padding = isNested ? {} : { px: '1.5em' };
+    const padding = ((!isNested && indent === undefined) || indent === 'both') ? { px: '2em' } : (indent === 'left') ? { paddingLeft: '2em' } : (indent === 'right') ? { paddingRight: '2em' } : {};
 
     let disabled = (context?.isDisabled === true) || (isDisabled === true);
     if (conditionKey !== undefined) {
@@ -38,12 +42,12 @@ const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, conditionKey, co
         disabled = disabled || (condition !== conditionValue);
     }
 
-    return (
+    const control = (
         <FormControl fontSize="md" w="100%" isDisabled={disabled} {...hover} {...padding} {...rest}>
             {label
                 ? (
                     <VStack spacing={0}>
-                        <FormLabel w="100%" m={0} paddingTop="1em" paddingBottom="0.5em">{label}</FormLabel>
+                        <FormLabel w="100%" m={0} paddingTop="1em" paddingBottom="0.5em"><LocalizedText messageId={label} /></FormLabel>
                         <Box w="100%">
                             {children}
                         </Box>
@@ -53,6 +57,18 @@ const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, conditionKey, co
             }
         </FormControl>
     );
+
+    if (hideIfDisabled === true) {
+        return (
+            <Box w="100%">
+                <Collapse in={!disabled}>
+                    {control}
+                </Collapse>
+            </Box>
+        );
+    }
+
+    return control;
 };
 
 export default ControlGroup;

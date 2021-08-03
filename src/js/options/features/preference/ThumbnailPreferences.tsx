@@ -25,15 +25,17 @@ import LabeledControl from './LabeledControl';
 const ThumbnailPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="Thumbnail">
-            <ControlGroup>
-                <LabeledControl messageId="prefsThumbnailWidth">
-                    <NumberInputControl<Preferences> name="thumbnail.width" w="12em" min={1} step={1} precision={0} unit="px" />
-                </LabeledControl>
-            </ControlGroup>
-            <ControlGroup>
-                <LabeledControl messageId="prefsThumbnailHeight">
-                    <NumberInputControl<Preferences> name="thumbnail.height" w="12em" min={1} step={1} precision={0} unit="px" />
-                </LabeledControl>
+            <ControlGroup label="prefsThumbnailSize">
+                <ControlGroup indent="left">
+                    <LabeledControl messageId="prefsThumbnailWidth">
+                        <NumberInputControl<Preferences> name="thumbnail.width" w="10em" min={1} step={1} precision={0} unit="px" />
+                    </LabeledControl>
+                </ControlGroup>
+                <ControlGroup indent="left">
+                    <LabeledControl messageId="prefsThumbnailHeight">
+                        <NumberInputControl<Preferences> name="thumbnail.height" w="10em" min={1} step={1} precision={0} unit="px" />
+                    </LabeledControl>
+                </ControlGroup>
             </ControlGroup>
         </PreferenceBlock>
     );
