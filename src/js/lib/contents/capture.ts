@@ -176,13 +176,16 @@ function showToast(image: string, p: prefs.Preferences) {
     img.style['height'] = '100%';
     img.style['objectFit'] = 'contain';
     img.onload = () => {
+        const div = document.createElement('div') as HTMLDivElement;
+        div.style['width'] = '100%';
+        div.style['height'] = '100%';
+        div.appendChild(img);
         const toast = Toastify({
-            node: img,
+            node: div,
             duration: p.general.notifyDuration,
             gravity: (p.general.notifyPosition === prefs.ToastPositions.LeftTop || p.general.notifyPosition === prefs.ToastPositions.RightTop) ? 'top' : 'bottom',
             position: (p.general.notifyPosition === prefs.ToastPositions.LeftTop || p.general.notifyPosition === prefs.ToastPositions.LeftBottom) ? 'left' : 'right',
             stopOnFocus: false,
-            avatar: image,
             callback: () => {
                 const idx = toasts.indexOf(toast);
                 if (idx !== -1) {
@@ -194,7 +197,7 @@ function showToast(image: string, p: prefs.Preferences) {
             // @ts-ignore
             style: {
                 width: `${p.thumbnail.width}px`,
-                height: `${p.thumbnail.height}px`,
+                aspectRatio: `${p.thumbnail.width} / ${p.thumbnail.height}`,
                 padding: '8px',
                 background: 'rgba(33, 33, 33, 0.94)',
             },
