@@ -30,7 +30,7 @@ const ScreenshotPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="Screenshot">
             <ControlGroup w="100%">
-                <LabeledControl isVertical label={<Text>ファイルフォーマット</Text>}>
+                <LabeledControl isVertical label={<LocalizedText messageId="prefsScreenshotFormat" />}>
                     <RadioGroupControl<Preferences> name="screenshot.fileType">
                         <RadioItem<FileType> value="image/jpeg" label={<LocalizedText messageId="prefsScreenshotFormatJPEG" />}>
                             <ControlGroup<Preferences> conditionKey="screenshot.fileType" conditionValue="image/jpeg">

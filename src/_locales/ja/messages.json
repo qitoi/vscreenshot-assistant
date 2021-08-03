@@ -32,6 +32,9 @@
   "prefsGeneralNotifyDuration": {
     "message": "通知の表示時間"
   },
+  "prefsScreenshotFormat": {
+    "message": "ファイルフォーマット"
+  },
   "prefsScreenshotFormatJPEG": {
     "message": "JPEG"
   },
@@ -106,5 +109,8 @@
   },
   "albumDownloadPreparingLabel": {
     "message": "ダウンロード準備中..."
+  },
+  "albumShareScreenshotButton": {
+    "message": "Share"
   }
 }

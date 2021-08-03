@@ -22,6 +22,7 @@ import { shareScreenshot } from '../../../lib/background/share-twitter';
 import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { ScreenshotInfoWithThumbnail } from './selectedScreenshotSlice';
 import { SelectedScreenshot } from './SelectedScreenshot';
+import { LocalizedText } from '../../../lib/components/LocalizedText';
 
 type SelectedScreenshotListProps = {
     video: VideoInfo,
@@ -70,7 +71,7 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: Selec
                 )}
             </Grid>
             <Box>
-                <Button colorScheme="twitter" onClick={handleClick}>Share</Button>
+                <Button colorScheme="twitter" onClick={handleClick}><LocalizedText messageId="albumShareScreenshotButton" /></Button>
             </Box>
         </HStack>
     );
