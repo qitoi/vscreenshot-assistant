@@ -17,19 +17,17 @@
 import * as React from 'react';
 import { Box, BoxProps, HStack, Radio } from '@chakra-ui/react';
 
-import LabeledControl from './LabeledControl';
+import { LocalizedText, MessageId } from '../../../lib/components/LocalizedText';
 
 type RadioItemProps<T> = BoxProps & {
     value: T,
-    label: React.ReactElement,
+    messageId: MessageId,
 };
 
-const RadioItem = <T extends string | number>({ value, label, children }: RadioItemProps<T>): React.ReactElement => {
+const RadioItem = <T extends string | number>({ value, messageId, children }: RadioItemProps<T>): React.ReactElement => {
     return (
         <HStack w="100%">
-            <LabeledControl label={<></>}>
-                <Radio value={value} w="100%">{label}</Radio>
-            </LabeledControl>
+            <Radio value={value} py="1em" w="100%"><LocalizedText messageId={messageId} /></Radio>
             <Box flexShrink={0}>
                 {children}
             </Box>

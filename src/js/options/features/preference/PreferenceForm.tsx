@@ -61,7 +61,7 @@ const PreferenceForm: React.FC = () => {
     return (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <VStack w="50em" marginX="auto">
+                <VStack w="60em" marginX="auto">
                     <GeneralPreferences />
                     <ScreenshotPreferences />
                     <ThumbnailPreferences />

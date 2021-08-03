@@ -18,7 +18,7 @@ import * as React from 'react';
 import { HStack } from '@chakra-ui/react';
 
 import { Preferences, ToastPosition, ToastPositions } from '../../../lib/prefs';
-import { LocalizedText, MessageId } from '../../../lib/components/LocalizedText';
+import { MessageId } from '../../../lib/components/LocalizedText';
 import PreferenceBlock from './PreferenceBlock';
 import SwitchControl from './SwitchControl';
 import ControlGroup from './ControlGroup';
@@ -38,22 +38,22 @@ const GeneralPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="General">
             <ControlGroup>
-                <LabeledControl label={<LocalizedText messageId="prefsGeneralHotkey" />}>
+                <LabeledControl messageId="prefsGeneralHotkey">
                     <HotkeyInputControl<Preferences> name="general.captureHotkey" w="12em" />
                 </LabeledControl>
             </ControlGroup>
             <ControlGroup isEnabledHover>
-                <LabeledControl label={<LocalizedText messageId="prefsGeneralClipboardCopy" />}>
+                <LabeledControl messageId="prefsGeneralClipboardCopy">
                     <SwitchControl<Preferences> name="general.copyClipboard" />
                 </LabeledControl>
             </ControlGroup>
             <ControlGroup>
-                <LabeledControl label={<LocalizedText messageId="prefsGeneralNotifyToast" />}>
+                <LabeledControl messageId="prefsGeneralNotifyToast">
                     <SwitchControl<Preferences> name="general.notifyToast" />
                 </LabeledControl>
                 <ControlGroup<Preferences> conditionKey="general.notifyToast" conditionValue={true}>
                     <ControlGroup>
-                        <LabeledControl label={<LocalizedText messageId="prefsGeneralNotifyDuration" />}>
+                        <LabeledControl messageId="prefsGeneralNotifyDuration">
                             <NumberInputControl<Preferences>
                                 name="general.notifyDuration"
                                 w="12em"
@@ -65,14 +65,14 @@ const GeneralPreferences: React.FC = () => {
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup>
-                        <LabeledControl isVertical label={<LocalizedText messageId="prefsGeneralNotifyPosition" />}>
+                        <LabeledControl isVertical messageId="prefsGeneralNotifyPosition">
                             <RadioGroupControl<Preferences> w="100%" name="general.notifyPosition">
                                 <HStack>
                                     {Object.values(ToastPositions).map(pos => (
                                         <RadioItem<ToastPosition>
                                             key={pos}
                                             value={pos}
-                                            label={<LocalizedText messageId={toastPositionItems[pos]} />} />
+                                            messageId={toastPositionItems[pos]} />
                                     ))}
                                 </HStack>
                             </RadioGroupControl>

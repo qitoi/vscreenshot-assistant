@@ -30,7 +30,7 @@ const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, conditionKey, co
     const context = useFormControlContext();
     const isNested = (context !== undefined);
     const hover = (isEnabledHover === true) ? { transition: 'background ease-out 200ms', _hover: { background: 'blackAlpha.50' } } : {};
-    const padding = isNested ? {} : { px: '1em' };
+    const padding = isNested ? {} : { px: '1.5em' };
 
     let disabled = (context?.isDisabled === true) || (isDisabled === true);
     if (conditionKey !== undefined) {

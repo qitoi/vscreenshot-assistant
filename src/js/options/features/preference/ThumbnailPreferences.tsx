@@ -17,7 +17,6 @@
 import * as React from 'react';
 
 import { Preferences } from '../../../lib/prefs';
-import { LocalizedText } from '../../../lib/components/LocalizedText';
 import PreferenceBlock from './PreferenceBlock';
 import ControlGroup from './ControlGroup';
 import NumberInputControl from './NumberInputControl';
@@ -27,12 +26,12 @@ const ThumbnailPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="Thumbnail">
             <ControlGroup>
-                <LabeledControl label={<LocalizedText messageId="prefsThumbnailWidth" />}>
+                <LabeledControl messageId="prefsThumbnailWidth">
                     <NumberInputControl<Preferences> name="thumbnail.width" w="12em" min={1} step={1} precision={0} unit="px" />
                 </LabeledControl>
             </ControlGroup>
             <ControlGroup>
-                <LabeledControl label={<LocalizedText messageId="prefsThumbnailHeight" />}>
+                <LabeledControl messageId="prefsThumbnailHeight">
                     <NumberInputControl<Preferences> name="thumbnail.height" w="12em" min={1} step={1} precision={0} unit="px" />
                 </LabeledControl>
             </ControlGroup>
