@@ -17,11 +17,12 @@
 // album window
 
 import PopupWindow from './lib/background/popup-window';
-import { CaptureParam, VideoInfo, VideoThumbnailParam, } from './lib/types';
+import { CaptureMessageBase, ImageDataUrl, MessageType, VideoInfo } from './lib/types';
 
 import * as storage from './lib/storage';
 import * as prefs from './lib/prefs';
 import { createThumbnail } from './lib/background/thumbnail';
+import { makeAnimation } from './lib/background/animation';
 
 
 const albumWindow = PopupWindow.create('album', 'album.html');
@@ -36,46 +37,67 @@ prefs.watch();
 // screenshot
 
 chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
-    switch (param.type) {
+    switch ((param as MessageType).type) {
         case 'capture': {
-            const p = param as CaptureParam;
-            const videoInfo: VideoInfo = {
-                platform: p.platform,
-                videoId: p.videoId,
-                lastUpdated: p.datetime,
-                ...p.videoInfo,
-            };
-            // ビデオのサムネイル存在チェック
-            const existsThumbnail =
-                storage.existsVideoThumbnail(p.platform, p.videoId)
-                    .then(exists => {
-                        sendResponse({ existsVideoThumbnail: exists, videoInfoParam: videoInfo });
-                        return exists;
-                    });
-
             // スクリーンショットのサムネイル作成
-            const createScreenshotThumbnail =
+            const thumbnail = () =>
                 prefs.loadPreferences().then(prefs => {
-                    return createThumbnail(p.image, prefs.thumbnail.width, prefs.thumbnail.height);
+                    return createThumbnail(param.image, prefs.thumbnail.width, prefs.thumbnail.height);
                 });
+            const image = () => Promise.resolve(param.image);
 
-            Promise.all([
-                existsThumbnail,
-                createScreenshotThumbnail,
-            ]).then(([existsVideoThumbnail, thumbnail]) => {
-                storage.saveScreenshot(p.platform, p.videoId, p.pos, p.datetime, p.image, thumbnail);
-                if (existsVideoThumbnail) {
-                    storage.saveVideoInfo(videoInfo);
-                }
-            });
+            capture(param, image, thumbnail, sendResponse);
+
             break;
         }
         case 'video-thumbnail': {
-            const p = param as VideoThumbnailParam;
-            storage.saveVideoThumbnail(p.videoInfo.platform, p.videoInfo.videoId, p.thumbnail);
-            storage.saveVideoInfo(p.videoInfo);
+            storage.saveVideoThumbnail(param.videoInfo.platform, param.videoInfo.videoId, param.thumbnail);
+            storage.saveVideoInfo(param.videoInfo);
+            break;
+        }
+        case 'animation': {
+            const thumbnail = () =>
+                prefs.loadPreferences().then(prefs => {
+                    return createThumbnail(param.images[0], prefs.thumbnail.width, prefs.thumbnail.height);
+                });
+            const image = () => convertAnimation(param.images, param.interval);
+
+            capture(param, image, thumbnail, sendResponse);
+
             break;
         }
     }
     return true;
 });
+
+function capture(param: CaptureMessageBase, image: () => Promise<ImageDataUrl>, thumbnail: () => Promise<ImageDataUrl>, sendResponse: (response?: any) => void): void {
+    const videoInfo: VideoInfo = {
+        platform: param.platform,
+        videoId: param.videoId,
+        lastUpdated: param.datetime,
+        ...param.videoInfo,
+    };
+    // ビデオのサムネイル存在チェック
+    const existsThumbnail =
+        storage.existsVideoThumbnail(param.platform, param.videoId)
+            .then(exists => {
+                sendResponse({ existsVideoThumbnail: exists, videoInfoParam: videoInfo });
+                return exists;
+            });
+
+    Promise.all([
+        existsThumbnail,
+        image(),
+        thumbnail(),
+    ]).then(([existsVideoThumbnail, image, thumbnail]) => {
+        storage.saveScreenshot(param.platform, param.videoId, param.pos, param.datetime, image, thumbnail);
+        if (existsVideoThumbnail) {
+            storage.saveVideoInfo(videoInfo);
+        }
+    });
+}
+
+async function convertAnimation(images: string[], interval: number): Promise<ImageDataUrl> {
+    const p = await prefs.loadPreferences();
+    return makeAnimation(images, p.animation.width, p.animation.height, interval);
+}

@@ -24,6 +24,7 @@ import ScreenshotPreferences from './ScreenshotPreferences';
 import ThumbnailPreferences from './ThumbnailPreferences';
 import TweetPreferences from './TweetPreferences';
 import GeneralPreferences from './GeneralPreferences';
+import AnimationPreferences from './AnimationPreferences';
 
 
 const PreferenceForm: React.FC = () => {
@@ -66,6 +67,7 @@ const PreferenceForm: React.FC = () => {
                     <ScreenshotPreferences />
                     <ThumbnailPreferences />
                     <TweetPreferences />
+                    <AnimationPreferences />
                     <ButtonGroup>
                         <Button colorScheme="blue" isLoading={isSubmitting} isDisabled={!isDirty} type="submit">
                             <LocalizedText messageId="prefsSave" />

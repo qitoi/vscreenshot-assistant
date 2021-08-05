@@ -54,6 +54,13 @@ export type Preferences = {
         tweetTitle: boolean,
         tweetAuthor: boolean,
     },
+    animation: {
+        enabled: boolean,
+        captureHotkey: string,
+        width: number,
+        height: number,
+        interval: number,
+    },
 };
 
 export const DefaultPreferences: Preferences = {
@@ -77,6 +84,13 @@ export const DefaultPreferences: Preferences = {
         tweetUrl: true,
         tweetTitle: true,
         tweetAuthor: false,
+    },
+    animation: {
+        enabled: false,
+        captureHotkey: 'alt+v',
+        width: 640,
+        height: 640,
+        interval: 50,
     },
 };
 
@@ -104,6 +118,13 @@ function completePreferences(prefs: Preferences): Preferences {
             tweetUrl: Boolean(prefs?.tweet?.tweetUrl ?? DefaultPreferences.tweet.tweetUrl),
             tweetTitle: Boolean(prefs?.tweet?.tweetTitle ?? DefaultPreferences.tweet.tweetTitle),
             tweetAuthor: Boolean(prefs?.tweet?.tweetAuthor ?? DefaultPreferences.tweet.tweetAuthor),
+        },
+        animation: {
+            enabled: Boolean(prefs?.animation?.enabled ?? DefaultPreferences.animation.enabled),
+            captureHotkey: prefs?.animation?.captureHotkey || DefaultPreferences.animation.captureHotkey,
+            width: Math.min(Math.max(Math.round(+(prefs?.animation?.width ?? DefaultPreferences.animation.width)), 1), 9999),
+            height: Math.min(Math.max(Math.round(+(prefs?.animation?.height ?? DefaultPreferences.animation.height)), 1), 9999),
+            interval: Math.min(Math.max(Math.round(+(prefs?.animation?.interval ?? DefaultPreferences.animation.interval)), 1), 9999),
         },
     };
 }

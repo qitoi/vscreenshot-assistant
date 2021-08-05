@@ -65,6 +65,21 @@
   "prefsTweetAuthor": {
     "message": "チャンネル名"
   },
+  "prefsAnimationEnabled": {
+    "message": "アニメーションGIF撮影の有効化"
+  },
+  "prefsAnimationHotkey": {
+    "message": "アニメーションGIF撮影のキー設定"
+  },
+  "prefsAnimationWidth": {
+    "message": "横幅"
+  },
+  "prefsAnimationHeight": {
+    "message": "縦幅"
+  },
+  "prefsAnimationInterval": {
+    "message": "間隔"
+  },
   "prefsSave": {
     "message": "保存"
   },

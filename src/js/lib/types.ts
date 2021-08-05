@@ -65,14 +65,11 @@ export function compareScreenshotInfo(s1: ScreenshotInfoKey, s2: ScreenshotInfoK
 
 // messaging parameter
 
-export type EventParam = {
-    type: string,
-};
+export type MessageType = CaptureMessage | AnimationMessage | VideoThumbnailMessage;
 
 export type CaptureVideoInfo = Omit<VideoInfo, 'platform' | 'videoId' | 'lastUpdated'>;
 
-export type CaptureParam = EventParam & {
-    type: 'capture',
+export type CaptureMessageBase = {
     platform: string,
     videoId: string,
     // video
@@ -80,10 +77,20 @@ export type CaptureParam = EventParam & {
     // screenshot
     pos: number,
     datetime: number,
+}
+
+export type CaptureMessage = CaptureMessageBase & {
+    type: 'capture',
     image: ImageDataUrl,
 };
 
-export type VideoThumbnailParam = EventParam & {
+export type AnimationMessage = CaptureMessageBase & {
+    type: 'animation',
+    images: ImageDataUrl[],
+    interval: number,
+};
+
+export type VideoThumbnailMessage = {
     type: 'video-thumbnail',
     videoInfo: VideoInfo,
     thumbnail: ImageDataUrl,

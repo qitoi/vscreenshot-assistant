@@ -18,7 +18,7 @@ import hotkeys from 'hotkeys-js';
 import * as Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 
-import { CaptureParam, ImageDataUrl, VideoThumbnailParam } from '../types';
+import { AnimationMessage, CaptureMessage, CaptureMessageBase, ImageDataUrl, VideoThumbnailMessage } from '../types';
 import Platform from '../platforms/platform';
 import * as prefs from '../prefs';
 import { downloadImage } from './download';
@@ -26,34 +26,111 @@ import { downloadImage } from './download';
 
 export function Setup(platform: Platform): void {
     prefs.watch().addEventListener(p => {
-        bindHotkey(p.general.captureHotkey, platform);
+        bindHotkey(platform, p);
     });
     prefs.loadPreferences().then(p => {
-        bindHotkey(p.general.captureHotkey, platform);
+        bindHotkey(platform, p);
     });
 }
 
-function bindHotkey(key: string, platform: Platform) {
+function bindHotkey(platform: Platform, p: prefs.Preferences) {
     hotkeys.unbind();
 
     let pressed = false;
-    hotkeys(key, { keyup: true }, event => {
+    hotkeys(p.general.captureHotkey, { keyup: true }, event => {
         if (!pressed && event.type === 'keydown') {
             pressed = true;
-            exec(platform);
+            if (platform.checkVideoPage()) {
+                capture(platform);
+            }
         }
         if (event.type === 'keyup') {
             pressed = false;
         }
     });
+
+    let animationPressed = false;
+    hotkeys(p.animation.captureHotkey, { keyup: true }, event => {
+        if (!animationPressed && event.type === 'keydown') {
+            animationPressed = true;
+            if (platform.checkVideoPage()) {
+                captureAnimation(platform);
+            }
+        }
+        if (event.type === 'keyup') {
+            animationPressed = false;
+        }
+    });
 }
 
 
-function exec(platform: Platform) {
-    if (!platform.checkVideoPage()) {
-        return;
+async function capture(platform: Platform) {
+    const video = platform.getVideoElement();
+    const pos = video.currentTime;
+    const ratio = video.videoWidth / video.videoHeight;
+    const canvas = captureVideo(video);
+
+    const { videoId, videoInfo } = await getVideoInfo(platform);
+    const p = await prefs.loadPreferences();
+
+    const image = convertToDataURL(canvas, p);
+
+    const param: Omit<CaptureMessage, keyof CaptureMessageBase> = {
+        type: 'capture',
+        image,
+    };
+
+    const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, param);
+
+    if (p.general.copyClipboard) {
+        copyToClipboard(canvas);
     }
-    return capture(platform);
+
+    if (p.general.notifyToast) {
+        screenshot.then(() => {
+            showToast(image, p);
+        });
+    }
+}
+
+async function captureAnimation(platform: Platform) {
+    const p = await prefs.loadPreferences();
+    const video = platform.getVideoElement();
+    const pos = video.currentTime;
+    const ratio = video.videoWidth / video.videoHeight;
+    const interval = p.animation.interval;
+    const canvases = startCaptureAnimation(video, interval);
+
+    const { videoId, videoInfo } = await getVideoInfo(platform);
+
+    const images = (await canvases).map(c => convertToDataURL(c, p));
+
+    const param: Omit<AnimationMessage, keyof CaptureMessageBase> = {
+        type: 'animation',
+        images,
+        interval,
+    };
+
+    const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, param);
+
+    if (p.general.notifyToast) {
+        screenshot.then(() => {
+            showToast(images[0], p);
+        });
+    }
+}
+
+async function startCaptureAnimation(video: HTMLVideoElement, interval: number): Promise<HTMLCanvasElement[]> {
+    return new Promise(resolve => {
+        const canvased: HTMLCanvasElement[] = [];
+        const id = setInterval(() => {
+            canvased.push(captureVideo(video));
+            if (canvased.length >= 100) {
+                clearInterval(id);
+                resolve(canvased);
+            }
+        }, interval);
+    });
 }
 
 
@@ -61,18 +138,12 @@ let currentPlatform: Platform | null = null;
 let currentVideoId: string | null = null;
 let currentVideoInfo: any = null;
 
-async function capture(platform: Platform) {
-    const video = platform.getVideoElement();
-    const pos = video.currentTime;
-    const canvas = captureVideo(video);
-
-    const p = await prefs.loadPreferences();
-
+async function getVideoInfo(platform: Platform): Promise<{ videoId: string, videoInfo: any }> {
     const videoId = platform.getVideoId();
     let videoInfo = currentVideoInfo;
 
     if (videoId === null) {
-        return;
+        return Promise.reject();
     }
 
     if (currentPlatform !== platform || currentVideoId !== videoId) {
@@ -82,31 +153,15 @@ async function capture(platform: Platform) {
         currentVideoId = videoId;
     }
 
-    const screenshot = saveScreenshot(canvas, platform, videoId, videoInfo, pos, p);
-
-    if (p.general.copyClipboard) {
-        copyToClipboard(canvas);
-    }
-
-    if (p.general.notifyToast) {
-        screenshot.then(image => {
-            showToast(image, p);
-        });
-    }
+    return { videoId, videoInfo };
 }
 
-function captureVideo(image: CanvasImageSource): HTMLCanvasElement {
+function captureVideo(video: HTMLVideoElement): HTMLCanvasElement {
     const canvas = document.createElement('canvas');
-    if (image instanceof HTMLVideoElement) {
-        canvas.width = image.videoWidth;
-        canvas.height = image.videoHeight;
-    }
-    else if (!(image instanceof SVGElement)) {
-        canvas.width = image.width;
-        canvas.height = image.height;
-    }
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
-    ctx?.drawImage(image, 0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     return canvas;
 }
 
@@ -114,37 +169,36 @@ function convertToDataURL(canvas: HTMLCanvasElement, p: prefs.Preferences): Imag
     return canvas.toDataURL(p.screenshot.fileType, (+p.screenshot.quality / 100));
 }
 
-function saveScreenshot(canvas: HTMLCanvasElement, platform: Platform, videoId: string, videoInfo: any, pos: number, p: prefs.Preferences): Promise<string> {
-    const image = convertToDataURL(canvas, p);
+type AdditionalParam = Omit<CaptureMessage, keyof CaptureMessageBase> | Omit<AnimationMessage, keyof CaptureMessageBase>;
 
-    const param: CaptureParam = {
-        type: 'capture',
+function saveScreenshot(platform: Platform, videoId: string, videoInfo: any, pos: number, ratio: number, param: AdditionalParam): Promise<void> {
+    const captureParam: CaptureMessageBase = {
+        ...param,
         platform: platform.PLATFORM_ID,
         videoId: videoId,
         videoInfo: {
             title: platform.getVideoTitle(videoId, videoInfo),
             author: platform.getAuthor(videoId, videoInfo),
             date: platform.getVideoDate(videoId, videoInfo),
-            ratio: canvas.width / canvas.height,
             private: platform.isPrivate(videoId, videoInfo),
+            ratio: ratio,
         },
         pos: pos,
         datetime: (new Date()).getTime(),
-        image: image,
     };
 
     return new Promise(resolve => {
-        chrome.runtime.sendMessage(param, async ({ existsVideoThumbnail, videoInfoParam }) => {
+        chrome.runtime.sendMessage(captureParam, async ({ existsVideoThumbnail, videoInfoParam }) => {
             if (!existsVideoThumbnail) {
                 const thumbnail = await downloadImage(platform.getVideoThumbnailUrl(videoId, videoInfo));
-                const param: VideoThumbnailParam = {
+                const thumbnailParam: VideoThumbnailMessage = {
                     type: 'video-thumbnail',
                     videoInfo: videoInfoParam,
                     thumbnail: thumbnail,
                 };
-                chrome.runtime.sendMessage(param);
+                chrome.runtime.sendMessage(thumbnailParam);
             }
-            resolve(image);
+            resolve();
         });
     });
 }
