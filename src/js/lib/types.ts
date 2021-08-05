@@ -50,6 +50,7 @@ export type ScreenshotInfo = {
     platform: string,
     videoId: string,
     no: number,
+    anime: boolean,
     pos: number, // time position
     datetime: number, // capture time
 };

@@ -15,8 +15,8 @@
  */
 
 import * as React from 'react';
-import { chakra, Box, Checkbox, Fade, HStack, Spacer } from '@chakra-ui/react';
-import { MdFullscreen } from 'react-icons/md';
+import { Center, chakra, Box, Checkbox, Fade, HStack, Spacer, AspectRatio } from '@chakra-ui/react';
+import { MdFullscreen, MdPlayCircleOutline } from 'react-icons/md';
 
 import { ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
 import LazyLoadScreenshotThumbnail from './LazyLoadScreenshotThumbnail';
@@ -85,6 +85,13 @@ const ScreenshotCard = ({ info, isChecked, disabled, onClick, onExpandClick }: S
             <Fade in={isShown || isChecked}>
                 <Box w="100%" h="100%" position="absolute" top={0} left={0} bgColor="rgba(0, 0, 0, 0.5)" />
             </Fade>
+            {info.anime && (
+                <Center w="100%" h="100%" position="absolute" top={0} left={0}>
+                    <AspectRatio w="60%" h="60%" ratio={1}>
+                        <MdPlayCircleOutline color="rgba(255, 255, 255, 0.8)" />
+                    </AspectRatio>
+                </Center>
+            )}
             <Fade in={isShown}>
                 <HStack w="100%" position="absolute" bottom={0} left={0} spacing={0} bgColor="rgba(0, 0, 0, 0)">
                     <Spacer />

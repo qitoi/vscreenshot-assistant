@@ -111,12 +111,12 @@ async function getScreenshotInfoIdList(platform: string, videoId: string): Promi
     return ids;
 }
 
-export async function saveScreenshot(platform: string, videoId: string, pos: number, datetime: number, image: ImageDataUrl, thumbnail: ImageDataUrl): Promise<void> {
+export async function saveScreenshot(platform: string, videoId: string, anime: boolean, pos: number, datetime: number, image: ImageDataUrl, thumbnail: ImageDataUrl): Promise<void> {
     const no = await publishScreenshotNo(platform, videoId);
     const infoId = getScreenshotInfoId(platform, videoId, no);
     const thumbId = getScreenshotThumbnailId(platform, videoId, no);
     const screenshotId = getScreenshotId(platform, videoId, no);
-    const info: ScreenshotInfo = { platform, videoId, no, pos, datetime };
+    const info: ScreenshotInfo = { platform, videoId, no, anime, pos, datetime };
     return setItems({
         [infoId]: info,
         [thumbId]: thumbnail,

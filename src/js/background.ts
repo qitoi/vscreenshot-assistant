@@ -46,7 +46,7 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
                 });
             const image = () => Promise.resolve(param.image);
 
-            capture(param, image, thumbnail, sendResponse);
+            capture(param, false, image, thumbnail, sendResponse);
 
             break;
         }
@@ -62,7 +62,7 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
                 });
             const image = () => convertAnimation(param.images, param.interval);
 
-            capture(param, image, thumbnail, sendResponse);
+            capture(param, true, image, thumbnail, sendResponse);
 
             break;
         }
@@ -70,12 +70,12 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
     return true;
 });
 
-function capture(param: CaptureMessageBase, image: () => Promise<ImageDataUrl>, thumbnail: () => Promise<ImageDataUrl>, sendResponse: (response?: any) => void): void {
+function capture(param: CaptureMessageBase, isAnime: boolean, image: () => Promise<ImageDataUrl>, thumbnail: () => Promise<ImageDataUrl>, sendResponse: (response?: any) => void): void {
     const videoInfo: VideoInfo = {
+        ...param.videoInfo,
         platform: param.platform,
         videoId: param.videoId,
         lastUpdated: param.datetime,
-        ...param.videoInfo,
     };
 
     Promise.all([
@@ -88,7 +88,7 @@ function capture(param: CaptureMessageBase, image: () => Promise<ImageDataUrl>, 
             storage.existsVideoThumbnail(param.platform, param.videoId)
         ]))
         .then(([image, thumbnail, existsVideoThumbnail]) => {
-            storage.saveScreenshot(param.platform, param.videoId, param.pos, param.datetime, image, thumbnail);
+            storage.saveScreenshot(param.platform, param.videoId, isAnime, param.pos, param.datetime, image, thumbnail);
             if (existsVideoThumbnail) {
                 storage.saveVideoInfo({ ...videoInfo, lastUpdated: Date.now() });
             }
