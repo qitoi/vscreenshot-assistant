@@ -67,6 +67,9 @@ const HotkeyInputControl = <T, >({ name, ...rest }: HotkeyInputControlProps<T>):
         }
         else {
             handlerRef.current = e => {
+                if (e.target !== node) {
+                    return;
+                }
                 const keys: string[] = [];
                 if (hotkeys.command) {
                     keys.push('command');
