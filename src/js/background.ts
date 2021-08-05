@@ -52,7 +52,7 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
         }
         case 'video-thumbnail': {
             storage.saveVideoThumbnail(param.videoInfo.platform, param.videoInfo.videoId, param.thumbnail);
-            storage.saveVideoInfo(param.videoInfo);
+            storage.saveVideoInfo({ ...param.videoInfo, lastUpdated: Date.now() });
             break;
         }
         case 'animation': {
@@ -77,24 +77,23 @@ function capture(param: CaptureMessageBase, image: () => Promise<ImageDataUrl>, 
         lastUpdated: param.datetime,
         ...param.videoInfo,
     };
-    // ビデオのサムネイル存在チェック
-    const existsThumbnail =
-        storage.existsVideoThumbnail(param.platform, param.videoId)
-            .then(exists => {
-                sendResponse({ existsVideoThumbnail: exists, videoInfoParam: videoInfo });
-                return exists;
-            });
 
     Promise.all([
-        existsThumbnail,
         image(),
         thumbnail(),
-    ]).then(([existsVideoThumbnail, image, thumbnail]) => {
-        storage.saveScreenshot(param.platform, param.videoId, param.pos, param.datetime, image, thumbnail);
-        if (existsVideoThumbnail) {
-            storage.saveVideoInfo(videoInfo);
-        }
-    });
+    ])
+        .then(([image, thumbnail]) => Promise.all([
+            image,
+            thumbnail,
+            storage.existsVideoThumbnail(param.platform, param.videoId)
+        ]))
+        .then(([image, thumbnail, existsVideoThumbnail]) => {
+            storage.saveScreenshot(param.platform, param.videoId, param.pos, param.datetime, image, thumbnail);
+            if (existsVideoThumbnail) {
+                storage.saveVideoInfo({ ...videoInfo, lastUpdated: Date.now() });
+            }
+            sendResponse({ existsVideoThumbnail, videoInfoParam: videoInfo });
+        });
 }
 
 async function convertAnimation(images: string[], interval: number): Promise<ImageDataUrl> {
