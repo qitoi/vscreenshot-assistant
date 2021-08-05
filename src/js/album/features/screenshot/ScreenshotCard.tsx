@@ -86,7 +86,7 @@ const ScreenshotCard = ({ info, isChecked, disabled, onClick, onExpandClick }: S
                 <Box w="100%" h="100%" position="absolute" top={0} left={0} bgColor="rgba(0, 0, 0, 0.5)" />
             </Fade>
             <Fade in={isShown}>
-                <HStack w="100%" position="absolute" bottom={0} left={0} bgColor="rgba(0, 0, 0, 0)">
+                <HStack w="100%" position="absolute" bottom={0} left={0} spacing={0} bgColor="rgba(0, 0, 0, 0)">
                     <Spacer />
                     <Box p={1}
                          cursor="pointer"
