@@ -71,7 +71,7 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: Selec
                 )}
             </Grid>
             <Box>
-                <Button colorScheme="twitter" onClick={handleClick}><LocalizedText messageId="albumShareScreenshotButton" /></Button>
+                <Button colorScheme="twitter" onClick={handleClick}><LocalizedText messageId="album_share_screenshot_button" /></Button>
             </Box>
         </HStack>
     );

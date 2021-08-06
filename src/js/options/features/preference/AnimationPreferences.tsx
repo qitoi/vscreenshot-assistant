@@ -30,18 +30,18 @@ const AnimationPreferences: React.FC = () => {
         <PreferenceBlock name="Animation">
             <Box w="100%">
                 <ControlGroup isEnabledHover>
-                    <LabeledControl messageId="prefsAnimationEnabled">
+                    <LabeledControl messageId="prefs_animation_enabled">
                         <SwitchControl<Preferences> name="animation.enabled" />
                     </LabeledControl>
                 </ControlGroup>
                 <ControlGroup<Preferences> conditionKey="animation.enabled" conditionValue={true} hideIfDisabled>
                     <ControlGroup indent="left">
-                        <LabeledControl messageId="prefsAnimationHotkey">
+                        <LabeledControl messageId="prefs_animation_hotkey">
                             <HotkeyInputControl<Preferences> name="animation.captureHotkey" w="12em" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="left">
-                        <LabeledControl messageId="prefsAnimationWidth">
+                        <LabeledControl messageId="prefs_animation_width">
                             <NumberInputControl<Preferences> name="animation.width"
                                                              w="10em"
                                                              min={1}
@@ -52,7 +52,7 @@ const AnimationPreferences: React.FC = () => {
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="left">
-                        <LabeledControl messageId="prefsAnimationHeight">
+                        <LabeledControl messageId="prefs_animation_height">
                             <NumberInputControl<Preferences> name="animation.height"
                                                              w="10em"
                                                              min={1}
@@ -63,7 +63,7 @@ const AnimationPreferences: React.FC = () => {
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="left">
-                        <LabeledControl messageId="prefsAnimationInterval">
+                        <LabeledControl messageId="prefs_animation_interval">
                             <NumberInputControl<Preferences> name="animation.interval"
                                                              w="10em"
                                                              min={10}

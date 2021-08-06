@@ -28,23 +28,23 @@ const TweetPreferences: React.FC = () => {
         <PreferenceBlock name="Tweet">
             <Box w="100%">
                 <ControlGroup isEnabledHover>
-                    <LabeledControl messageId="prefsTweetEnabled">
+                    <LabeledControl messageId="prefs_tweet_enabled">
                         <SwitchControl<Preferences> name="tweet.enabled" />
                     </LabeledControl>
                 </ControlGroup>
                 <ControlGroup<Preferences> indent="left" conditionKey="tweet.enabled" conditionValue={true} hideIfDisabled>
                     <ControlGroup indent="both">
-                        <LabeledControl messageId="prefsTweetURL">
+                        <LabeledControl messageId="prefs_tweet_url">
                             <SwitchControl<Preferences> name="tweet.tweetUrl" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="both">
-                        <LabeledControl messageId="prefsTweetTitle">
+                        <LabeledControl messageId="prefs_tweet_title">
                             <SwitchControl<Preferences> name="tweet.tweetTitle" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="both">
-                        <LabeledControl messageId="prefsTweetAuthor">
+                        <LabeledControl messageId="prefs_tweet_author">
                             <SwitchControl<Preferences> name="tweet.tweetAuthor" />
                         </LabeledControl>
                     </ControlGroup>

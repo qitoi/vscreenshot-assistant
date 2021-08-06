@@ -28,11 +28,11 @@ const ScreenshotPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="Screenshot">
             <ControlGroup w="100%">
-                <LabeledControl isVertical messageId="prefsScreenshotFormat">
+                <LabeledControl isVertical messageId="prefs_screenshot_format">
                     <RadioGroupControl<Preferences> name="screenshot.fileType">
-                        <RadioItem<FileType> value="image/jpeg" messageId="prefsScreenshotFormatJPEG">
+                        <RadioItem<FileType> value="image/jpeg" messageId="prefs_screenshot_format_jpeg">
                             <ControlGroup<Preferences> conditionKey="screenshot.fileType" conditionValue="image/jpeg">
-                                <LabeledControl messageId="prefsScreenshotFormatJPEGQuality">
+                                <LabeledControl messageId="prefs_screenshot_format_jpeg">
                                     <NumberInputControl<Preferences>
                                         name="screenshot.quality"
                                         w="12em"
@@ -43,7 +43,7 @@ const ScreenshotPreferences: React.FC = () => {
                                 </LabeledControl>
                             </ControlGroup>
                         </RadioItem>
-                        <RadioItem<FileType> value="image/png" messageId="prefsScreenshotFormatPNG" />
+                        <RadioItem<FileType> value="image/png" messageId="prefs_screenshot_format_png" />
                     </RadioGroupControl>
                 </LabeledControl>
             </ControlGroup>

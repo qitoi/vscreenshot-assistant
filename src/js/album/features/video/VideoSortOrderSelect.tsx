@@ -27,10 +27,10 @@ const VideoSortOrderSelect: React.FC = () => {
     const order = useSelector(selectVideoSortOrder);
 
     const videoSortOrderLabels = React.useMemo<Record<VideoSortOrder, string>>(() => ({
-        [VideoSortOrders.VideoDateAsc]: getLocalizedText('albumVideoOrderVideoDateAsc'),
-        [VideoSortOrders.VideoDateDesc]: getLocalizedText('albumVideoOrderVideoDateDesc'),
-        [VideoSortOrders.LastUpdateAsc]: getLocalizedText('albumVideoOrderLastUpdateAsc'),
-        [VideoSortOrders.LastUpdateDesc]: getLocalizedText('albumVideoOrderLastUpdateDesc'),
+        [VideoSortOrders.VideoDateAsc]: getLocalizedText('album_video_order_video_date_asc'),
+        [VideoSortOrders.VideoDateDesc]: getLocalizedText('album_video_order_video_date_desc'),
+        [VideoSortOrders.LastUpdateAsc]: getLocalizedText('album_video_order_last_update_asc'),
+        [VideoSortOrders.LastUpdateDesc]: getLocalizedText('album_video_order_last_update_desc'),
     }), []);
 
     const handleChangeSortOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {

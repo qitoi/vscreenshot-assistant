@@ -69,8 +69,8 @@ const App: React.FC = () => {
             <Box>
                 <Tabs>
                     <TabList position="sticky" top={0} bg="white" justifyContent="center">
-                        <Tab><LocalizedText messageId="prefsTabPreferences" /></Tab>
-                        <Tab><LocalizedText messageId="prefsTabLicense" /></Tab>
+                        <Tab><LocalizedText messageId="prefs_tab_preferences" /></Tab>
+                        <Tab><LocalizedText messageId="prefs_tab_license" /></Tab>
                     </TabList>
                     <Box w="80%" maxW="100em" marginX="auto">
                         <TabPanels>

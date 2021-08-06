@@ -1,137 +1,137 @@
 {
-  "prefsTabPreferences": {
+  "prefs_tab_preferences": {
     "message": "設定"
   },
-  "prefsTabLicense": {
+  "prefs_tab_license": {
     "message": "ライセンス"
   },
-  "prefsGeneralHotkey": {
+  "prefs_general_hotkey": {
     "message": "スクリーンショット撮影のキー設定"
   },
-  "prefsGeneralClipboardCopy": {
+  "prefs_general_clipboard_copy": {
     "message": "スクリーンショット撮影時にクリップボードにコピー"
   },
-  "prefsGeneralNotifyToast": {
+  "prefs_general_notify_toast": {
     "message": "スクリーンショット撮影時に画面に通知"
   },
-  "prefsGeneralNotifyPosition": {
+  "prefs_general_notify_position": {
     "message": "通知の表示位置"
   },
-  "prefsGeneralNotifyPositionBottomLeft": {
+  "prefs_general_notify_position_bottom_left": {
     "message": "左下"
   },
-  "prefsGeneralNotifyPositionBottomRight": {
+  "prefs_general_notify_position_bottom_right": {
     "message": "右下"
   },
-  "prefsGeneralNotifyPositionTopLeft": {
+  "prefs_general_notify_position_top_left": {
     "message": "左上"
   },
-  "prefsGeneralNotifyPositionTopRight": {
+  "prefs_general_notify_position_top_right": {
     "message": "右上"
   },
-  "prefsGeneralNotifyDuration": {
+  "prefs_general_notify_duration": {
     "message": "通知の表示時間"
   },
-  "prefsScreenshotFormat": {
+  "prefs_screenshot_format": {
     "message": "ファイルフォーマット"
   },
-  "prefsScreenshotFormatJPEG": {
+  "prefs_screenshot_format_jpeg": {
     "message": "JPEG"
   },
-  "prefsScreenshotFormatJPEGQuality": {
+  "prefs_screenshot_format_jpeg_quality": {
     "message": "品質"
   },
-  "prefsScreenshotFormatPNG": {
+  "prefs_screenshot_format_png": {
     "message": "PNG"
   },
-  "prefsThumbnailSize": {
+  "prefs_thumbnail_size": {
     "message": "サムネイルのサイズ"
   },
-  "prefsThumbnailWidth": {
+  "prefs_thumbnail_width": {
     "message": "横幅"
   },
-  "prefsThumbnailHeight": {
+  "prefs_thumbnail_height": {
     "message": "縦幅"
   },
-  "prefsTweetEnabled": {
+  "prefs_tweet_enabled": {
     "message": "Twitterへの投稿機能の有効化"
   },
-  "prefsTweetURL": {
+  "prefs_tweet_url": {
     "message": "URL"
   },
-  "prefsTweetTitle": {
+  "prefs_tweet_title": {
     "message": "タイトル"
   },
-  "prefsTweetAuthor": {
+  "prefs_tweet_author": {
     "message": "チャンネル名"
   },
-  "prefsAnimationEnabled": {
+  "prefs_animation_enabled": {
     "message": "アニメーションGIF撮影の有効化"
   },
-  "prefsAnimationHotkey": {
+  "prefs_animation_hotkey": {
     "message": "アニメーションGIF撮影のキー設定"
   },
-  "prefsAnimationWidth": {
+  "prefs_animation_width": {
     "message": "横幅"
   },
-  "prefsAnimationHeight": {
+  "prefs_animation_height": {
     "message": "縦幅"
   },
-  "prefsAnimationInterval": {
+  "prefs_animation_interval": {
     "message": "間隔"
   },
-  "prefsSave": {
+  "prefs_save": {
     "message": "保存"
   },
-  "albumMenuDownload": {
+  "album_menu_download": {
     "message": "ダウンロード"
   },
-  "albumMenuDelete": {
+  "album_menu_delete": {
     "message": "削除"
   },
-  "albumMenuPreferences": {
+  "album_menu_preferences": {
     "message": "設定"
   },
-  "albumVideoOrderLastUpdateAsc": {
-    "message": "最終更新日時 / 昇順"
+  "album_video_order_last_update_asc": {
+    "message": "最終更新日時/昇順"
   },
-  "albumVideoOrderLastUpdateDesc": {
-    "message": "最終更新日時 / 降順"
+  "album_video_order_last_update_desc": {
+    "message": "最終更新日時/降順"
   },
-  "albumVideoOrderVideoDateAsc": {
-    "message": "公開日 / 昇順"
+  "album_video_order_video_date_asc": {
+    "message": "公開日/昇順"
   },
-  "albumVideoOrderVideoDateDesc": {
-    "message": "公開日 / 降順"
+  "album_video_order_video_date_desc": {
+    "message": "公開日/降順"
   },
-  "albumScreenshotOrderCaptureDateAsc": {
-    "message": "撮影日時 / 昇順"
+  "album_screenshot_order_capture_date_asc": {
+    "message": "撮影日時/昇順"
   },
-  "albumScreenshotOrderCaptureDateDesc": {
-    "message": "撮影日時 / 降順"
+  "album_screenshot_order_capture_date_desc": {
+    "message": "撮影日時/降順"
   },
-  "albumScreenshotOrderVideoPosAsc": {
-    "message": "再生位置 / 昇順"
+  "album_screenshot_order_video_pos_asc": {
+    "message": "再生位置/昇順"
   },
-  "albumScreenshotOrderVideoPosDesc": {
-    "message": "再生位置 / 降順"
+  "album_screenshot_order_video_pos_desc": {
+    "message": "再生位置/降順"
   },
-  "albumDeleteConfirmLabel": {
+  "album_delete_confirm_label": {
     "message": "スクリーンショットを削除しますか？"
   },
-  "albumDeletingLabel": {
+  "album_deleting_label": {
     "message": "スクリーンショットを削除しています..."
   },
-  "albumDeleteButton": {
+  "album_delete_button": {
     "message": "削除"
   },
-  "albumCancelButton": {
+  "album_cancel_button": {
     "message": "キャンセル"
   },
-  "albumDownloadPreparingLabel": {
+  "album_download_preparing_label": {
     "message": "ダウンロード準備中..."
   },
-  "albumShareScreenshotButton": {
+  "album_share_screenshot_button": {
     "message": "Share"
   }
 }

@@ -30,32 +30,32 @@ import NumberInputControl from './NumberInputControl';
 
 const GeneralPreferences: React.FC = () => {
     const toastPositionItems: Record<ToastPosition, MessageId> = {
-        [ToastPositions.LeftBottom]: 'prefsGeneralNotifyPositionBottomLeft',
-        [ToastPositions.RightBottom]: 'prefsGeneralNotifyPositionBottomRight',
-        [ToastPositions.LeftTop]: 'prefsGeneralNotifyPositionTopLeft',
-        [ToastPositions.RightTop]: 'prefsGeneralNotifyPositionTopRight',
+        [ToastPositions.LeftBottom]: 'prefs_general_notify_position_bottom_left',
+        [ToastPositions.RightBottom]: 'prefs_general_notify_position_bottom_right',
+        [ToastPositions.LeftTop]: 'prefs_general_notify_position_top_left',
+        [ToastPositions.RightTop]: 'prefs_general_notify_position_top_right',
     };
     return (
         <PreferenceBlock name="General">
             <ControlGroup>
-                <LabeledControl messageId="prefsGeneralHotkey">
+                <LabeledControl messageId="prefs_general_hotkey">
                     <HotkeyInputControl<Preferences> name="general.captureHotkey" w="12em" />
                 </LabeledControl>
             </ControlGroup>
             <ControlGroup isEnabledHover>
-                <LabeledControl messageId="prefsGeneralClipboardCopy">
+                <LabeledControl messageId="prefs_general_clipboard_copy">
                     <SwitchControl<Preferences> name="general.copyClipboard" />
                 </LabeledControl>
             </ControlGroup>
             <Box w="100%">
                 <ControlGroup isEnabledHover>
-                    <LabeledControl messageId="prefsGeneralNotifyToast">
+                    <LabeledControl messageId="prefs_general_notify_toast">
                         <SwitchControl<Preferences> name="general.notifyToast" />
                     </LabeledControl>
                 </ControlGroup>
                 <ControlGroup<Preferences> conditionKey="general.notifyToast" conditionValue={true} hideIfDisabled>
                     <ControlGroup indent="left">
-                        <LabeledControl messageId="prefsGeneralNotifyDuration">
+                        <LabeledControl messageId="prefs_general_notify_duration">
                             <NumberInputControl<Preferences>
                                 name="general.notifyDuration"
                                 w="12em"
@@ -67,7 +67,7 @@ const GeneralPreferences: React.FC = () => {
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="left">
-                        <LabeledControl isVertical messageId="prefsGeneralNotifyPosition">
+                        <LabeledControl isVertical messageId="prefs_general_notify_position">
                             <RadioGroupControl<Preferences> w="100%" name="general.notifyPosition">
                                 <HStack>
                                     {Object.values(ToastPositions).map(pos => (

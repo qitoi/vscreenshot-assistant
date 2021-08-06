@@ -27,10 +27,10 @@ const ScreenshotSortOrderSelect: React.FC = () => {
     const order = useSelector(selectScreenshotSortOrder);
 
     const screenshotSortOrderLabels = React.useMemo<Record<ScreenshotSortOrder, string>>(() => ({
-        [ScreenshotSortOrders.CaptureDateAsc]: getLocalizedText('albumScreenshotOrderCaptureDateAsc'),
-        [ScreenshotSortOrders.CaptureDateDesc]: getLocalizedText('albumScreenshotOrderCaptureDateDesc'),
-        [ScreenshotSortOrders.VideoPosAsc]: getLocalizedText('albumScreenshotOrderVideoPosAsc'),
-        [ScreenshotSortOrders.VideoPosDesc]: getLocalizedText('albumScreenshotOrderVideoPosDesc'),
+        [ScreenshotSortOrders.CaptureDateAsc]: getLocalizedText('album_screenshot_order_capture_date_asc'),
+        [ScreenshotSortOrders.CaptureDateDesc]: getLocalizedText('album_screenshot_order_capture_date_desc'),
+        [ScreenshotSortOrders.VideoPosAsc]: getLocalizedText('album_screenshot_order_video_pos_asc'),
+        [ScreenshotSortOrders.VideoPosDesc]: getLocalizedText('album_screenshot_order_video_pos_desc'),
     }), []);
 
     const handleChangeSortOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {

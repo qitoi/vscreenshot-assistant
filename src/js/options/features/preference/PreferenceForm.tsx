@@ -70,7 +70,7 @@ const PreferenceForm: React.FC = () => {
                     <AnimationPreferences />
                     <ButtonGroup>
                         <Button colorScheme="blue" isLoading={isSubmitting} isDisabled={!isDirty} type="submit">
-                            <LocalizedText messageId="prefsSave" />
+                            <LocalizedText messageId="prefs_save" />
                         </Button>
                     </ButtonGroup>
                 </VStack>

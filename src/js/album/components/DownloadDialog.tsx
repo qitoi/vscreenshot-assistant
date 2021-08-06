@@ -47,9 +47,9 @@ type DownloadDialogProps = {
 const DownloadDialog = ({ isOpen, onCancel, setProgressHandler }: DownloadDialogProps) => {
     return (
         <Dialog isOpen={isOpen}
-                cancelLabel={<LocalizedText messageId="albumCancelButton" />}
+                cancelLabel={<LocalizedText messageId="album_cancel_button" />}
                 onCancel={onCancel}>
-            <Center py="1em"><LocalizedText messageId="albumDownloadPreparingLabel" /></Center>
+            <Center py="1em"><LocalizedText messageId="album_download_preparing_label" /></Center>
             <ProgressBar setProgressHandler={setProgressHandler} />
         </Dialog>
     );

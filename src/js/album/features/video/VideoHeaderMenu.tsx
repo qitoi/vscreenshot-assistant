@@ -97,32 +97,32 @@ const VideoHeaderMenu: React.FC = () => {
                     icon={<HamburgerIcon color="gray.500" />} />
                 <MenuList>
                     <MenuItem isDisabled={video === null} icon={<FcDownload size="1.5em" />} onClick={handleDownload}>
-                        <LocalizedText messageId="albumMenuDownload" />
+                        <LocalizedText messageId="album_menu_download" />
                     </MenuItem>
                     <MenuItem isDisabled={video === null} icon={<FcEmptyTrash size="1.5em" />} onClick={handleDeleteConfirm}>
-                        <LocalizedText messageId="albumMenuDelete" />
+                        <LocalizedText messageId="album_menu_delete" />
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem icon={<FcSettings size="1.5em" />} onClick={handleOpenOptions}>
-                        <LocalizedText messageId="albumMenuPreferences" />
+                        <LocalizedText messageId="album_menu_preferences" />
                     </MenuItem>
                 </MenuList>
             </Menu>
 
             <Dialog isOpen={isDeleteOpen}
-                    okLabel={<LocalizedText messageId="albumDeleteButton" />}
-                    cancelLabel={<LocalizedText messageId="albumCancelButton" />}
+                    okLabel={<LocalizedText messageId="album_delete_button" />}
+                    cancelLabel={<LocalizedText messageId="album_cancel_button" />}
                     isButtonDisabled={isDeletingVideo}
                     onOK={handleDelete}
                     onCancel={handleDeleteCancel}>
                 {!isDeletingVideo
                     ? (
                         <Box>
-                            <Center><Text py="1em"><LocalizedText messageId="albumDeleteConfirmLabel" /></Text></Center>
+                            <Center><Text py="1em"><LocalizedText messageId="album_delete_confirm_label" /></Text></Center>
                         </Box>
                     ) : (
                         <Box>
-                            <Center><Text py="1em"><LocalizedText messageId="albumDeletingLabel" /></Text></Center>
+                            <Center><Text py="1em"><LocalizedText messageId="album_deleting_label" /></Text></Center>
                             <Progress isIndeterminate />
                         </Box>
                     )
