@@ -26,39 +26,52 @@ import { downloadImage } from './download';
 
 export function Setup(platform: Platform): void {
     prefs.watch().addEventListener(p => {
-        bindHotkey(platform, p);
+        setupCaptureHotkey(platform, p);
     });
     prefs.loadPreferences().then(p => {
-        bindHotkey(platform, p);
+        setupCaptureHotkey(platform, p);
     });
 }
 
-function bindHotkey(platform: Platform, p: prefs.Preferences) {
+function setupCaptureHotkey(platform: Platform, p: prefs.Preferences) {
     hotkeys.unbind();
 
-    let pressed = false;
-    hotkeys(p.general.captureHotkey, { keyup: true }, event => {
-        if (!pressed && event.type === 'keydown') {
-            pressed = true;
-            if (platform.checkVideoPage()) {
-                capture(platform);
-            }
-        }
-        if (event.type === 'keyup') {
-            pressed = false;
+    bindHotkey(p.general.captureHotkey, () => {
+        if (platform.checkVideoPage()) {
+            capture(platform);
         }
     });
 
-    let animationPressed = false;
-    hotkeys(p.animation.captureHotkey, { keyup: true }, event => {
-        if (!animationPressed && event.type === 'keydown') {
-            animationPressed = true;
+    if (p.animation.enabled) {
+        bindHotkey(p.animation.captureHotkey, async onKeyUp => {
             if (platform.checkVideoPage()) {
-                captureAnimation(platform);
+                const stopCaptureAnimation = await captureAnimation(platform);
+                await onKeyUp;
+                stopCaptureAnimation();
             }
+        });
+    }
+}
+
+
+function bindHotkey(hotkey: string, onKeyDown: (onKeyUp: Promise<void>) => void) {
+    let pressed = false;
+    let resolve: (() => void) | null = null;
+    hotkeys(hotkey, { keyup: true }, event => {
+        if (!pressed && event.type === 'keydown') {
+            pressed = true;
+            if (resolve !== null) {
+                resolve();
+            }
+            const promise = new Promise<void>(r => resolve = r);
+            onKeyDown(promise);
         }
-        if (event.type === 'keyup') {
-            animationPressed = false;
+        else if (pressed && event.type === 'keyup') {
+            pressed = false;
+            if (resolve !== null) {
+                resolve();
+                resolve = null;
+            }
         }
     });
 }
@@ -99,38 +112,38 @@ async function captureAnimation(platform: Platform) {
     const pos = video.currentTime;
     const ratio = video.videoWidth / video.videoHeight;
     const interval = p.animation.interval;
-    const canvases = startCaptureAnimation(video, interval);
-
+    const stopCapture = startCaptureAnimation(video, interval);
     const { videoId, videoInfo } = await getVideoInfo(platform);
 
-    const images = (await canvases).map(c => convertToDataURL(c, p));
+    return () => {
+        const canvases = stopCapture();
+        const images = canvases.map(c => convertToDataURL(c, p));
 
-    const param: Omit<AnimationMessage, keyof CaptureMessageBase> = {
-        type: 'animation',
-        images,
-        interval,
+        const param: Omit<AnimationMessage, keyof CaptureMessageBase> = {
+            type: 'animation',
+            images,
+            interval,
+        };
+
+        const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, param);
+
+        if (p.general.notifyToast) {
+            screenshot.then(() => {
+                showToast(images[0], p);
+            });
+        }
     };
-
-    const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, param);
-
-    if (p.general.notifyToast) {
-        screenshot.then(() => {
-            showToast(images[0], p);
-        });
-    }
 }
 
-async function startCaptureAnimation(video: HTMLVideoElement, interval: number): Promise<HTMLCanvasElement[]> {
-    return new Promise(resolve => {
-        const canvased: HTMLCanvasElement[] = [];
-        const id = setInterval(() => {
-            canvased.push(captureVideo(video));
-            if (canvased.length >= 100) {
-                clearInterval(id);
-                resolve(canvased);
-            }
-        }, interval);
-    });
+function startCaptureAnimation(video: HTMLVideoElement, interval: number): () => HTMLCanvasElement[] {
+    const canvased: HTMLCanvasElement[] = [];
+    const id = setInterval(() => {
+        canvased.push(captureVideo(video));
+    }, interval);
+    return () => {
+        clearInterval(id);
+        return canvased;
+    };
 }
 
 
