@@ -66,7 +66,12 @@ export function compareScreenshotInfo(s1: ScreenshotInfoKey, s2: ScreenshotInfoK
 
 // messaging parameter
 
-export type MessageType = CaptureMessage | AnimationMessage | VideoThumbnailMessage;
+export type MessageType =
+    CaptureMessage
+    | VideoThumbnailMessage
+    | AnimeStartMessage
+    | AnimeFrameMessage
+    | AnimeEndMessage;
 
 export type CaptureVideoInfo = Omit<VideoInfo, 'platform' | 'videoId' | 'lastUpdated'>;
 
@@ -85,14 +90,26 @@ export type CaptureMessage = CaptureMessageBase & {
     image: ImageDataUrl,
 };
 
-export type AnimationMessage = CaptureMessageBase & {
-    type: 'animation',
-    images: ImageDataUrl[],
-    interval: number,
-};
-
 export type VideoThumbnailMessage = {
     type: 'video-thumbnail',
     videoInfo: VideoInfo,
     thumbnail: ImageDataUrl,
+};
+
+export type AnimeStartMessage = {
+    type: 'anime-start',
+    id: string,
+};
+
+export type AnimeFrameMessage = {
+    type: 'anime-frame',
+    id: string,
+    no: number,
+    image: ImageDataUrl,
+};
+
+export type AnimeEndMessage = CaptureMessageBase & {
+    type: 'anime-end',
+    id: string,
+    interval: number,
 };

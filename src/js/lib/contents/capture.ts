@@ -18,7 +18,15 @@ import hotkeys from 'hotkeys-js';
 import * as Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 
-import { AnimationMessage, CaptureMessage, CaptureMessageBase, ImageDataUrl, VideoThumbnailMessage } from '../types';
+import {
+    AnimeEndMessage,
+    AnimeFrameMessage,
+    AnimeStartMessage,
+    CaptureMessage,
+    CaptureMessageBase,
+    ImageDataUrl,
+    VideoThumbnailMessage
+} from '../types';
 import Platform from '../platforms/platform';
 import * as prefs from '../prefs';
 import { downloadImage } from './download';
@@ -115,17 +123,38 @@ async function captureAnimation(platform: Platform) {
     const stopCapture = startCaptureAnimation(video, interval);
     const { videoId, videoInfo } = await getVideoInfo(platform);
 
+    const time = Date.now();
+    const id = `${time}-${pos}`;
+
     return () => {
         const canvases = stopCapture();
         const images = canvases.map(c => convertToDataURL(c, p));
 
-        const param: Omit<AnimationMessage, keyof CaptureMessageBase> = {
-            type: 'animation',
-            images,
+        const start: AnimeStartMessage = {
+            type: 'anime-start',
+            id,
+        };
+        chrome.runtime.sendMessage(start);
+
+        let no = 0;
+        for (const image of images) {
+            no += 1;
+            const frame: AnimeFrameMessage = {
+                type: 'anime-frame',
+                id,
+                no,
+                image,
+            };
+            chrome.runtime.sendMessage(frame);
+        }
+
+        const end: Omit<AnimeEndMessage, keyof CaptureMessageBase> = {
+            type: 'anime-end',
+            id,
             interval,
         };
 
-        const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, param);
+        const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, end);
 
         if (p.general.notifyToast) {
             screenshot.then(() => {
@@ -182,7 +211,9 @@ function convertToDataURL(canvas: HTMLCanvasElement, p: prefs.Preferences): Imag
     return canvas.toDataURL(p.screenshot.fileType, (+p.screenshot.quality / 100));
 }
 
-type AdditionalParam = Omit<CaptureMessage, keyof CaptureMessageBase> | Omit<AnimationMessage, keyof CaptureMessageBase>;
+type AdditionalParam =
+    Omit<CaptureMessage, keyof CaptureMessageBase>
+    | Omit<AnimeEndMessage, keyof CaptureMessageBase>;
 
 function saveScreenshot(platform: Platform, videoId: string, videoInfo: any, pos: number, ratio: number, param: AdditionalParam): Promise<void> {
     const captureParam: CaptureMessageBase = {

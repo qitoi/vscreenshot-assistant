@@ -18,9 +18,9 @@ import * as gif from 'gif.js';
 import worker from '!raw-loader!gif.js/dist/gif.worker.js';
 
 import { ImageDataUrl } from '../types';
-import { createThumbnail } from './thumbnail';
 
-export async function makeAnimation(images: ImageDataUrl[], width: number, height: number, interval: number, onProgress?: (progress: number) => void): Promise<ImageDataUrl> {
+
+export async function makeAnimation(images: ImageDataUrl[], interval: number, onProgress?: (progress: number) => void): Promise<ImageDataUrl> {
     const encoder = new gif({
         repeat: 0,
         quality: 1,
@@ -28,13 +28,12 @@ export async function makeAnimation(images: ImageDataUrl[], width: number, heigh
     });
 
     const elems = await Promise.all(images.map(image =>
-        createThumbnail(image, width, height)
-            .then(resized => new Promise<HTMLImageElement>(resolve => {
-                const img = document.createElement('img') as HTMLImageElement;
-                img.src = resized;
-                img.onload = () => resolve(img);
-            }))
-    ));
+        new Promise<HTMLImageElement>(resolve => {
+            const img = document.createElement('img') as HTMLImageElement;
+            img.src = image;
+            img.onload = () => resolve(img);
+        }))
+    );
 
     for (const img of elems) {
         encoder.addFrame(img, { delay: interval });
