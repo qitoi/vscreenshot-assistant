@@ -66,9 +66,11 @@ const VideoHeaderMenu: React.FC = () => {
         try {
             const zipBlob = await archive(video.platform, video.videoId);
             const a = document.createElement('a') as HTMLAnchorElement;
-            a.href = URL.createObjectURL(zipBlob);
+            const zip = URL.createObjectURL(zipBlob);
+            a.href = zip;
             a.download = 'images.zip';
             a.click();
+            URL.revokeObjectURL(zip);
         }
         catch (e) {
             if (!(e instanceof CancelError)) {

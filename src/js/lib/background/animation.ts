@@ -21,10 +21,11 @@ import { ImageDataUrl } from '../types';
 
 
 export async function makeAnimation(images: ImageDataUrl[], interval: number, onProgress?: (progress: number) => void): Promise<ImageDataUrl> {
+    const workerScript = URL.createObjectURL(new Blob([worker], { type: 'text/javascript' }));
     const encoder = new gif({
         repeat: 0,
         quality: 1,
-        workerScript: URL.createObjectURL(new Blob([worker], { type: 'text/javascript' })),
+        workerScript,
     });
 
     const elems = await Promise.all(images.map(image =>
@@ -44,6 +45,7 @@ export async function makeAnimation(images: ImageDataUrl[], interval: number, on
             onProgress && onProgress(percent);
         });
         encoder.on('finished', (blob: Blob) => {
+            URL.revokeObjectURL(workerScript);
             const reader = new FileReader();
             reader.onload = e => {
                 resolve(e.target?.result as string);
