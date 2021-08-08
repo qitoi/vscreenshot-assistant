@@ -124,26 +124,14 @@ async function captureAnimation(platform: Platform, stop: Promise<void>) {
     const time = Date.now();
     const id = `${time}-${pos}`;
 
-    const canvases = await capture;
-    const images = canvases.map(c => convertToDataURL(c, p));
-
     const start: AnimeStartMessage = {
         type: 'anime-start',
         id,
     };
     chrome.runtime.sendMessage(start);
 
-    let no = 0;
-    for (const image of images) {
-        no += 1;
-        const frame: AnimeFrameMessage = {
-            type: 'anime-frame',
-            id,
-            no,
-            image,
-        };
-        chrome.runtime.sendMessage(frame);
-    }
+    const canvases = await capture;
+    const firstFrame = await sendFrame(id, canvases, p);
 
     const end: Omit<AnimeEndMessage, keyof CaptureMessageBase> = {
         type: 'anime-end',
@@ -155,9 +143,33 @@ async function captureAnimation(platform: Platform, stop: Promise<void>) {
 
     if (p.general.notifyToast) {
         screenshot.then(() => {
-            showToast(images[0], p);
+            showToast(firstFrame, p);
         });
     }
+}
+
+async function sendFrame(id: string, canvases: HTMLCanvasElement[], prefs: prefs.Preferences): Promise<ImageDataUrl> {
+    let firstFrame: ImageDataUrl = '';
+    let no = 0;
+    for (const canvas of canvases) {
+        no += 1;
+        const image = convertToDataURL(canvas, prefs);
+
+        if (no === 1) {
+            firstFrame = image;
+        }
+
+        const frame: AnimeFrameMessage = {
+            type: 'anime-frame',
+            id,
+            no,
+            image,
+        };
+        chrome.runtime.sendMessage(frame);
+        await new Promise(resolve => setTimeout(resolve, 0));
+    }
+
+    return firstFrame;
 }
 
 async function startCaptureAnimation(video: HTMLVideoElement, interval: number, stop: Promise<void>): Promise<HTMLCanvasElement[]> {
