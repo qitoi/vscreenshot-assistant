@@ -116,6 +116,13 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
 
             break;
         }
+        case 'remove-video': {
+            storage.removeVideoInfo(message.platform, message.videoId)
+                .then(() => {
+                    sendResponse('complete');
+                });
+            break;
+        }
     }
     return true;
 });

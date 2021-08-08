@@ -71,7 +71,8 @@ export type MessageType =
     | VideoThumbnailMessage
     | AnimeStartMessage
     | AnimeFrameMessage
-    | AnimeEndMessage;
+    | AnimeEndMessage
+    | RemoveVideoMessage;
 
 export type CaptureVideoInfo = Omit<VideoInfo, 'platform' | 'videoId' | 'lastUpdated'>;
 
@@ -112,4 +113,10 @@ export type AnimeEndMessage = CaptureMessageBase & {
     type: 'anime-end',
     id: string,
     interval: number,
+};
+
+export type RemoveVideoMessage = {
+    type: 'remove-video',
+    platform: string,
+    videoId: string,
 };
