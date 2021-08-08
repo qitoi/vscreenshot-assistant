@@ -53,9 +53,7 @@ function setupCaptureHotkey(platform: Platform, p: prefs.Preferences) {
     if (p.animation.enabled) {
         bindHotkey(p.animation.captureHotkey, async onKeyUp => {
             if (platform.checkVideoPage()) {
-                const stopCaptureAnimation = await captureAnimation(platform);
-                await onKeyUp;
-                stopCaptureAnimation();
+                captureAnimation(platform, onKeyUp);
             }
         });
     }
@@ -114,65 +112,62 @@ async function capture(platform: Platform) {
     }
 }
 
-async function captureAnimation(platform: Platform) {
+async function captureAnimation(platform: Platform, stop: Promise<void>) {
     const p = await prefs.loadPreferences();
     const video = platform.getVideoElement();
     const pos = video.currentTime;
     const ratio = video.videoWidth / video.videoHeight;
     const interval = p.animation.interval;
-    const stopCapture = startCaptureAnimation(video, interval);
+    const capture = startCaptureAnimation(video, interval, stop);
     const { videoId, videoInfo } = await getVideoInfo(platform);
 
     const time = Date.now();
     const id = `${time}-${pos}`;
 
-    return () => {
-        const canvases = stopCapture();
-        const images = canvases.map(c => convertToDataURL(c, p));
+    const canvases = await capture;
+    const images = canvases.map(c => convertToDataURL(c, p));
 
-        const start: AnimeStartMessage = {
-            type: 'anime-start',
-            id,
-        };
-        chrome.runtime.sendMessage(start);
-
-        let no = 0;
-        for (const image of images) {
-            no += 1;
-            const frame: AnimeFrameMessage = {
-                type: 'anime-frame',
-                id,
-                no,
-                image,
-            };
-            chrome.runtime.sendMessage(frame);
-        }
-
-        const end: Omit<AnimeEndMessage, keyof CaptureMessageBase> = {
-            type: 'anime-end',
-            id,
-            interval,
-        };
-
-        const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, end);
-
-        if (p.general.notifyToast) {
-            screenshot.then(() => {
-                showToast(images[0], p);
-            });
-        }
+    const start: AnimeStartMessage = {
+        type: 'anime-start',
+        id,
     };
+    chrome.runtime.sendMessage(start);
+
+    let no = 0;
+    for (const image of images) {
+        no += 1;
+        const frame: AnimeFrameMessage = {
+            type: 'anime-frame',
+            id,
+            no,
+            image,
+        };
+        chrome.runtime.sendMessage(frame);
+    }
+
+    const end: Omit<AnimeEndMessage, keyof CaptureMessageBase> = {
+        type: 'anime-end',
+        id,
+        interval,
+    };
+
+    const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, end);
+
+    if (p.general.notifyToast) {
+        screenshot.then(() => {
+            showToast(images[0], p);
+        });
+    }
 }
 
-function startCaptureAnimation(video: HTMLVideoElement, interval: number): () => HTMLCanvasElement[] {
+async function startCaptureAnimation(video: HTMLVideoElement, interval: number, stop: Promise<void>): Promise<HTMLCanvasElement[]> {
     const canvased: HTMLCanvasElement[] = [];
     const id = setInterval(() => {
         canvased.push(captureVideo(video));
     }, interval);
-    return () => {
-        clearInterval(id);
-        return canvased;
-    };
+    await stop;
+    clearInterval(id);
+    return canvased;
 }
 
 
