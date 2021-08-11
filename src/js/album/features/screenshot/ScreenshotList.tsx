@@ -40,7 +40,7 @@ const ScreenshotList: React.FC = () => {
     const selected = useSelector(selectSelectedScreenshot);
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
     const thumbnailPreferences = useSelector(selectThumbnailPreferences);
-    const [imageViewIndex, setImageViewIndex] = React.useState<number | null>(null);
+    const [lightboxScreenshot, setLightboxScreenshot] = React.useState<ScreenshotInfo | null>(null);
     const tweetEnabled = useSelector(selectTweetEnabled);
 
     React.useEffect(() => {
@@ -54,9 +54,8 @@ const ScreenshotList: React.FC = () => {
     }, [dispatch]);
 
     const handleExpandScreenshot = React.useCallback((info: ScreenshotInfo) => {
-        const cur = screenshots.findIndex(s => compareScreenshotInfo(s, info));
-        setImageViewIndex(cur);
-    }, [screenshots]);
+        setLightboxScreenshot(info);
+    }, [setLightboxScreenshot]);
 
     const handleRemoveSelected = React.useCallback((info: ScreenshotInfo) => {
         dispatch(removeSelectedScreenshot({ info }));
@@ -68,7 +67,7 @@ const ScreenshotList: React.FC = () => {
 
     const getKey = React.useCallback((s: ScreenshotInfo) => getScreenshotKey(s), []);
     const loadImage = React.useCallback((s: ScreenshotInfo) => storage.getScreenshot(s.platform, s.videoId, s.no), []);
-    const handleLightboxClose = React.useCallback(() => setImageViewIndex(null), []);
+    const handleLightboxClose = React.useCallback(() => setLightboxScreenshot(null), []);
 
     return (
         <Box w="100%" h="100%" minH="100%">
@@ -97,10 +96,10 @@ const ScreenshotList: React.FC = () => {
                     onResize={handleSelectedResize}
                     onClick={handleRemoveSelected} />
             )}
-            {video !== null && imageViewIndex !== null && (
+            {video !== null && lightboxScreenshot !== null && (
                 <CustomLightbox
                     list={screenshots}
-                    index={imageViewIndex}
+                    initial={lightboxScreenshot}
                     getKey={getKey}
                     loadImage={loadImage}
                     onClose={handleLightboxClose} />
