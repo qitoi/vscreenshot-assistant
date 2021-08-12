@@ -74,6 +74,13 @@ export type MessageType =
     | AnimeEndMessage
     | RemoveVideoMessage;
 
+export type CaptureMessageType =
+    CaptureMessage
+    | AnimeEndMessage;
+
+type OmitAll<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+export type CaptureMessageAdditionalType = OmitAll<CaptureMessageType, keyof CaptureMessageBase>;
+
 export type CaptureVideoInfo = Omit<VideoInfo, 'platform' | 'videoId' | 'lastUpdated'>;
 
 export type CaptureMessageBase = {

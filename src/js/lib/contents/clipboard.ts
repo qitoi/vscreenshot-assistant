@@ -14,18 +14,13 @@
  *  limitations under the License.
  */
 
-import { ImageDataUrl } from '../types';
-
-export function downloadImage(url: string): Promise<ImageDataUrl> {
-    return new Promise<ImageDataUrl>(resolve => {
-        fetch(url)
-            .then(res => res.blob())
-            .then(body => {
-                const reader = new FileReader();
-                reader.readAsDataURL(body);
-                reader.onload = () => {
-                    resolve(reader.result as ImageDataUrl);
-                };
-            });
-    });
+export async function copyToClipboard(canvas: HTMLCanvasElement): Promise<void> {
+    canvas.toBlob(blob => {
+        if (blob !== null) {
+            // @ts-ignore
+            const data = [new ClipboardItem({ [blob.type]: blob })];
+            // @ts-ignore
+            return navigator.clipboard.write(data);
+        }
+    }, 'image/png');
 }
