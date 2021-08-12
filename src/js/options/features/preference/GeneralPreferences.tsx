@@ -42,11 +42,6 @@ const GeneralPreferences: React.FC = () => {
                     <HotkeyInputControl<Preferences> name="general.captureHotkey" w="12em" />
                 </LabeledControl>
             </ControlGroup>
-            <ControlGroup isEnabledHover>
-                <LabeledControl messageId="prefs_general_clipboard_copy">
-                    <SwitchControl<Preferences> name="general.copyClipboard" />
-                </LabeledControl>
-            </ControlGroup>
             <Box w="100%">
                 <ControlGroup isEnabledHover>
                     <LabeledControl messageId="prefs_general_notify_toast">

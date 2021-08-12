@@ -46,9 +46,8 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
         interval,
     };
 
-    const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, end);
-
-    return screenshot.then(() => firstFrame);
+    return saveScreenshot(platform, videoId, videoInfo, pos, ratio, end)
+        .then(() => firstFrame);
 }
 
 

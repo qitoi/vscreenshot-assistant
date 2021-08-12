@@ -11,9 +11,6 @@
   "prefs_general_hotkey": {
     "message": "スクリーンショット撮影のキー設定"
   },
-  "prefs_general_clipboard_copy": {
-    "message": "スクリーンショット撮影時にクリップボードにコピー"
-  },
   "prefs_general_notify_toast": {
     "message": "スクリーンショット撮影時に画面に通知"
   },

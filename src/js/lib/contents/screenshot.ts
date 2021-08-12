@@ -17,7 +17,6 @@
 import { CaptureMessage, CaptureMessageBase, ImageDataUrl } from '../types';
 import * as prefs from '../prefs';
 import Platform from '../platforms/platform';
-import { copyToClipboard } from './clipboard';
 import { captureVideo, convertToDataURL, getVideoInfo, saveScreenshot } from './util';
 
 
@@ -36,11 +35,6 @@ export async function capture(platform: Platform, prefs: prefs.Preferences): Pro
         image,
     };
 
-    const screenshot = saveScreenshot(platform, videoId, videoInfo, pos, ratio, param);
-
-    if (prefs.general.copyClipboard) {
-        copyToClipboard(canvas);
-    }
-
-    return screenshot.then(() => image);
+    return saveScreenshot(platform, videoId, videoInfo, pos, ratio, param)
+        .then(() => image);
 }

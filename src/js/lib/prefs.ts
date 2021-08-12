@@ -35,7 +35,6 @@ const isToastPosition = (type: any): type is ToastPosition => Object.values(Toas
 export type Preferences = {
     general: {
         captureHotkey: string,
-        copyClipboard: boolean,
         notifyToast: boolean,
         notifyPosition: ToastPosition,
         notifyDuration: number,
@@ -66,7 +65,6 @@ export type Preferences = {
 export const DefaultPreferences: Preferences = {
     general: {
         captureHotkey: 'alt+s',
-        copyClipboard: false,
         notifyToast: true,
         notifyPosition: ToastPositions.LeftBottom,
         notifyDuration: 1000,
@@ -100,7 +98,6 @@ function completePreferences(prefs: Preferences): Preferences {
     return {
         general: {
             captureHotkey: prefs?.general?.captureHotkey || DefaultPreferences.general.captureHotkey,
-            copyClipboard: Boolean(prefs?.general?.copyClipboard ?? DefaultPreferences.general.copyClipboard),
             notifyToast: Boolean(prefs?.general?.notifyToast ?? DefaultPreferences.general.notifyToast),
             notifyPosition: completeToastPosition(prefs?.general?.notifyPosition),
             notifyDuration: Math.min(Math.max(Math.round(+(prefs?.general?.notifyDuration ?? DefaultPreferences.general.notifyDuration)), 100), 60000),
