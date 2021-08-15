@@ -15,12 +15,13 @@
  */
 
 import hotkeys from 'hotkeys-js';
-import Platform from '../platforms/platform';
+
+import { ImageDataUrl } from '../types';
 import * as prefs from '../prefs';
+import Platform from '../platforms/platform';
 import * as screenshot from './screenshot';
 import * as animation from './animation';
-import { showToast } from './toast';
-import { ImageDataUrl } from '../types';
+import { showScreenshotToast } from './toast';
 
 
 export function Setup(platform: Platform): void {
@@ -77,10 +78,10 @@ function bindHotkey(hotkey: string, onKeyDown: (onKeyUp: Promise<void>) => void)
 }
 
 
-function captureComplete(capture: Promise<ImageDataUrl>, prefs: prefs.Preferences) {
-    capture.then(img => {
-        if (prefs.general.notifyToast) {
-            showToast(img, prefs);
-        }
-    });
+function captureComplete(complete: Promise<ImageDataUrl>, prefs: prefs.Preferences) {
+    if (prefs.general.notifyToast) {
+        complete.then(img => {
+            showScreenshotToast(img, prefs);
+        });
+    }
 }

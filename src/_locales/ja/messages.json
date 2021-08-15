@@ -133,5 +133,19 @@
   },
   "album_share_screenshot_button": {
     "message": "Share"
+  },
+  "contents_animation_capture_caption": {
+    "message": "アニメーションGIF撮影中"
+  },
+  "contents_animation_capture_progress": {
+    "message": "$frame$ フレーム / $time$ 秒",
+    "placeholders": {
+      "frame": {
+        "content": "$1"
+      },
+      "time": {
+        "content": "$2"
+      }
+    }
   }
 }

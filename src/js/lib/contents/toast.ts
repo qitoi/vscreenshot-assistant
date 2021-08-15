@@ -20,12 +20,20 @@ import 'toastify-js/src/toastify.css';
 import * as prefs from '../prefs';
 
 
-let toasts: ReturnType<typeof Toastify>[] = [];
+type ToastOption = Toastify.Options & {
+    style?: Partial<CSSStyleDeclaration & { aspectRatio: string }>,
+}
+
+type Toast = ReturnType<typeof Toastify> & {
+    hideToast(): void,
+}
 
 
-export function showToast(image: string, p: prefs.Preferences): void {
+let toasts: Toast[] = [];
+
+
+export function showScreenshotToast(image: string, p: prefs.Preferences): void {
     for (const t of toasts) {
-        // @ts-ignore
         t.hideToast();
     }
     toasts = [];
@@ -40,29 +48,42 @@ export function showToast(image: string, p: prefs.Preferences): void {
         div.style['width'] = '100%';
         div.style['height'] = '100%';
         div.appendChild(img);
-        const toast = Toastify({
+        const toast = showToast({
             node: div,
             duration: p.general.notifyDuration,
-            gravity: (p.general.notifyPosition === prefs.ToastPositions.LeftTop || p.general.notifyPosition === prefs.ToastPositions.RightTop) ? 'top' : 'bottom',
-            position: (p.general.notifyPosition === prefs.ToastPositions.LeftTop || p.general.notifyPosition === prefs.ToastPositions.LeftBottom) ? 'left' : 'right',
-            stopOnFocus: false,
             callback: () => {
                 const idx = toasts.indexOf(toast);
                 if (idx !== -1) {
-                    // @ts-ignore
                     toasts[idx].hideToast();
                     toasts.splice(idx, 1);
                 }
             },
-            // @ts-ignore
             style: {
                 width: `${p.thumbnail.width}px`,
                 aspectRatio: `${p.thumbnail.width} / ${p.thumbnail.height}`,
                 padding: '8px',
                 background: 'rgba(33, 33, 33, 0.94)',
             },
-        });
-        toast.showToast();
+        }, p);
         toasts.push(toast);
     };
+}
+
+export function showToast(options: ToastOption, p: prefs.Preferences): Toast {
+    options = {
+        gravity: (p.general.notifyPosition === prefs.ToastPositions.LeftTop || p.general.notifyPosition === prefs.ToastPositions.RightTop) ? 'top' : 'bottom',
+        position: (p.general.notifyPosition === prefs.ToastPositions.LeftTop || p.general.notifyPosition === prefs.ToastPositions.LeftBottom) ? 'left' : 'right',
+        stopOnFocus: false,
+        style: {
+            color: 'rgba(220, 220, 220, 1)',
+            borderRadius: '5px',
+            fontSize: 'medium',
+            padding: '8px',
+            background: 'rgba(33, 33, 33, 0.94)',
+        },
+        ...options,
+    };
+    const toast = Toastify(options);
+    toast.showToast();
+    return toast as Toast;
 }

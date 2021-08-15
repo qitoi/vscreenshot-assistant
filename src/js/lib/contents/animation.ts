@@ -18,7 +18,9 @@ import { ImageDataUrl } from '../types';
 import * as messages from '../messages';
 import * as prefs from '../prefs';
 import Platform from '../platforms/platform';
+import { getLocalizedText } from '../components/LocalizedText';
 import { captureVideo, convertToDataURL, getVideoInfo, saveScreenshot } from './util';
+import { showToast } from './toast';
 
 
 export async function capture(platform: Platform, stop: Promise<void>, prefs: prefs.Preferences): Promise<ImageDataUrl> {
@@ -26,7 +28,30 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
     const pos = video.currentTime;
     const ratio = video.videoWidth / video.videoHeight;
     const interval = prefs.animation.interval;
-    const capture = startCaptureAnimation(video, interval, stop);
+
+    const div = document.createElement('div');
+    const cap = document.createElement('p');
+    cap.textContent = getLocalizedText('contents_animation_capture_caption');
+    cap.style['margin'] = '0';
+    cap.style['padding'] = '0';
+    const progress = document.createElement('p');
+    progress.textContent = '...';
+    progress.style['margin'] = '0';
+    progress.style['padding'] = '0';
+    progress.style['textAlign'] = 'center';
+
+    div.append(cap, progress);
+
+    const handleCaptureProgress = (frame: number, time: number) => {
+        progress.textContent = getLocalizedText('contents_animation_capture_progress', ['' + frame, time.toFixed(2)]);
+    };
+
+    const toast = showToast({
+        node: div,
+        duration: -1,
+    }, prefs);
+
+    const capture = startCaptureAnimation(video, interval, stop, prefs, handleCaptureProgress);
     const { videoId, videoInfo } = await getVideoInfo(platform);
 
     const time = Date.now();
@@ -39,6 +64,9 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
     messages.sendMessage(start);
 
     const canvases = await capture;
+
+    toast.hideToast();
+
     const firstFrame = await sendFrame(id, canvases, prefs);
 
     const end: Omit<messages.AnimeEndRequest, keyof messages.CaptureRequestBase> = {
@@ -52,14 +80,20 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
 }
 
 
-async function startCaptureAnimation(video: HTMLVideoElement, interval: number, stop: Promise<void>): Promise<HTMLCanvasElement[]> {
-    const canvased: HTMLCanvasElement[] = [];
-    const id = setInterval(() => {
-        canvased.push(captureVideo(video));
-    }, interval);
+async function startCaptureAnimation(video: HTMLVideoElement, interval: number, stop: Promise<void>, prefs: prefs.Preferences, onProgress: (frame: number, time: number) => void): Promise<HTMLCanvasElement[]> {
+    const canvases: HTMLCanvasElement[] = [];
+
+    const capture = () => {
+        canvases.push(captureVideo(video));
+        const sec = canvases.length * interval / 1000;
+        onProgress(canvases.length, sec);
+    };
+
+    const id = setInterval(capture, interval);
+
     await stop;
     clearInterval(id);
-    return canvased;
+    return canvases;
 }
 
 
