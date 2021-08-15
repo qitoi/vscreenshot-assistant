@@ -14,7 +14,8 @@
  *  limitations under the License.
  */
 
-import { CaptureMessage, CaptureMessageBase, ImageDataUrl } from '../types';
+import { ImageDataUrl } from '../types';
+import * as messages from '../messages';
 import * as prefs from '../prefs';
 import Platform from '../platforms/platform';
 import { captureVideo, convertToDataURL, getVideoInfo, saveScreenshot } from './util';
@@ -30,7 +31,7 @@ export async function capture(platform: Platform, prefs: prefs.Preferences): Pro
 
     const image = convertToDataURL(canvas, prefs);
 
-    const param: Omit<CaptureMessage, keyof CaptureMessageBase> = {
+    const param: Omit<messages.CaptureRequest, keyof messages.CaptureRequestBase> = {
         type: 'capture',
         image,
     };

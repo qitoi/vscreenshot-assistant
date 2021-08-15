@@ -14,7 +14,8 @@
  *  limitations under the License.
  */
 
-import { AnimeEndMessage, AnimeFrameMessage, AnimeStartMessage, CaptureMessageBase, ImageDataUrl } from '../types';
+import { ImageDataUrl } from '../types';
+import * as messages from '../messages';
 import * as prefs from '../prefs';
 import Platform from '../platforms/platform';
 import { captureVideo, convertToDataURL, getVideoInfo, saveScreenshot } from './util';
@@ -31,16 +32,16 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
     const time = Date.now();
     const id = `${time}-${pos}`;
 
-    const start: AnimeStartMessage = {
+    const start: messages.AnimeStartRequest = {
         type: 'anime-start',
         id,
     };
-    chrome.runtime.sendMessage(start);
+    messages.sendMessage(start);
 
     const canvases = await capture;
     const firstFrame = await sendFrame(id, canvases, prefs);
 
-    const end: Omit<AnimeEndMessage, keyof CaptureMessageBase> = {
+    const end: Omit<messages.AnimeEndRequest, keyof messages.CaptureRequestBase> = {
         type: 'anime-end',
         id,
         interval,
@@ -73,13 +74,13 @@ async function sendFrame(id: string, canvases: HTMLCanvasElement[], prefs: prefs
             firstFrame = image;
         }
 
-        const frame: AnimeFrameMessage = {
+        const frame: messages.AnimeFrameRequest = {
             type: 'anime-frame',
             id,
             no,
             image,
         };
-        chrome.runtime.sendMessage(frame);
+        messages.sendMessage(frame);
         await new Promise(resolve => setTimeout(resolve, 0));
     }
 

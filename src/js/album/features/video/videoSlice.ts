@@ -16,8 +16,8 @@
 
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { getVideoKey, RemoveVideoMessage, VideoInfo } from '../../../lib/types';
-import * as storage from '../../../lib/storage';
+import { getVideoKey, VideoInfo } from '../../../lib/types';
+import * as messages from '../../../lib/messages';
 import { RootState } from '../../store';
 import { loadVideoSortOrder, saveVideoSortOrder, sortVideo, VideoSortOrder } from './VideoSort';
 
@@ -42,14 +42,16 @@ export const removeVideo = createAsyncThunk<RemoveVideoPayload, { platform: stri
 (
     'video/remove',
     async ({ platform, videoId }): Promise<RemoveVideoPayload> => {
-        const remove: RemoveVideoMessage = {
+        const remove: messages.RemoveVideoRequest = {
             type: 'remove-video',
             platform,
             videoId,
         };
         await new Promise<void>(resolve => {
-            chrome.runtime.sendMessage(remove, () => {
-                resolve();
+            messages.sendMessage(remove, message => {
+                if (message.status === 'complete') {
+                    resolve();
+                }
             });
         });
         return {

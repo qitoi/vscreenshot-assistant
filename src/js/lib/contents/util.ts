@@ -14,8 +14,9 @@
  *  limitations under the License.
  */
 
+import { ImageDataUrl } from '../types';
+import * as messages from '../messages';
 import * as prefs from '../prefs';
-import { CaptureMessageAdditionalType, CaptureMessageBase, ImageDataUrl, VideoThumbnailMessage } from '../types';
 import Platform from '../platforms/platform';
 
 
@@ -72,8 +73,8 @@ export function convertToDataURL(canvas: HTMLCanvasElement, prefs: prefs.Prefere
 }
 
 
-export function saveScreenshot(platform: Platform, videoId: string, videoInfo: any, pos: number, ratio: number, param: CaptureMessageAdditionalType): Promise<void> {
-    const captureParam: CaptureMessageBase = {
+export function saveScreenshot(platform: Platform, videoId: string, videoInfo: any, pos: number, ratio: number, param: messages.CaptureRequestAdditionalType): Promise<void> {
+    const captureParam: messages.CaptureMessageRequest = {
         ...param,
         platform: platform.PLATFORM_ID,
         videoId: videoId,
@@ -88,16 +89,21 @@ export function saveScreenshot(platform: Platform, videoId: string, videoInfo: a
         datetime: (new Date()).getTime(),
     };
 
-    return new Promise(resolve => {
-        chrome.runtime.sendMessage(captureParam, async ({ existsVideoThumbnail, videoInfoParam }) => {
-            if (!existsVideoThumbnail) {
+    return new Promise((resolve, reject) => {
+        messages.sendMessage(captureParam, async (message) => {
+            if (message.status === 'error') {
+                reject(message.error);
+                return;
+            }
+
+            if (message.status === 'video-thumbnail') {
                 const thumbnail = await downloadImage(platform.getVideoThumbnailUrl(videoId, videoInfo));
-                const thumbnailParam: VideoThumbnailMessage = {
+                const thumbnailParam: messages.VideoThumbnailRequest = {
                     type: 'video-thumbnail',
-                    videoInfo: videoInfoParam,
+                    videoInfo: message.videoInfo,
                     thumbnail: thumbnail,
                 };
-                chrome.runtime.sendMessage(thumbnailParam);
+                messages.sendMessage(thumbnailParam);
             }
             resolve();
         });

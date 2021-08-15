@@ -17,7 +17,15 @@
 // album window
 
 import PopupWindow from './lib/background/popup-window';
-import { CaptureMessageBase, ImageDataUrl, MessageType, VideoInfo } from './lib/types';
+import { ImageDataUrl, VideoInfo } from './lib/types';
+import {
+    AnimeEndResponse,
+    AnimeFrameResponse,
+    CaptureRequestBase,
+    CaptureResponse,
+    MessageRequest,
+    RemoveVideoResponse,
+} from './lib/messages';
 
 import * as storage from './lib/storage';
 import * as prefs from './lib/prefs';
@@ -57,7 +65,7 @@ const animeCapture: AnimeCapture = {};
 const ANIME_CAPTURE_TIMEOUT = 60 * 1000;
 
 chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
-    const message = param as MessageType;
+    const message = param as MessageRequest;
     switch (message.type) {
         case 'capture': {
             // スクリーンショットのサムネイル作成
@@ -66,7 +74,23 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
             });
             const image = Promise.resolve(message.image);
 
-            capture(message, false, image, thumbnail, sendResponse);
+            capture(message, false, image, thumbnail)
+                .then(({ existsVideoThumbnail, videoInfo }) => {
+                    const response: (message: CaptureResponse) => void = sendResponse;
+                    if (existsVideoThumbnail) {
+                        response({
+                            type: 'capture-response',
+                            status: 'complete',
+                        });
+                    }
+                    else {
+                        response({
+                            type: 'capture-response',
+                            status: 'video-thumbnail',
+                            videoInfo,
+                        });
+                    }
+                });
 
             break;
         }
@@ -88,23 +112,25 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
             break;
         }
         case 'anime-frame': {
+            const response: (message: AnimeFrameResponse) => void = sendResponse;
             if (!(message.id in animeCapture)) {
-                sendResponse('timeout');
+                response({ type: 'anime-frame-response', status: 'error', error: 'timeout' });
                 break;
             }
             addAnimeFrame(message.id, message.no, message.image);
             break;
         }
         case 'anime-end': {
+            const response: (message: AnimeEndResponse) => void = sendResponse;
             if (!(message.id in animeCapture)) {
-                sendResponse('timeout');
+                response({ type: 'anime-end-response', status: 'error', error: 'timeout' });
                 break;
             }
             clearTimeout(animeCapture[message.id].timeout);
 
             const thumbnail = animeCapture[message.id].thumbnail;
             if (thumbnail === null) {
-                sendResponse('invalid');
+                response({ type: 'anime-end-response', status: 'error', error: 'invalid' });
                 break;
             }
 
@@ -112,14 +138,30 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
                 makeAnimation(frames.sort((a, b) => a.no - b.no).map(f => f.image), message.interval)
             );
 
-            capture(message, true, image, thumbnail, sendResponse);
+            capture(message, true, image, thumbnail)
+                .then(({ existsVideoThumbnail, videoInfo }) => {
+                    if (existsVideoThumbnail) {
+                        response({
+                            type: 'anime-end-response',
+                            status: 'complete',
+                        });
+                    }
+                    else {
+                        response({
+                            type: 'anime-end-response',
+                            status: 'video-thumbnail',
+                            videoInfo,
+                        });
+                    }
+                });
 
             break;
         }
         case 'remove-video': {
+            const response: (message: RemoveVideoResponse) => void = sendResponse;
             storage.removeVideoInfo(message.platform, message.videoId)
                 .then(() => {
-                    sendResponse('complete');
+                    response({ type: 'remove-video-response', status: 'complete' });
                 });
             break;
         }
@@ -127,7 +169,7 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
     return true;
 });
 
-function capture(param: CaptureMessageBase, isAnime: boolean, image: Promise<ImageDataUrl>, thumbnail: Promise<ImageDataUrl>, sendResponse: (response?: any) => void): void {
+function capture(param: CaptureRequestBase, isAnime: boolean, image: Promise<ImageDataUrl>, thumbnail: Promise<ImageDataUrl>): Promise<{ existsVideoThumbnail: boolean, videoInfo: VideoInfo }> {
     const videoInfo: VideoInfo = {
         ...param.videoInfo,
         platform: param.platform,
@@ -135,7 +177,7 @@ function capture(param: CaptureMessageBase, isAnime: boolean, image: Promise<Ima
         lastUpdated: param.datetime,
     };
 
-    Promise.all([
+    return Promise.all([
         image,
         thumbnail,
     ])
@@ -149,7 +191,7 @@ function capture(param: CaptureMessageBase, isAnime: boolean, image: Promise<Ima
             if (existsVideoThumbnail) {
                 storage.saveVideoInfo({ ...videoInfo, lastUpdated: Date.now() });
             }
-            sendResponse({ existsVideoThumbnail, videoInfoParam: videoInfo });
+            return { existsVideoThumbnail, videoInfo };
         });
 }
 
