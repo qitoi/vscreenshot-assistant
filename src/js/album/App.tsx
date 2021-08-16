@@ -38,8 +38,8 @@ const App: React.FC = () => {
             dispatch(setPreferences(p));
         };
         prefs.loadPreferences().then(callback);
-        onChanged.addEventListener(callback);
-        return () => onChanged.removeEventListener(callback);
+        onChanged.addListener(callback);
+        return () => onChanged.removeListener(callback);
     }, []);
 
     return (

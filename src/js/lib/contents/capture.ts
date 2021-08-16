@@ -25,7 +25,7 @@ import { showScreenshotToast } from './toast';
 
 
 export function Setup(platform: Platform): void {
-    prefs.watch().addEventListener(prefs => {
+    prefs.watch().addListener(prefs => {
         setupCaptureHotkey(platform, prefs);
     });
     prefs.loadPreferences().then(prefs => {

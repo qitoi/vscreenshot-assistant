@@ -15,6 +15,7 @@
  */
 
 import * as storage from './storage';
+import { Event, EventHandler } from './event';
 
 
 const PREFERENCES_KEY = 'preferences';
@@ -139,35 +140,16 @@ export async function savePreferences(prefs: Preferences): Promise<void> {
 }
 
 
-interface PreferencesEvent {
-    addEventListener: (callback: (prefs: Preferences) => void) => void;
-    removeEventListener: (callback: (prefs: Preferences) => void) => void;
-}
+type PreferencesEventHandler = EventHandler<Preferences>;
 
-let onChanged: PreferencesEvent | null = null;
+let onChanged: PreferencesEventHandler | null = null;
 
-export function watch(): PreferencesEvent {
+export function watch(): PreferencesEventHandler {
     if (onChanged !== null) {
         return onChanged;
     }
 
-    const prefsEvent = new class implements PreferencesEvent {
-        callbacks: ((prefs: Preferences) => void)[] = [];
-
-        addEventListener(callback: (prefs: Preferences) => void) {
-            this.callbacks.push(callback);
-        }
-
-        removeEventListener(callback: (prefs: Preferences) => void) {
-            this.callbacks = this.callbacks.filter(cb => cb !== callback);
-        }
-
-        dispatch(prefs: Preferences) {
-            for (const cb of this.callbacks) {
-                cb(prefs);
-            }
-        }
-    };
+    const prefsEvent = new Event<Preferences>();
 
     loadPreferences().then(prefs => {
         currentPreferences = completePreferences(prefs);

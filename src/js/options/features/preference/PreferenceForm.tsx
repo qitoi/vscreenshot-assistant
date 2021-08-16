@@ -47,8 +47,8 @@ const PreferenceForm: React.FC = () => {
         const callback = (p: prefs.Preferences) => {
             reset(p);
         };
-        onChanged.addEventListener(callback);
-        return () => onChanged.removeEventListener(callback);
+        onChanged.addListener(callback);
+        return () => onChanged.removeListener(callback);
     }, [reset]);
 
     const onSubmit = async (values: prefs.Preferences) => {
