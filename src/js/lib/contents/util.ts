@@ -18,6 +18,7 @@ import { ImageDataUrl } from '../types';
 import * as messages from '../messages';
 import * as prefs from '../prefs';
 import Platform from '../platforms/platform';
+import { MessageRequest, MessageResponse } from '../messages';
 
 
 let currentPlatform: Platform | null = null;
@@ -72,8 +73,11 @@ export function convertToDataURL(canvas: HTMLCanvasElement, prefs: prefs.Prefere
     return canvas.toDataURL(prefs.screenshot.fileType, (+prefs.screenshot.quality / 100));
 }
 
+type MessageSender = {
+    sendMessage: (req: MessageRequest, callback: (res: MessageResponse) => void) => void,
+};
 
-export function saveScreenshot(platform: Platform, videoId: string, videoInfo: any, pos: number, ratio: number, param: messages.CaptureRequestAdditionalType): Promise<void> {
+export function saveScreenshot(platform: Platform, videoId: string, videoInfo: any, pos: number, ratio: number, param: messages.CaptureRequestAdditionalType, sender: MessageSender): Promise<void> {
     const captureParam: messages.CaptureMessageRequest = {
         ...param,
         platform: platform.PLATFORM_ID,
@@ -90,7 +94,7 @@ export function saveScreenshot(platform: Platform, videoId: string, videoInfo: a
     };
 
     return new Promise((resolve, reject) => {
-        messages.sendMessage(captureParam, async (message) => {
+        sender.sendMessage(captureParam, async (message) => {
             if (message.status === 'error') {
                 reject(message.error);
                 return;

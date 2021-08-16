@@ -22,7 +22,7 @@ export function sendMessage<T extends MessageRequest>(message: T, callback?: (me
 }
 
 
-type ResponseType<T extends MessageRequest> = T extends any ? FindMap<T, RequestResponseMap> : never;
+export type ResponseType<T extends MessageRequest> = T extends any ? FindMap<T, RequestResponseMap> : never;
 
 export type MessageRequest = MapKeys<RequestResponseMap>;
 export type MessageResponse = MapValues<RequestResponseMap>;
@@ -30,11 +30,11 @@ export type MessageResponse = MapValues<RequestResponseMap>;
 
 type RequestResponseMap = [
     [CaptureRequest, CaptureResponse],
-    [VideoThumbnailRequest, VideoThumbnailResponse],
-    [AnimeStartRequest, AnimeStartResponse],
-    [AnimeFrameRequest, AnimeFrameResponse],
+    [VideoThumbnailRequest, never],
+    [AnimeFrameRequest, never],
     [AnimeEndRequest, AnimeEndResponse],
     [RemoveVideoRequest, RemoveVideoResponse],
+    [AnimeEncodeProgressRequest, never],
 ];
 
 
@@ -66,14 +66,6 @@ export type VideoThumbnailRequest = {
     videoInfo: VideoInfo,
     thumbnail: ImageDataUrl,
 };
-export type VideoThumbnailResponse = Response<VideoThumbnailRequest>;
-
-
-export type AnimeStartRequest = {
-    type: 'anime-start',
-    id: string,
-};
-export type AnimeStartResponse = Response<AnimeStartRequest>;
 
 
 export type AnimeFrameRequest = {
@@ -82,7 +74,6 @@ export type AnimeFrameRequest = {
     no: number,
     image: ImageDataUrl,
 };
-export type AnimeFrameResponse = Response<AnimeFrameRequest>;
 
 
 export type AnimeEndRequest = CaptureRequestBase & {
@@ -96,6 +87,12 @@ export type AnimeEndResponse = Response<AnimeEndRequest, {
 }>;
 
 
+type AnimeEncodeProgressRequest = {
+    type: 'anime-encode-progress',
+    progress: number,
+};
+
+
 export type RemoveVideoRequest = {
     type: 'remove-video',
     platform: string,
@@ -105,7 +102,7 @@ export type RemoveVideoResponse = Response<RemoveVideoRequest>;
 
 
 type Response<T extends { type: string }, P = never> = {
-    type: Concat<T['type'], '-response'>,
+    type: `${T['type']}-response`,
 } & (P | {
     status: 'complete',
 } | {
@@ -117,7 +114,6 @@ type Response<T extends { type: string }, P = never> = {
 // type utils
 
 type OmitAll<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
-type Concat<S1 extends string, S2 extends string> = `${S1}${S2}`;
 type IsSame<T, U> = T extends U ? U extends T ? true : false : false;
 type MapKeys<Map extends [any, any][]> =
     Map extends [[infer Key, any], ...infer Rest]

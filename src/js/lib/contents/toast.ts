@@ -24,7 +24,7 @@ type ToastOption = Toastify.Options & {
     style?: Partial<CSSStyleDeclaration & { aspectRatio: string }>,
 }
 
-type Toast = ReturnType<typeof Toastify> & {
+export type Toast = ReturnType<typeof Toastify> & {
     hideToast(): void,
 }
 
@@ -78,6 +78,7 @@ export function showToast(options: ToastOption, p: prefs.Preferences): Toast {
             color: 'rgba(220, 220, 220, 1)',
             borderRadius: '5px',
             fontSize: 'medium',
+            lineHeight: '1.5em',
             padding: '8px',
             background: 'rgba(33, 33, 33, 0.94)',
         },

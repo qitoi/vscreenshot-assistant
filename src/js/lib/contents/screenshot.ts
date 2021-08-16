@@ -36,6 +36,6 @@ export async function capture(platform: Platform, prefs: prefs.Preferences): Pro
         image,
     };
 
-    return saveScreenshot(platform, videoId, videoInfo, pos, ratio, param)
+    return saveScreenshot(platform, videoId, videoInfo, pos, ratio, param, messages)
         .then(() => image);
 }

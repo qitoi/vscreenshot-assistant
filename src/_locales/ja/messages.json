@@ -147,5 +147,8 @@
         "content": "$2"
       }
     }
+  },
+  "contents_animation_convert_caption": {
+    "message": "アニメーションGIF変換中"
   }
 }
