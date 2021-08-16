@@ -108,6 +108,11 @@ port.listenPort().addListener(port => {
         return;
     }
 
+    port.onDisconnect.addListener(() => {
+        animeCapture.thumbnail = null;
+        animeCapture.frames = [];
+    });
+
     const animeCapture: AnimeCapture = {
         thumbnail: null,
         frames: [],

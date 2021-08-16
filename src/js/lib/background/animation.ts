@@ -32,7 +32,10 @@ export async function makeAnimation(images: ImageDataUrl[], interval: number, on
         new Promise<HTMLImageElement>(resolve => {
             const img = document.createElement('img') as HTMLImageElement;
             img.src = image;
-            img.onload = () => resolve(img);
+            img.onload = () => {
+                img.onload = null;
+                resolve(img);
+            };
         }))
     );
 
@@ -44,10 +47,12 @@ export async function makeAnimation(images: ImageDataUrl[], interval: number, on
         encoder.on('progress', percent => {
             onProgress && onProgress(percent);
         });
-        encoder.on('finished', (blob: Blob) => {
+        encoder.once('finished', (blob: Blob) => {
+            encoder.removeAllListeners();
             URL.revokeObjectURL(workerScript);
             const reader = new FileReader();
             reader.onload = e => {
+                reader.onload = null;
                 resolve(e.target?.result as string);
             };
             reader.readAsDataURL(blob);
