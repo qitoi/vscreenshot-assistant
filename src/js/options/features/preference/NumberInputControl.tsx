@@ -52,7 +52,7 @@ const NumberInputControl = <T, >({ unit, ...rest }: NumberInputControlProps<T>):
                     <NumberDecrementStepper />
                 </NumberInputStepper>
             </NumberInput>
-            {unit && (<Box flexShrink={0}>{unit}</Box>)}
+            {unit && (<Box w={`${unit.length}em`} flexShrink={0}>{unit}</Box>)}
         </HStack>
     );
 };
