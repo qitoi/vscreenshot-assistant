@@ -40,13 +40,11 @@ const App: React.FC = () => {
         prefs.loadPreferences().then(callback);
         onChanged.addListener(callback);
         return () => onChanged.removeListener(callback);
-    }, []);
+    }, [dispatch]);
 
     return (
         <ChakraProvider>
-            <Flex wrap="nowrap"
-                  bgColor="gray.50"
-                  draggable={false}>
+            <Flex wrap="nowrap" bgColor="gray.100" draggable={false}>
                 <Sidebar>
                     <VideoList />
                 </Sidebar>

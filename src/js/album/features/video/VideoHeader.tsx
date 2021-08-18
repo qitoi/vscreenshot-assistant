@@ -21,9 +21,9 @@ import ScreenshotSortOrderSelect from '../screenshot/ScreenshotSortOrderSelect';
 import VideoHeaderMenu from './VideoHeaderMenu';
 import VideoHeaderInformation from './VideoHeaderInformation';
 
-export default function VideoHeader() {
+const VideoHeader: React.FC = () => {
     return (
-        <Box h="5em" p="1em" fontSize="lg" lineHeight="1.5em" bg="teal.500" color="white">
+        <Box h="5em" p="1em" fontSize="lg" lineHeight="1.5em" bg="gray.500" color="white">
             <HStack h="3em">
                 <VideoHeaderInformation />
                 <Spacer />
@@ -36,4 +36,6 @@ export default function VideoHeader() {
             </HStack>
         </Box>
     );
-}
+};
+
+export default VideoHeader;

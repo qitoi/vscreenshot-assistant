@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Center, VStack } from '@chakra-ui/react';
+import { Box, Center, VStack } from '@chakra-ui/react';
 
 import { getVideoKey, VideoInfo } from '../../../lib/types';
 import * as storage from '../../../lib/storage';
@@ -27,11 +27,13 @@ import VideoSortOrderSelect from './VideoSortOrderSelect';
 
 const VideoList: React.FC = () => {
     const dispatch = useDispatch();
+    const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
     const videos = useSelector(selectVideoList);
 
     React.useEffect(() => {
         storage.getVideoInfoList()
             .then(videos => {
+                setIsLoaded(true);
                 dispatch(setVideoList(videos));
             });
     }, [dispatch]);
@@ -41,16 +43,22 @@ const VideoList: React.FC = () => {
     }, [dispatch]);
 
     return (
-        <>
-            <Center p="1em" bg="teal.600" color="white" fontSize="lg" h="5em">
-                <VideoSortOrderSelect />
-            </Center>
-            <VStack my={5}>
-                {videos.map((v) =>
-                    <VideoThumbnail key={getVideoKey(v)} info={v} onSelected={handleSelected} />
+        <VStack h="100%" spacing={0} m={0} p={0}>
+            <Center w="100%" h="5em" p="1em" bg="gray.500" color="white" fontSize="lg" flexShrink={0}>
+                {isLoaded && (
+                    <VideoSortOrderSelect />
                 )}
-            </VStack>
-        </>
+            </Center>
+            {isLoaded && (
+                <Box w="100%" h="100%" overflowY="scroll">
+                    <VStack py="1em">
+                        {videos.map((v) =>
+                            <VideoThumbnail key={getVideoKey(v)} info={v} onSelected={handleSelected} />
+                        )}
+                    </VStack>
+                </Box>
+            )}
+        </VStack>
     );
 };
 

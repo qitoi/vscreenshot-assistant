@@ -19,6 +19,8 @@ import { Image } from '@chakra-ui/react';
 import { useInView } from 'react-intersection-observer';
 
 import * as storage from '../../../lib/storage';
+import { useSelector } from '../../store';
+import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
 
 type LazyLoadVideoThumbnailProps = {
     platform: string,
@@ -30,6 +32,7 @@ const LazyLoadVideoThumbnail = ({ platform, videoId }: LazyLoadVideoThumbnailPro
     const { ref, inView } = useInView({
         triggerOnce: true,
     });
+    const thumbnailPreferences = useSelector(selectThumbnailPreferences);
 
     React.useEffect(() => {
         storage.getVideoThumbnail(platform, videoId).then(image => {
@@ -38,7 +41,7 @@ const LazyLoadVideoThumbnail = ({ platform, videoId }: LazyLoadVideoThumbnailPro
     }, [inView, platform, videoId]);
 
     return (
-        <Image ref={ref} src={image} w="100%" minW="320px" minH="180px" draggable={false} />
+        <Image ref={ref} src={image} w={`${thumbnailPreferences.width}px`} draggable={false} />
     );
 };
 

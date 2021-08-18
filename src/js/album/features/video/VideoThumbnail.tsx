@@ -36,13 +36,12 @@ const VideoThumbnail = ({ info, onSelected }: VideoThumbnailProps) => {
     return (
         <Box
             as="button"
-            w="100%"
             onClick={handleClick}
             onMouseEnter={() => setIsShown.on()}
             onMouseLeave={() => setIsShown.off()}>
             <Box
                 position="relative"
-                w="fit-content"
+                w="100%"
                 m="0 auto"
                 rounded="md"
                 overflow="clip">

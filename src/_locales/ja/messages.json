@@ -84,7 +84,7 @@
     "message": "保存"
   },
   "album_menu_download": {
-    "message": "ダウンロード"
+    "message": "まとめて保存"
   },
   "album_menu_delete": {
     "message": "削除"
@@ -129,7 +129,7 @@
     "message": "キャンセル"
   },
   "album_download_preparing_label": {
-    "message": "ダウンロード準備中..."
+    "message": "ZIPファイル準備中..."
   },
   "album_share_screenshot_button": {
     "message": "Share"

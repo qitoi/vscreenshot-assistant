@@ -21,17 +21,7 @@ type SidebarProps = BoxProps;
 
 const Sidebar: React.FC<BoxProps> = (props: SidebarProps) => {
     return (
-        <Box
-            as="nav"
-            w="20%"
-            minW="340px"
-            maxW="340px"
-            h={'calc(100vh)'}
-            overflowY="auto"
-            flexShrink={0}
-            bg="gray.200"
-            borderColor="black"
-        >
+        <Box as="nav" h="100vh" overflowY="clip" flexShrink={0} borderColor="black">
             {props.children}
         </Box>
     );
