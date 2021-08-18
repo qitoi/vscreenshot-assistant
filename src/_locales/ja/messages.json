@@ -39,7 +39,7 @@
     "message": "JPEG"
   },
   "prefs_screenshot_format_jpeg_quality": {
-    "message": "品質"
+    "message": "品質 (0-100)"
   },
   "prefs_screenshot_format_png": {
     "message": "PNG"

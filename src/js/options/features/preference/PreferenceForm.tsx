@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Button, ButtonGroup, VStack } from '@chakra-ui/react';
+import { chakra, Button, VStack, Spacer, HStack, Box } from '@chakra-ui/react';
 
 import * as prefs from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
@@ -61,20 +61,27 @@ const PreferenceForm: React.FC = () => {
 
     return (
         <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <VStack w="60em" marginX="auto">
-                    <GeneralPreferences />
-                    <ScreenshotPreferences />
-                    <ThumbnailPreferences />
-                    <TweetPreferences />
-                    <AnimationPreferences />
-                    <ButtonGroup>
-                        <Button colorScheme="blue" isLoading={isSubmitting} isDisabled={!isDirty} type="submit">
-                            <LocalizedText messageId="prefs_save" />
-                        </Button>
-                    </ButtonGroup>
-                </VStack>
-            </form>
+            <Box>
+                <chakra.form onSubmit={handleSubmit(onSubmit)}>
+                    <Box w="100%" minH="calc(100vh - 8em)" py="2em">
+                        <VStack w="60em" mx="auto">
+                            <GeneralPreferences />
+                            <ScreenshotPreferences />
+                            <ThumbnailPreferences />
+                            <TweetPreferences />
+                            <AnimationPreferences />
+                        </VStack>
+                    </Box>
+                    <Box w="100%" h="8em" position="sticky" bottom={0} bgColor="white" borderTopColor="gray.500" borderTopWidth="1px">
+                        <HStack w="60em" h="100%" px="2em" mx="auto">
+                            <Spacer />
+                            <Button colorScheme="blue" isLoading={isSubmitting} isDisabled={!isDirty} type="submit">
+                                <LocalizedText messageId="prefs_save" />
+                            </Button>
+                        </HStack>
+                    </Box>
+                </chakra.form>
+            </Box>
         </FormProvider>
     );
 };

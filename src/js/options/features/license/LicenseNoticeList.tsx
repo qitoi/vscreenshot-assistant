@@ -39,23 +39,28 @@ const LicenseNoticeList: React.FC = () => {
     }, [dispatch]);
 
     return (
-        <Accordion allowMultiple>
-            {licenses.map(l => (
-                <AccordionItem key={l.name}>
-                    <h2>
-                        <AccordionButton>
-                            <Box flex={1} textAlign="left">{l.name}</Box>
-                            <AccordionIcon />
-                        </AccordionButton>
-                    </h2>
-                    <AccordionPanel>
-                        <Code w="100%">
-                            <chakra.pre p="1em" whiteSpace="pre-wrap">{l.license}</chakra.pre>
-                        </Code>
-                    </AccordionPanel>
-                </AccordionItem>
-            ))}
-        </Accordion>
+        <Box maxW="100em" p="2em" mx="auto">
+            <Box fontSize="md" p="1em">
+                THE FOLLOWING SETS FORTH ATTRIBUTION NOTICES FOR THIRD PARTY SOFTWARE THAT MAY BE CONTAINED IN THIS APPLICATION.
+            </Box>
+            <Accordion allowMultiple>
+                {licenses.map(l => (
+                    <AccordionItem key={l.name}>
+                        <h2>
+                            <AccordionButton>
+                                <Box flex={1} textAlign="left">{l.name}</Box>
+                                <AccordionIcon />
+                            </AccordionButton>
+                        </h2>
+                        <AccordionPanel>
+                            <Code w="100%">
+                                <chakra.pre p="1em" whiteSpace="pre-wrap">{l.license}</chakra.pre>
+                            </Code>
+                        </AccordionPanel>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+        </Box>
     );
 };
 

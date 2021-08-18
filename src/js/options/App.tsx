@@ -27,8 +27,15 @@ const theme = extendTheme({
         Tabs: {
             baseStyle: {
                 tab: {
+                    transition: 'background ease-out 200ms',
+                    _hover: {
+                        background: 'whiteAlpha.50'
+                    },
                     _focus: {
                         boxShadow: 'none',
+                    },
+                    _selected: {
+                        background: 'whiteAlpha.900',
                     },
                 }
             },
@@ -66,21 +73,19 @@ const theme = extendTheme({
 const App: React.FC = () => {
     return (
         <ChakraProvider theme={theme}>
-            <Box>
-                <Tabs>
-                    <TabList position="sticky" top={0} bg="white" justifyContent="center">
+            <Box h="100vh" minH="fit-content" overflow="clip">
+                <Tabs colorScheme="gray" align="start" orientation="vertical" h="100%">
+                    <TabList bgColor="gray.500" color="white" w="20em">
+                        <Box py="1em" fontSize="lg" textAlign="center">VScreenshot Assistant</Box>
                         <Tab><LocalizedText messageId="prefs_tab_preferences" /></Tab>
                         <Tab><LocalizedText messageId="prefs_tab_license" /></Tab>
                     </TabList>
-                    <Box w="80%" maxW="100em" marginX="auto">
-                        <TabPanels>
-                            <TabPanel>
+                    <Box w="100%" h="100%" marginX="auto">
+                        <TabPanels h="100%" position="relative">
+                            <TabPanel h="100%" p={0} overflowY="scroll">
                                 <PreferenceForm />
                             </TabPanel>
-                            <TabPanel>
-                                <Box fontSize="md" pb="1em">
-                                    THE FOLLOWING SETS FORTH ATTRIBUTION NOTICES FOR THIRD PARTY SOFTWARE THAT MAY BE CONTAINED IN THIS APPLICATION.
-                                </Box>
+                            <TabPanel h="100%" p={0} overflowY="scroll">
                                 <LicenseNoticeList />
                             </TabPanel>
                         </TabPanels>

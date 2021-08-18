@@ -32,7 +32,7 @@ const ScreenshotPreferences: React.FC = () => {
                     <RadioGroupControl<Preferences> name="screenshot.fileType">
                         <RadioItem<FileType> value="image/jpeg" messageId="prefs_screenshot_format_jpeg">
                             <ControlGroup<Preferences> conditionKey="screenshot.fileType" conditionValue="image/jpeg">
-                                <LabeledControl messageId="prefs_screenshot_format_jpeg">
+                                <LabeledControl messageId="prefs_screenshot_format_jpeg_quality">
                                     <NumberInputControl<Preferences>
                                         name="screenshot.quality"
                                         w="12em"
