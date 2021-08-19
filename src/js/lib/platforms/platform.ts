@@ -35,5 +35,7 @@ export default interface Platform {
 
     getVideoThumbnailUrl(videoId: string, info: any): string;
 
+    getHashtags(videoId: string, info: any): string[];
+
     isPrivate(videoId: string, info: any): boolean;
 }

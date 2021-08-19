@@ -16,6 +16,9 @@
 
 import Platform from './platform';
 
+import { extractHashtags } from './util';
+
+
 const Youtube: Platform = {
     PLATFORM_ID: 'youtube',
 
@@ -38,7 +41,21 @@ const Youtube: Platform = {
 
     async initVideoInfo(): Promise<any> {
         return new Promise(resolve => {
-            resolve(JSON.parse((document.querySelector('script#scriptTag') as HTMLElement)?.innerText));
+            const info: any = JSON.parse((document.querySelector('script#scriptTag') as HTMLElement)?.innerText);
+
+            const anchors = Array.from(document.querySelectorAll('a[href*="/hashtag/"]')) as HTMLAnchorElement[];
+            const hashtags: Record<string, boolean> = {};
+            for (const anchor of anchors) {
+                const tags = extractHashtags(anchor.textContent ?? '');
+                for (const tag of tags) {
+                    if (tag !== undefined && tag !== '') {
+                        hashtags[tag] = true;
+                    }
+                }
+            }
+            info.hashtags = Object.keys(hashtags);
+
+            resolve(info);
         });
     },
 
@@ -69,6 +86,10 @@ const Youtube: Platform = {
 
     getAuthor(videoId: string, info: any): string {
         return info?.author;
+    },
+
+    getHashtags(videoId: string, info: any): string[] {
+        return info.hashtags;
     },
 
     isPrivate(): boolean {

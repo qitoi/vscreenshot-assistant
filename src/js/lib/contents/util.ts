@@ -85,6 +85,7 @@ export function saveScreenshot(platform: Platform, videoId: string, videoInfo: a
         videoInfo: {
             title: platform.getVideoTitle(videoId, videoInfo),
             author: platform.getAuthor(videoId, videoInfo),
+            hashtags: platform.getHashtags(videoId, videoInfo),
             date: platform.getVideoDate(videoId, videoInfo),
             private: platform.isPrivate(videoId, videoInfo),
             ratio: ratio,

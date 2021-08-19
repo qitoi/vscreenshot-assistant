@@ -26,6 +26,7 @@ export type VideoInfo = {
     videoId: string,
     title: string,
     author: string,
+    hashtags: string[],
     private: boolean,
     ratio: number,
     date: number,

@@ -59,6 +59,10 @@ const SPWN: Platform = {
         return `https://public.spwn.jp/event-pages/${videoId}${info.basic_data.banner_img_path}`;
     },
 
+    getHashtags(videoId: string, info: any): string[] {
+        return info.basic_data.twitterHashTag;
+    },
+
     isPrivate(): boolean {
         return false;
     },
