@@ -86,6 +86,9 @@
   "album_menu_download": {
     "message": "まとめて保存"
   },
+  "album_menu_show_thumbnail": {
+    "message": "サムネイルを表示"
+  },
   "album_menu_delete": {
     "message": "削除"
   },

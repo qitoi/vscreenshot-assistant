@@ -17,9 +17,10 @@
 import * as React from 'react';
 import { Box, Center, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Progress, Text } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { FcEmptyTrash, FcDownload, FcSettings } from 'react-icons/fc';
+import { FcEmptyTrash, FcDownload, FcSettings, FcPicture } from 'react-icons/fc';
 import { CancelError } from 'p-cancelable';
 
+import { getScreenshotKey, getVideoKey, ScreenshotInfo, VideoInfo } from '../../../lib/types';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import useArchive from '../../hooks/useArchive';
@@ -27,6 +28,8 @@ import Dialog from '../../components/Dialog';
 import DownloadDialog from '../../components/DownloadDialog';
 import { selectActiveVideo, setActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from './videoSlice';
+import CustomLightbox from '../../components/CustomLightbox';
+import * as storage from '../../../lib/storage';
 
 const VideoHeaderMenu: React.FC = () => {
     const dispatch = useDispatch();
@@ -37,6 +40,7 @@ const VideoHeaderMenu: React.FC = () => {
     const [archive, cancel, setProgressHandler] = useArchive();
     const [isDownloadOpen, setIsDownloadOpen] = React.useState<boolean>(false);
     const [isDeletingVideo, setIsDeletingVideo] = React.useState<boolean>(false);
+    const [thumbnailVideo, setThumbnailVideo] = React.useState<VideoInfo[]>([]);
 
     const handleDeleteConfirm = () => {
         setIsDeleteOpen(true);
@@ -86,6 +90,15 @@ const VideoHeaderMenu: React.FC = () => {
         setIsDownloadOpen(false);
     }, [cancel]);
 
+    const handleShowThumbnail = React.useCallback(() => {
+        if (video !== null) {
+            setThumbnailVideo([video]);
+        }
+    }, [video]);
+    const handleCloseThumbnail = React.useCallback(() => setThumbnailVideo([]), []);
+    const getKey = React.useCallback((v: VideoInfo) => getVideoKey(v), []);
+    const loadImage = React.useCallback((v: VideoInfo) => storage.getVideoThumbnail(v.platform, v.videoId), []);
+
     const handleOpenOptions = React.useCallback(() => {
         chrome.runtime.openOptionsPage();
     }, []);
@@ -100,6 +113,9 @@ const VideoHeaderMenu: React.FC = () => {
                 <MenuList>
                     <MenuItem isDisabled={video === null} icon={<FcDownload size="1.5em" />} onClick={handleDownload}>
                         <LocalizedText messageId="album_menu_download" />
+                    </MenuItem>
+                    <MenuItem isDisabled={video === null} icon={<FcPicture size="1.5em" />} onClick={handleShowThumbnail}>
+                        <LocalizedText messageId="album_menu_show_thumbnail" />
                     </MenuItem>
                     <MenuItem isDisabled={video === null} icon={<FcEmptyTrash size="1.5em" />} onClick={handleDeleteConfirm}>
                         <LocalizedText messageId="album_menu_delete" />
@@ -132,6 +148,16 @@ const VideoHeaderMenu: React.FC = () => {
             </Dialog>
 
             <DownloadDialog isOpen={isDownloadOpen} onCancel={handleDownloadCancel} setProgressHandler={setProgressHandler} />
+
+            {thumbnailVideo.length > 0 && video !== null && (
+                <CustomLightbox
+                    list={thumbnailVideo}
+                    initial={video}
+                    loop={false}
+                    getKey={getKey}
+                    loadImage={loadImage}
+                    onClose={handleCloseThumbnail} />
+            )}
         </>
     );
 };
