@@ -15,10 +15,16 @@
  */
 
 import * as React from 'react';
+import { chakra, IconButton } from '@chakra-ui/react';
+import { MdFileDownload } from 'react-icons/md';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
 import { ImageDataUrl } from '../../lib/types';
+import { convertScreenshotToFile, getFileExt } from '../../lib/data-url';
+
+
+const FileDownloadIcon = chakra(MdFileDownload);
 
 
 type ExpandImage = {
@@ -248,11 +254,34 @@ const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, onClose }
         }
     }, [setCurrent, current, list]);
 
+    const handleDownload = React.useCallback(() => {
+        const blob = convertScreenshotToFile(main.src);
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = 'image' + getFileExt(blob.type);
+        a.click();
+        URL.revokeObjectURL(blobUrl);
+    }, [main]);
+
     return (
         <Lightbox
             mainSrc={main.src}
             nextSrc={next.src}
             prevSrc={prev.src}
+            toolbarButtons={[
+                <IconButton key="download"
+                            aria-label="Save"
+                            icon={<FileDownloadIcon size="25px" opacity={0.7} _hover={{ opacity: 1 }} />}
+                            w="40px"
+                            h="35px"
+                            paddingTop="2px"
+                            bgColor="rgba(0,0,0,0)"
+                            _hover={{ bgColor: 'rgba(0,0,0,0)' }}
+                            _active={{ bgColor: 'rgba(0,0,0,0)' }}
+                            _focus={{ boxShadow: 'none' }}
+                            onClick={handleDownload} />
+            ]}
             onMoveNextRequest={moveNext}
             onMovePrevRequest={movePrev}
             onCloseRequest={onClose}

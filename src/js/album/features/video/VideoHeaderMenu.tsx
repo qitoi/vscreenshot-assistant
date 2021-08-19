@@ -20,7 +20,8 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { FcEmptyTrash, FcDownload, FcSettings, FcPicture } from 'react-icons/fc';
 import { CancelError } from 'p-cancelable';
 
-import { getScreenshotKey, getVideoKey, ScreenshotInfo, VideoInfo } from '../../../lib/types';
+import { getVideoKey, VideoInfo } from '../../../lib/types';
+import * as storage from '../../../lib/storage';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import useArchive from '../../hooks/useArchive';
@@ -29,7 +30,6 @@ import DownloadDialog from '../../components/DownloadDialog';
 import { selectActiveVideo, setActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from './videoSlice';
 import CustomLightbox from '../../components/CustomLightbox';
-import * as storage from '../../../lib/storage';
 
 const VideoHeaderMenu: React.FC = () => {
     const dispatch = useDispatch();
