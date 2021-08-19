@@ -35,10 +35,11 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
     }, []);
 
     const cancel = React.useCallback(() => {
+        setProgressHandler(() => undefined);
         if (cancelable !== null) {
             cancelable.cancel();
         }
-    }, [cancelable]);
+    }, [cancelable, setProgressHandler]);
 
     const zip = React.useCallback(async (platform: string, videoId: string): Promise<Blob> => {
         // reset progress
