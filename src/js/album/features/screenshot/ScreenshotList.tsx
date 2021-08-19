@@ -100,6 +100,7 @@ const ScreenshotList: React.FC = () => {
                 <CustomLightbox
                     list={screenshots}
                     initial={lightboxScreenshot}
+                    loop={true}
                     getKey={getKey}
                     loadImage={loadImage}
                     onClose={handleLightboxClose} />

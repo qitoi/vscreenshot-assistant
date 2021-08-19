@@ -34,7 +34,7 @@ const initialExpandImage: ExpandImage = {
 };
 
 type ActionType<T> =
-    { type: 'list', list: T[], getKey: (t: T) => string }
+    { type: 'list', list: T[], loop: boolean, getKey: (t: T) => string }
     | { type: 'select', target: T, getKey: (t: T) => string }
     | { type: 'loading', key: string }
     | { type: 'loaded', key: string, image: string };
@@ -42,34 +42,49 @@ type ActionType<T> =
 type StateType<T> = {
     current: T | null,
     list: T[],
+    loop: boolean,
     images: ExpandImage[],
 };
 
 type LightboxProps<T> = {
     list: T[],
     initial: T,
+    loop: boolean,
     getKey: (i: T) => string;
     loadImage: (i: T) => Promise<ImageDataUrl>,
     onClose: () => void,
 };
 
-function getShowTargets<T>(list: T[], target: T): T[] {
-    const targets: T[] = [];
+function getShowTargets<T>(list: T[], target: T, loop: boolean): (T | null)[] {
+    const targets: (T | null)[] = [];
     const index = list.indexOf(target);
     if (index !== -1) {
         for (const offset of [0, 1, -1]) {
-            const t = list[(index + offset + list.length) % list.length];
-            targets.push(t);
+            const idx = index + offset;
+            // ループ設定
+            if (loop) {
+                const t = list[(idx + list.length) % list.length];
+                targets.push(t);
+            }
+            // ループ設定でない場合は範囲外はnull
+            else {
+                if (idx in list) {
+                    targets.push(list[idx]);
+                }
+                else {
+                    targets.push(null);
+                }
+            }
         }
     }
     return targets;
 }
 
-function getLoadTargets<T>(list: T[], target: T): T[] {
+function getLoadTargets<T>(list: T[], target: T, loop: boolean): T[] {
     const targets: T[] = [];
-    const candidates = getShowTargets(list, target);
+    const candidates = getShowTargets(list, target, loop);
     for (const t of candidates) {
-        if (!targets.includes(t)) {
+        if (t !== null && !targets.includes(t)) {
             targets.push(t);
         }
     }
@@ -80,7 +95,7 @@ function getInitialImages(): ExpandImage[] {
     return [{ ...initialExpandImage }, { ...initialExpandImage }, { ...initialExpandImage }];
 }
 
-function getImages<T>(list: T[], target: T | null, getKey: (t: T) => string, prevImages: ExpandImage[]): ExpandImage[] {
+function getImages<T>(list: T[], target: T | null, loop: boolean, getKey: (t: T) => string, prevImages: ExpandImage[]): ExpandImage[] {
     if (target === null) {
         return getInitialImages();
     }
@@ -90,23 +105,22 @@ function getImages<T>(list: T[], target: T | null, getKey: (t: T) => string, pre
         return acc;
     }, {});
 
-    let images: ExpandImage[] = [];
-    const targets = getShowTargets<T>(list, target);
-    if (targets.length > 0) {
-        for (const t of targets) {
+    const images: ExpandImage[] = getInitialImages();
+    const targets = getShowTargets<T>(list, target, loop);
+    for (const index in targets) {
+        const t = targets[index];
+        // 表示対象がnullの場合は空、nullでなければロードする
+        if (t !== null) {
             const key = getKey(t);
             // 既にロード済みの画像であれば流用
             if (key in imageCache) {
-                images.push(imageCache[key]);
+                images[index] = imageCache[key];
             }
             // 未ロードであれば仮画像を設定しつつロード待ち
             else {
-                images.push({ key, src: chrome.runtime.getURL('img/empty.png'), empty: true });
+                images[index] = { key, src: chrome.runtime.getURL('img/empty.png'), empty: true };
             }
         }
-    }
-    else {
-        images = getInitialImages();
     }
 
     return images;
@@ -120,7 +134,8 @@ function reducer<T>(state: StateType<T>, action: ActionType<T>): StateType<T> {
             return {
                 ...state,
                 list,
-                images: getImages(list, state.current, action.getKey, state.images)
+                loop: action.loop,
+                images: getImages(list, state.current, action.loop, action.getKey, state.images)
             };
         }
 
@@ -130,7 +145,7 @@ function reducer<T>(state: StateType<T>, action: ActionType<T>): StateType<T> {
             return {
                 ...state,
                 current,
-                images: getImages(state.list, current, action.getKey, state.images)
+                images: getImages(state.list, current, state.loop, action.getKey, state.images)
             };
         }
 
@@ -167,10 +182,10 @@ function reducer<T>(state: StateType<T>, action: ActionType<T>): StateType<T> {
 
 
 function useCustomLightboxLoad<T>(getKey: (t: T) => string, loadImage: (t: T) => Promise<ImageDataUrl>) {
-    const [state, dispatch] = React.useReducer<React.Reducer<StateType<T>, ActionType<T>>>(reducer, { images: getInitialImages(), list: [], current: null });
+    const [state, dispatch] = React.useReducer<React.Reducer<StateType<T>, ActionType<T>>>(reducer, { images: getInitialImages(), list: [], loop: false, current: null });
 
-    const setList = React.useCallback((list: T[]) => {
-        dispatch({ type: 'list', list, getKey });
+    const setList = React.useCallback((list: T[], loop: boolean) => {
+        dispatch({ type: 'list', list, loop, getKey });
     }, [dispatch, getKey]);
 
     const setCurrent = React.useCallback((target: T) => {
@@ -180,7 +195,7 @@ function useCustomLightboxLoad<T>(getKey: (t: T) => string, loadImage: (t: T) =>
     React.useEffect(() => {
         if (state.current !== null) {
             // ステート更新時にロードが必要な画像があればロード実行
-            const targets = getLoadTargets(state.list, state.current);
+            const targets = getLoadTargets(state.list, state.current, state.loop);
             const loaded = state.images.filter(i => !i.empty).map(i => i.key);
             const loadTargets: T[] = targets.filter(t => !loaded.includes(getKey(t)));
             for (const t of loadTargets) {
@@ -202,13 +217,13 @@ function useCustomLightboxLoad<T>(getKey: (t: T) => string, loadImage: (t: T) =>
 }
 
 
-const CustomLightbox = <T, >({ list, initial, getKey, loadImage, onClose }: LightboxProps<T>): React.ReactElement => {
+const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, onClose }: LightboxProps<T>): React.ReactElement => {
     const { setList, setCurrent, current, images: [main, next, prev] } = useCustomLightboxLoad(getKey, loadImage);
 
     // 初期リスト・リスト更新時の反映
     React.useEffect(() => {
-        setList(list);
-    }, [setList, list]);
+        setList(list, loop);
+    }, [setList, list, loop]);
 
     // 初期選択の画像指定
     React.useEffect(() => {
