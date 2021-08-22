@@ -62,7 +62,6 @@ export class Port {
 
         this.port.onMessage.addListener(value => {
             const message = value as PortRequestMessage | PortResponseMessage;
-            console.log('recv', message);
             // receive response
             if ('resId' in message) {
                 const seqId = message.resId;
