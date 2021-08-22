@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Box, Button, Grid, HStack, useBoolean } from '@chakra-ui/react';
+import { Box, Button, Grid, HStack, Spacer, useBoolean, VStack } from '@chakra-ui/react';
 
 import { getScreenshotKey, ScreenshotInfo, VideoInfo } from '../../../lib/types';
 import { shareScreenshot } from '../../../lib/background/share-twitter';
@@ -23,6 +23,9 @@ import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { ScreenshotInfoWithThumbnail } from './selectedScreenshotSlice';
 import { SelectedScreenshot } from './SelectedScreenshot';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
+import { useSelector } from '../../store';
+import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
+import { selectHashtags } from '../activeVideo/activeVideoSlice';
 
 type SelectedScreenshotListProps = {
     video: VideoInfo,
@@ -34,6 +37,8 @@ type SelectedScreenshotListProps = {
 const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: SelectedScreenshotListProps) => {
     const [loaded, setLoaded] = useBoolean(false);
     const ref = useResizeObserver<HTMLDivElement>(onResize);
+    const thumbPrefs = useSelector(selectThumbnailPreferences);
+    const hashtags = useSelector(selectHashtags);
 
     const handleLoad = () => {
         setLoaded.on();
@@ -41,7 +46,7 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: Selec
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        shareScreenshot(video, screenshots);
+        shareScreenshot(video, screenshots, hashtags);
     };
 
     if (screenshots.length === 0) {
@@ -56,23 +61,27 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: Selec
                 p="1rem"
                 visibility={loaded ? 'visible' : 'hidden'}
                 bg="gray.300">
-            <Grid w="100%"
-                  gridTemplateColumns="repeat(4, minmax(auto, 320px))"
-                  gap={2}
-                  flexWrap="nowrap"
-                  justifyContent="center">
-                {screenshots.map(s =>
-                    <SelectedScreenshot
-                        key={getScreenshotKey(s)}
-                        info={s}
-                        screenshot={s.thumbnail}
-                        onLoad={handleLoad}
-                        onClick={onClick} />
-                )}
-            </Grid>
+            <Spacer />
+            <VStack>
+                <Grid w="100%"
+                      gridTemplateColumns={`repeat(4, minmax(${thumbPrefs.width / 2}px, ${thumbPrefs.width}px))`}
+                      gap={2}
+                      flexWrap="nowrap"
+                      justifyContent="center">
+                    {screenshots.map(s =>
+                        <SelectedScreenshot
+                            key={getScreenshotKey(s)}
+                            info={s}
+                            screenshot={s.thumbnail}
+                            onLoad={handleLoad}
+                            onClick={onClick} />
+                    )}
+                </Grid>
+            </VStack>
             <Box>
                 <Button colorScheme="twitter" onClick={handleClick}><LocalizedText messageId="album_share_screenshot_button" /></Button>
             </Box>
+            <Spacer />
         </HStack>
     );
 };

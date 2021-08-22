@@ -23,22 +23,35 @@ export type SetActiveVideoPayload = VideoInfo | null;
 export const setActiveVideo = createAction<SetActiveVideoPayload>('activeVideo/set');
 type ActiveVideoState = {
     video: VideoInfo | null,
+    selectedHashtags: string[],
 };
 
 const initialState: ActiveVideoState = {
     video: null,
+    selectedHashtags: [],
 };
+
+type SelectHashtagsPayload = {
+    hashtags: string[],
+}
 
 const slice = createSlice({
     name: 'activeVideo',
     initialState,
-    reducers: {},
+    reducers: {
+        setHashtags(state: ActiveVideoState, action: PayloadAction<SelectHashtagsPayload>): void {
+            state.selectedHashtags = action.payload.hashtags;
+        }
+    },
     extraReducers: builder => {
         builder.addCase(setActiveVideo, (state, action: PayloadAction<SetActiveVideoPayload>): void => {
             state.video = action.payload;
+            state.selectedHashtags = [];
         });
     },
 });
 
 export default slice.reducer;
+export const { setHashtags } = slice.actions;
 export const selectActiveVideo = (state: RootState): typeof state.activeVideo.video => state.activeVideo.video;
+export const selectHashtags = (state: RootState): typeof state.activeVideo.selectedHashtags => state.activeVideo.selectedHashtags;

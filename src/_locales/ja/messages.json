@@ -65,6 +65,9 @@
   "prefs_tweet_author": {
     "message": "チャンネル名"
   },
+  "prefs_tweet_hashtag": {
+    "message": "ハッシュタグ"
+  },
   "prefs_animation_enabled": {
     "message": "アニメーションGIF撮影の有効化"
   },

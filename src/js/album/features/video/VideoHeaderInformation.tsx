@@ -15,15 +15,26 @@
  */
 
 import * as React from 'react';
-import { Box, HStack, Link } from '@chakra-ui/react';
+import { Box, CheckboxGroup, HStack, Link } from '@chakra-ui/react';
 import { LockIcon } from '@chakra-ui/icons';
 
 import platforms from '../../../lib/platforms';
-import { useSelector } from '../../store';
-import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
+import { getVideoKey } from '../../../lib/types';
+import { useDispatch, useSelector } from '../../store';
+import { HashtagCheckbox } from '../../components/HashtagCheckbox';
+import { selectActiveVideo, selectHashtags, setHashtags } from '../activeVideo/activeVideoSlice';
+import { selectHashtagEnabled } from '../preferences/preferencesSlice';
 
 const VideoHeaderInformation: React.FC = () => {
     const video = useSelector(selectActiveVideo);
+    const dispatch = useDispatch();
+    const selectedHashtags = useSelector(selectHashtags);
+    const hashtagEnabled = useSelector(selectHashtagEnabled);
+    const videoKey = video ? getVideoKey(video) : '';
+
+    const handleSelectedHashtagsChange = React.useCallback((value: string[]) => {
+        dispatch(setHashtags({ hashtags: value }));
+    }, [dispatch]);
 
     if (video === null) {
         return null;
@@ -38,7 +49,27 @@ const VideoHeaderInformation: React.FC = () => {
                     {video.title} / {video.author}
                 </Link>
             </HStack>
-            <Box>{(new Date(video.date)).toDateString()}</Box>
+            <HStack>
+                <Box whiteSpace="nowrap">
+                    {(new Date(video.date)).toDateString()}
+                </Box>
+                {hashtagEnabled && video && video.hashtags && video.hashtags.length > 0 && (
+                    <CheckboxGroup key={videoKey} onChange={handleSelectedHashtagsChange}>
+                        <HStack>
+                            {video.hashtags.map(hashtag => (
+                                <HashtagCheckbox
+                                    key={hashtag}
+                                    value={hashtag}
+                                    checked={selectedHashtags.includes(hashtag)}
+                                    checkedColor="rgba(255, 255, 255, 1)"
+                                    uncheckedColor="rgba(200, 200, 200, 0.8)">
+                                    #{hashtag}
+                                </HashtagCheckbox>
+                            ))}
+                        </HStack>
+                    </CheckboxGroup>
+                )}
+            </HStack>
         </Box>
     );
 };

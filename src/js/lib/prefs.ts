@@ -50,6 +50,7 @@ export type Preferences = {
     },
     tweet: {
         enabled: boolean,
+        tweetHashtag: boolean,
         tweetUrl: boolean,
         tweetTitle: boolean,
         tweetAuthor: boolean,
@@ -83,6 +84,7 @@ export const DefaultPreferences: Preferences = {
         tweetUrl: true,
         tweetTitle: true,
         tweetAuthor: false,
+        tweetHashtag: true,
     },
     animation: {
         enabled: false,
@@ -116,6 +118,7 @@ function completePreferences(prefs: Preferences): Preferences {
             tweetUrl: Boolean(prefs?.tweet?.tweetUrl ?? DefaultPreferences.tweet.tweetUrl),
             tweetTitle: Boolean(prefs?.tweet?.tweetTitle ?? DefaultPreferences.tweet.tweetTitle),
             tweetAuthor: Boolean(prefs?.tweet?.tweetAuthor ?? DefaultPreferences.tweet.tweetAuthor),
+            tweetHashtag: Boolean(prefs?.tweet?.tweetHashtag ?? DefaultPreferences.tweet.tweetHashtag),
         },
         animation: {
             enabled: Boolean(prefs?.animation?.enabled ?? DefaultPreferences.animation.enabled),

@@ -29,13 +29,13 @@ type TweetOptions = {
 };
 
 
-export function shareScreenshot(video: VideoInfo, screenshots: ScreenshotInfo[]): void {
+export function shareScreenshot(video: VideoInfo, screenshots: ScreenshotInfo[], hashtags: string[]): void {
     storage.getScreenshotList(screenshots).then(images => {
-        shareScreenshotOnTwitter(video, images);
+        shareScreenshotOnTwitter(video, images, hashtags);
     });
 }
 
-async function shareScreenshotOnTwitter(video: VideoInfo, screenshots: ImageDataUrl[]): Promise<void> {
+async function shareScreenshotOnTwitter(video: VideoInfo, screenshots: ImageDataUrl[], hashtags: string[]): Promise<void> {
     const options: TweetOptions = {};
     const text: string[] = [];
 
@@ -53,6 +53,9 @@ async function shareScreenshotOnTwitter(video: VideoInfo, screenshots: ImageData
     }
     if (text.length > 0) {
         options.text = text.join(' / ');
+    }
+    if (tweetPrefs.tweetHashtag && hashtags.length > 0) {
+        options.hashtags = hashtags.join(',');
     }
 
     const url = new URL(TWITTER_SHARE_URL);

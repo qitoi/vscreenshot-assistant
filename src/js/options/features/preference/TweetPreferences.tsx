@@ -48,6 +48,11 @@ const TweetPreferences: React.FC = () => {
                             <SwitchControl<Preferences> name="tweet.tweetAuthor" />
                         </LabeledControl>
                     </ControlGroup>
+                    <ControlGroup indent="both">
+                        <LabeledControl messageId="prefs_tweet_hashtag">
+                            <SwitchControl<Preferences> name="tweet.tweetHashtag" />
+                        </LabeledControl>
+                    </ControlGroup>
                 </ControlGroup>
             </Box>
         </PreferenceBlock>
