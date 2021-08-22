@@ -73,7 +73,7 @@ export const DefaultPreferences: Preferences = {
     },
     screenshot: {
         fileType: 'image/jpeg',
-        quality: 90,
+        quality: 94,
     },
     thumbnail: {
         width: 320,
