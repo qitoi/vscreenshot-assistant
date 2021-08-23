@@ -70,7 +70,8 @@ export async function removeVideoInfo(platform: string, videoId: string): Promis
     // video info/thumbnail ids
     const infoId = getVideoInfoId(platform, videoId);
     const thumbId = getVideoThumbnailId(platform, videoId);
-    const ids: string[] = [infoId, thumbId];
+    const hashtagsId = getVideoSelectedHashtagsId(platform, videoId);
+    const ids: string[] = [infoId, thumbId, hashtagsId];
 
     // screenshot info/thumbnail/image ids
     const maxNo = await getPublishedScreenshotNo(platform, videoId);
@@ -97,6 +98,19 @@ export async function saveVideoThumbnail(platform: string, videoId: string, thum
 export async function existsVideoThumbnail(platform: string, videoId: string): Promise<boolean> {
     const thumbId = getVideoThumbnailId(platform, videoId);
     return existsItem(thumbId);
+}
+
+export async function getVideoSelectedHashtags(platform: string, videoId: string): Promise<string[]> {
+    const hashtagsId = getVideoSelectedHashtagsId(platform, videoId);
+    return getItemById<string[] | undefined>(hashtagsId)
+        .then(hashtags => hashtags ?? []);
+}
+
+export async function saveVideoSelectedHashtags(platform: string, videoId: string, hashtags: string[]): Promise<void> {
+    const hashtagsId = getVideoSelectedHashtagsId(platform, videoId);
+    return setItems({
+        [hashtagsId]: hashtags,
+    });
 }
 
 
@@ -183,6 +197,10 @@ function getVideoInfoId(platform: string, videoId: string): string {
 
 function getVideoThumbnailId(platform: string, videoId: string): string {
     return `v:t:${platform}:${videoId}`;
+}
+
+function getVideoSelectedHashtagsId(platform: string, videoId: string): string {
+    return `v:h:${platform}:${videoId}`;
 }
 
 function getScreenshotNoId(platform: string, videoId: string): string {

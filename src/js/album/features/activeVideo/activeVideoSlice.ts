@@ -14,44 +14,76 @@
  *  limitations under the License.
  */
 
-import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { VideoInfo } from '../../../lib/types';
+import { compareVideoInfo, VideoInfo } from '../../../lib/types';
+import * as storage from '../../../lib/storage';
 import { RootState } from '../../store';
 
-export type SetActiveVideoPayload = VideoInfo | null;
-export const setActiveVideo = createAction<SetActiveVideoPayload>('activeVideo/set');
+
 type ActiveVideoState = {
     video: VideoInfo | null,
-    selectedHashtags: string[],
+    hashtags: string[],
 };
 
 const initialState: ActiveVideoState = {
     video: null,
-    selectedHashtags: [],
+    hashtags: [],
 };
 
-type SelectHashtagsPayload = {
+type SetActiveVideoPayload = {
+    video: VideoInfo | null,
     hashtags: string[],
-}
+};
+
+export const setActiveVideo = createAsyncThunk<SetActiveVideoPayload, VideoInfo | null>(
+    'activeVideo/setActiveVideo',
+    async (video): Promise<SetActiveVideoPayload> => {
+        if (video === null) {
+            return {
+                video,
+                hashtags: [],
+            };
+        }
+        const hashtags = await storage.getVideoSelectedHashtags(video.platform, video.videoId);
+        return {
+            video,
+            hashtags,
+        };
+    }
+);
+
+type SetHashtagsPayload = {
+    video: VideoInfo,
+    hashtags: string[],
+};
+
+export const setHashtags = createAsyncThunk<SetHashtagsPayload, SetHashtagsPayload>(
+    'activeVideo/setHashtags',
+    async ({ video, hashtags }): Promise<SetHashtagsPayload> => {
+        await storage.saveVideoSelectedHashtags(video.platform, video.videoId, hashtags);
+        return { video, hashtags };
+    }
+);
+
 
 const slice = createSlice({
     name: 'activeVideo',
     initialState,
-    reducers: {
-        setHashtags(state: ActiveVideoState, action: PayloadAction<SelectHashtagsPayload>): void {
-            state.selectedHashtags = action.payload.hashtags;
-        }
-    },
+    reducers: {},
     extraReducers: builder => {
-        builder.addCase(setActiveVideo, (state, action: PayloadAction<SetActiveVideoPayload>): void => {
-            state.video = action.payload;
-            state.selectedHashtags = [];
+        builder.addCase(setActiveVideo.fulfilled, (state, action): void => {
+            state.video = action.payload.video;
+            state.hashtags = action.payload.hashtags;
+        });
+        builder.addCase(setHashtags.fulfilled, (state, action): void => {
+            if (state.video !== null && compareVideoInfo(state.video, action.payload.video)) {
+                state.hashtags = action.payload.hashtags;
+            }
         });
     },
 });
 
 export default slice.reducer;
-export const { setHashtags } = slice.actions;
 export const selectActiveVideo = (state: RootState): typeof state.activeVideo.video => state.activeVideo.video;
-export const selectHashtags = (state: RootState): typeof state.activeVideo.selectedHashtags => state.activeVideo.selectedHashtags;
+export const selectHashtags = (state: RootState): typeof state.activeVideo.hashtags => state.activeVideo.hashtags;

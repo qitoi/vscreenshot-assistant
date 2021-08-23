@@ -26,15 +26,17 @@ import { selectActiveVideo, selectHashtags, setHashtags } from '../activeVideo/a
 import { selectHashtagEnabled } from '../preferences/preferencesSlice';
 
 const VideoHeaderInformation: React.FC = () => {
-    const video = useSelector(selectActiveVideo);
     const dispatch = useDispatch();
+    const video = useSelector(selectActiveVideo);
     const selectedHashtags = useSelector(selectHashtags);
     const hashtagEnabled = useSelector(selectHashtagEnabled);
     const videoKey = video ? getVideoKey(video) : '';
 
     const handleSelectedHashtagsChange = React.useCallback((value: string[]) => {
-        dispatch(setHashtags({ hashtags: value }));
-    }, [dispatch]);
+        if (video !== null) {
+            dispatch(setHashtags({ video, hashtags: value }));
+        }
+    }, [dispatch, video]);
 
     if (video === null) {
         return null;
@@ -54,13 +56,12 @@ const VideoHeaderInformation: React.FC = () => {
                     {(new Date(video.date)).toDateString()}
                 </Box>
                 {hashtagEnabled && video && video.hashtags && video.hashtags.length > 0 && (
-                    <CheckboxGroup key={videoKey} onChange={handleSelectedHashtagsChange}>
+                    <CheckboxGroup key={videoKey} value={selectedHashtags} onChange={handleSelectedHashtagsChange}>
                         <HStack>
                             {video.hashtags.map(hashtag => (
                                 <HashtagCheckbox
                                     key={hashtag}
                                     value={hashtag}
-                                    checked={selectedHashtags.includes(hashtag)}
                                     checkedColor="rgba(255, 255, 255, 1)"
                                     uncheckedColor="rgba(200, 200, 200, 0.8)">
                                     #{hashtag}

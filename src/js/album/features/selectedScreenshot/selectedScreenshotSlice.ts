@@ -18,7 +18,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { compareScreenshotInfo, compareVideoInfo, ImageDataUrl, ScreenshotInfo, VideoInfoKey } from '../../../lib/types';
 import { RootState } from '../../store';
-import { setActiveVideo, SetActiveVideoPayload } from '../activeVideo/activeVideoSlice';
+import { setActiveVideo } from '../activeVideo/activeVideoSlice';
 
 export type ScreenshotInfoWithThumbnail = ScreenshotInfo & {
     thumbnail: ImageDataUrl,
@@ -64,9 +64,10 @@ const slice = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addCase(setActiveVideo, (state, action: PayloadAction<SetActiveVideoPayload>): void => {
-                if (state.videoInfoKey === null || action.payload === null || !compareVideoInfo(state.videoInfoKey, action.payload)) {
-                    state.videoInfoKey = (action.payload === null) ? null : { platform: action.payload.platform, videoId: action.payload.videoId };
+            .addCase(setActiveVideo.fulfilled, (state, action): void => {
+                const video = action.payload.video;
+                if (state.videoInfoKey === null || video === null || !compareVideoInfo(state.videoInfoKey, video)) {
+                    state.videoInfoKey = (video === null) ? null : { platform: video.platform, videoId: video.videoId };
                     state.selected = [];
                 }
             });

@@ -20,7 +20,7 @@ import { compareVideoInfo, ImageDataUrl, ScreenshotInfo, VideoInfoKey } from '..
 import * as storage from '../../../lib/storage';
 import { RootState } from '../../store';
 import { loadScreenshotSortOrder, saveScreenshotSortOrder, sortScreenshot, ScreenshotSortOrder } from './ScreenshotSort';
-import { setActiveVideo, SetActiveVideoPayload } from '../activeVideo/activeVideoSlice';
+import { setActiveVideo } from '../activeVideo/activeVideoSlice';
 
 
 type ScreenshotState = {
@@ -108,10 +108,10 @@ const slice = createSlice<ScreenshotState, SliceCaseReducers<ScreenshotState>>({
     },
     extraReducers: builder => {
         builder
-            .addCase(setActiveVideo, (state, action: PayloadAction<SetActiveVideoPayload>): void => {
-                const p = action.payload;
-                if (state.videoInfoKey === null || p === null || !compareVideoInfo(state.videoInfoKey, p)) {
-                    state.videoInfoKey = (p === null ? null : { platform: p.platform, videoId: p.videoId });
+            .addCase(setActiveVideo.fulfilled, (state, action): void => {
+                const video = action.payload.video;
+                if (state.videoInfoKey === null || video === null || !compareVideoInfo(state.videoInfoKey, video)) {
+                    state.videoInfoKey = (video === null ? null : { platform: video.platform, videoId: video.videoId });
                     state.screenshots = [];
                     state.screenshotMap = {};
                     state.thumbnails = {};
