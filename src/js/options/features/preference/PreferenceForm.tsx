@@ -68,8 +68,8 @@ const PreferenceForm: React.FC = () => {
                             <GeneralPreferences />
                             <ScreenshotPreferences />
                             <ThumbnailPreferences />
-                            <TweetPreferences />
                             <AnimationPreferences />
+                            <TweetPreferences />
                         </VStack>
                     </Box>
                     <Box w="100%" h="8em" position="sticky" bottom={0} bgColor="white" borderTopColor="gray.500" borderTopWidth="1px">
