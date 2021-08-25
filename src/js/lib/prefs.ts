@@ -87,7 +87,7 @@ export const DefaultPreferences: Preferences = {
         tweetHashtag: true,
     },
     animation: {
-        enabled: false,
+        enabled: true,
         captureHotkey: 'alt+v',
         width: 640,
         height: 640,
