@@ -71,7 +71,7 @@ const ScreenshotList: React.FC = () => {
     const handleLightboxClose = React.useCallback(() => setLightboxScreenshot(null), []);
 
     return (
-        <Box w="100%" h="100%" minH="100%">
+        <Box w="100%" h="100%" minH="100%" userSelect="none">
             <Grid
                 w="100%"
                 minH={`calc(100% - 1rem - ${selectedHeight}px)`}

@@ -50,7 +50,7 @@ const VideoList: React.FC = () => {
                 )}
             </Center>
             {isLoaded && (
-                <Box w="100%" h="100%" overflowY="scroll">
+                <Box w="100%" h="100%" overflowY="scroll" userSelect="none">
                     <VStack py="1em">
                         {videos.map((v) =>
                             <VideoThumbnail key={getVideoKey(v)} info={v} onSelected={handleSelected} />
