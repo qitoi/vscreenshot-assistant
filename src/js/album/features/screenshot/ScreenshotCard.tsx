@@ -22,26 +22,28 @@ import { ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
 import LazyLoadScreenshotThumbnail from './LazyLoadScreenshotThumbnail';
 
 
-type ScreenshotCardProps = React.PropsWithChildren<{
+type ScreenshotCardProps = {
     info: ScreenshotInfo,
     isChecked: boolean,
     disabled: boolean,
+    selectable: boolean,
     onClick: (info: ScreenshotInfo, thumbnail: ImageDataUrl) => void,
     onExpandClick: (info: ScreenshotInfo) => void,
-}>;
+};
 
-const ScreenshotCard = ({ info, isChecked, disabled, onClick, onExpandClick }: ScreenshotCardProps) => {
+const ScreenshotCard = ({ info, isChecked, disabled, selectable, onClick, onExpandClick }: ScreenshotCardProps) => {
     const [isShown, setIsShown] = React.useState<boolean>(false);
     const [isClickable, setIsClickable] = React.useState<boolean>(false);
     const ref = React.useRef<HTMLImageElement>(null);
     const [visible, setVisible] = React.useState<boolean>(false);
 
+    const clickable = (!disabled && selectable) || isChecked;
     const handleClick = React.useCallback((e: React.MouseEvent<HTMLDivElement & HTMLButtonElement>) => {
         e.preventDefault();
-        if (isClickable && !disabled && ref.current !== null) {
+        if (isClickable && clickable && ref.current !== null) {
             onClick(info, ref.current.src);
         }
-    }, [info, disabled, onClick, isClickable]);
+    }, [info, clickable, onClick, isClickable]);
 
     const handleExpandClick = React.useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
@@ -71,7 +73,7 @@ const ScreenshotCard = ({ info, isChecked, disabled, onClick, onExpandClick }: S
                     rounded="md"
                     overflow="clip"
                     onClick={handleClick}
-                    cursor={disabled ? 'default' : 'pointer'}
+                    cursor={disabled ? 'default' : clickable ? 'pointer' : 'not-allowed'}
                     onMouseEnter={handleMouseOver}
                     onMouseLeave={handleMouseOut}
                     onMouseMove={handleMouseOver}>

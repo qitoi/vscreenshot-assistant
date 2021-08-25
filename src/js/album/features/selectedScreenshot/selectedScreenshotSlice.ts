@@ -54,7 +54,9 @@ const slice = createSlice({
                 state.selected = filtered;
             }
             else {
-                state.selected.push({ ...p.info, thumbnail: p.thumbnail });
+                if (isSelectableScreenshot(state.selected, action.payload.info)) {
+                    state.selected.push({ ...p.info, thumbnail: p.thumbnail });
+                }
             }
         },
         removeSelectedScreenshot: (state, action: PayloadAction<RemoveSelectedScreenshotPayload>): void => {
@@ -73,6 +75,13 @@ const slice = createSlice({
             });
     },
 });
+
+export function isSelectableScreenshot(selected: ScreenshotInfoWithThumbnail[], screenshot: ScreenshotInfo): boolean {
+    if (screenshot.anime) {
+        return selected.length === 0;
+    }
+    return selected.length < 4 && selected.every(s => !s.anime);
+}
 
 export default slice.reducer;
 export const { toggleSelectedScreenshot, removeSelectedScreenshot } = slice.actions;

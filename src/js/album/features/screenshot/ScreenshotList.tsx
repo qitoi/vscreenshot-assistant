@@ -25,6 +25,7 @@ import SelectedScreenshotList from '../selectedScreenshot/SelectedScreenshotList
 import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
 import { fetchScreenshotList, selectScreenshotList } from './screenshotSlice';
 import {
+    isSelectableScreenshot,
     removeSelectedScreenshot,
     selectSelectedScreenshot,
     toggleSelectedScreenshot,
@@ -83,6 +84,7 @@ const ScreenshotList: React.FC = () => {
                         key={getScreenshotKey(s)}
                         info={s}
                         disabled={video.private || !tweetEnabled}
+                        selectable={isSelectableScreenshot(selected, s)}
                         isChecked={selected.some(ss => compareScreenshotInfo(ss, s))}
                         onClick={handleClickScreenshot}
                         onExpandClick={handleExpandScreenshot} />
