@@ -53,7 +53,7 @@ const GeneralPreferences: React.FC = () => {
                         <LabeledControl messageId="prefs_general_notify_duration">
                             <NumberInputControl<Preferences>
                                 name="general.notifyDuration"
-                                w="12em"
+                                w="10em"
                                 min={100}
                                 max={60000}
                                 step={100}
