@@ -30,7 +30,7 @@ type ControlGroupProps<T> = Omit<FormControlProps, 'label'> & {
 };
 
 const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, indent, conditionKey, conditionValue, hideIfDisabled, children, ...rest }: ControlGroupProps<T>): React.ReactElement => {
-    const { watch } = useFormContext<T>();
+    const { watch, getValues } = useFormContext<T>();
     const context = useFormControlContext();
     const isNested = (context !== undefined);
     const hover = (isEnabledHover === true) ? { transition: 'background ease-out 200ms', _hover: { background: 'blackAlpha.50' } } : {};
@@ -38,7 +38,8 @@ const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, indent, conditio
 
     let disabled = (context?.isDisabled === true) || (isDisabled === true);
     if (conditionKey !== undefined) {
-        const condition = watch(conditionKey);
+        watch(conditionKey);
+        const condition = getValues(conditionKey);
         disabled = disabled || (condition !== conditionValue);
     }
 
