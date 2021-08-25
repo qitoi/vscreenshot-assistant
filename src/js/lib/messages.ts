@@ -33,8 +33,9 @@ type RequestResponseMap = [
     [VideoThumbnailRequest, never],
     [AnimeFrameRequest, never],
     [AnimeEndRequest, AnimeEndResponse],
-    [RemoveVideoRequest, RemoveVideoResponse],
     [AnimeEncodeProgressRequest, never],
+    [RemoveVideoRequest, RemoveVideoResponse],
+    [ResetStorageRequest, ResetStorageResponse],
 ];
 
 
@@ -99,6 +100,12 @@ export type RemoveVideoRequest = {
     videoId: string,
 };
 export type RemoveVideoResponse = Response<RemoveVideoRequest>;
+
+
+export type ResetStorageRequest = {
+    type: 'reset-storage',
+};
+export type ResetStorageResponse = Response<ResetStorageRequest>;
 
 
 type Response<T extends { type: string }, P = never> = {

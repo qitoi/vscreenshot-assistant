@@ -81,6 +81,14 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
                 });
             break;
         }
+        case 'reset-storage': {
+            const response: (message: messages.ResetStorageResponse) => void = sendResponse;
+            storage.clear(['preferences'])
+                .then(() => {
+                    response({ type: 'reset-storage-response', status: 'complete' });
+                });
+            break;
+        }
     }
     return true;
 });

@@ -139,7 +139,11 @@ export async function loadPreferences(): Promise<Preferences> {
 }
 
 export async function savePreferences(prefs: Preferences): Promise<void> {
-    return storage.setItems({ [PREFERENCES_KEY]: completePreferences(prefs) });
+    return storage.setItems({ [PREFERENCES_KEY]: { ...completePreferences(prefs), t: Date.now() } });
+}
+
+export async function resetPreferences(): Promise<void> {
+    return savePreferences(DefaultPreferences);
 }
 
 

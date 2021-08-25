@@ -25,6 +25,7 @@ import ThumbnailPreferences from './ThumbnailPreferences';
 import TweetPreferences from './TweetPreferences';
 import GeneralPreferences from './GeneralPreferences';
 import AnimationPreferences from './AnimationPreferences';
+import ResetPreferences from './ResetPreferences';
 
 
 const PreferenceForm: React.FC = () => {
@@ -70,6 +71,7 @@ const PreferenceForm: React.FC = () => {
                             <ThumbnailPreferences />
                             <AnimationPreferences />
                             <TweetPreferences />
+                            <ResetPreferences />
                         </VStack>
                     </Box>
                     <Box w="100%" h="8em" position="sticky" bottom={0} bgColor="white" borderTopColor="gray.500" borderTopWidth="1px">

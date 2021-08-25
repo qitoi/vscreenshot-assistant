@@ -38,22 +38,23 @@ type RemoveVideoPayload = {
     videoId: string,
 }
 
-export const removeVideo = createAsyncThunk<RemoveVideoPayload, { platform: string, videoId: string }>
-(
+export const removeVideo = createAsyncThunk<RemoveVideoPayload, { platform: string, videoId: string, removeFromStorage: boolean }>(
     'video/remove',
-    async ({ platform, videoId }): Promise<RemoveVideoPayload> => {
-        const remove: messages.RemoveVideoRequest = {
-            type: 'remove-video',
-            platform,
-            videoId,
-        };
-        await new Promise<void>(resolve => {
-            messages.sendMessage(remove, message => {
-                if (message.status === 'complete') {
-                    resolve();
-                }
+    async ({ platform, videoId, removeFromStorage }): Promise<RemoveVideoPayload> => {
+        if (removeFromStorage) {
+            const remove: messages.RemoveVideoRequest = {
+                type: 'remove-video',
+                platform,
+                videoId,
+            };
+            await new Promise<void>(resolve => {
+                messages.sendMessage(remove, message => {
+                    if (message.status === 'complete') {
+                        resolve();
+                    }
+                });
             });
-        });
+        }
         return {
             platform,
             videoId,

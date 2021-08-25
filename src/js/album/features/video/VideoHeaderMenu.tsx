@@ -25,7 +25,7 @@ import * as storage from '../../../lib/storage';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import useArchive from '../../hooks/useArchive';
-import Dialog from '../../components/Dialog';
+import Dialog from '../../../lib/components/Dialog';
 import DownloadDialog from '../../components/DownloadDialog';
 import { selectActiveVideo, setActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from './videoSlice';
@@ -53,8 +53,7 @@ const VideoHeaderMenu: React.FC = () => {
     const handleDelete = async () => {
         if (video !== null) {
             setIsDeletingVideo(true);
-            await dispatch(removeVideo({ platform: video.platform, videoId: video.videoId }));
-            dispatch(setActiveVideo(null));
+            await dispatch(removeVideo({ platform: video.platform, videoId: video.videoId, removeFromStorage: true }));
         }
         setIsDeleteOpen(false);
         setIsDeletingVideo(false);

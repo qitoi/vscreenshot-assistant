@@ -19,6 +19,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { compareVideoInfo, VideoInfo } from '../../../lib/types';
 import * as storage from '../../../lib/storage';
 import { RootState } from '../../store';
+import { removeVideo } from '../video/videoSlice';
 
 
 type ActiveVideoState = {
@@ -79,6 +80,11 @@ const slice = createSlice({
         builder.addCase(setHashtags.fulfilled, (state, action): void => {
             if (state.video !== null && compareVideoInfo(state.video, action.payload.video)) {
                 state.hashtags = action.payload.hashtags;
+            }
+        });
+        builder.addCase(removeVideo.fulfilled, (state, action): void => {
+            if (state.video !== null && compareVideoInfo(state.video, action.payload)) {
+                state.video = null;
             }
         });
     },

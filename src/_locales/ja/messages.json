@@ -83,6 +83,39 @@
   "prefs_animation_interval": {
     "message": "間隔"
   },
+  "prefs_reset_preferences": {
+    "message": "設定の初期化"
+  },
+  "prefs_reset_preferences_button": {
+    "message": "初期化"
+  },
+  "prefs_reset_preferences_dialog_label": {
+    "message": "設定を初期化しますか？"
+  },
+  "prefs_reset_preferences_dialog_cancel": {
+    "message": "キャンセル"
+  },
+  "prefs_reset_preferences_dialog_exec": {
+    "message": "初期化"
+  },
+  "prefs_reset_storage": {
+    "message": "全てのスクリーンショットの削除"
+  },
+  "prefs_reset_storage_button": {
+    "message": "削除"
+  },
+  "prefs_reset_storage_dialog_confirm_label": {
+    "message": "全てのスクリーンショットを削除しますか？"
+  },
+  "prefs_reset_storage_dialog_label": {
+    "message": "スクリーンショットを削除しています..."
+  },
+  "prefs_reset_storage_dialog_cancel": {
+    "message": "キャンセル"
+  },
+  "prefs_reset_storage_dialog_exec": {
+    "message": "削除"
+  },
   "prefs_save": {
     "message": "保存"
   },

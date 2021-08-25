@@ -18,8 +18,8 @@ import * as React from 'react';
 import { Center, Progress } from '@chakra-ui/react';
 
 import { LocalizedText } from '../../lib/components/LocalizedText';
+import Dialog from '../../lib/components/Dialog';
 import { SetProgressHandler } from '../hooks/useArchive';
-import Dialog from './Dialog';
 
 type ProgressBarProps = {
     setProgressHandler: SetProgressHandler,

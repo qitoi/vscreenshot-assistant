@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 
+import { VideoInfo } from '../../lib/types';
 import { useDispatch } from '../store';
 import { appendVideo, removeVideo } from '../features/video/videoSlice';
 import { appendScreenshot } from '../features/screenshot/screenshotSlice';
@@ -37,7 +38,8 @@ export function useWatchStorageChange(): void {
                             dispatch(appendVideo(change.newValue));
                         }
                         else {
-                            dispatch(removeVideo(change.oldValue));
+                            const video = change.oldValue as VideoInfo;
+                            dispatch(removeVideo({ platform: video.platform, videoId: video.videoId, removeFromStorage: false }));
                         }
                         break;
                     }
