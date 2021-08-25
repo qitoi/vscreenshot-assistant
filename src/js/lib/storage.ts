@@ -222,14 +222,6 @@ function getScreenshotId(platform: string, videoId: string, no: number): string 
 
 // util
 
-export async function clear(excludeIds: string[]): Promise<void> {
-    return execInSequence(async () => {
-        const excludeItems = await getItemMapByIds(excludeIds);
-        await clearAll();
-        await setItems(excludeItems);
-    });
-}
-
 export function getItemById<T>(id: string, defaultVal: any = null): Promise<T> {
     return new Promise(resolve => {
         chrome.storage.local.get({ [id]: defaultVal }, items => {
@@ -276,7 +268,7 @@ function existsItem(id: string): Promise<boolean> {
     });
 }
 
-function clearAll(): Promise<void> {
+export function clearAll(): Promise<void> {
     return new Promise(resolve => {
         chrome.storage.local.clear(resolve);
     });

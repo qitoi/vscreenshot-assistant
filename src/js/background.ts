@@ -83,7 +83,7 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
         }
         case 'reset-storage': {
             const response: (message: messages.ResetStorageResponse) => void = sendResponse;
-            storage.clear(['preferences'])
+            clearAllScreenshot()
                 .then(() => {
                     response({ type: 'reset-storage-response', status: 'complete' });
                 });
@@ -213,4 +213,11 @@ function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, im
             }
             return { existsVideoThumbnail, videoInfo };
         });
+}
+
+
+async function clearAllScreenshot(): Promise<void> {
+    const p = await prefs.loadPreferences();
+    await storage.clearAll();
+    await prefs.savePreferences(p);
 }
