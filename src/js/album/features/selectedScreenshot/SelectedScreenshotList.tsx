@@ -64,8 +64,7 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: Selec
                 visibility={loaded ? 'visible' : 'hidden'}
                 bg="gray.300">
             <Spacer />
-            <Grid w="100%"
-                  gridTemplateColumns={`repeat(4, minmax(${thumbPrefs.width / 4}px, ${thumbPrefs.width}px))`}
+            <Grid gridTemplateColumns={`repeat(4, minmax(${thumbPrefs.width / 4}px, ${thumbPrefs.width}px))`}
                   gap={2}
                   flexWrap="nowrap"
                   justifyContent="center">
