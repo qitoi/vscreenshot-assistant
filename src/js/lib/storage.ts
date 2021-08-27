@@ -27,14 +27,14 @@ type VideoKeyMap = {
 type VideoKey = [platform: string, id: string];
 
 function getVideoPrimaryKeys(): Promise<VideoKey[]> {
-    return execInSequence(async () => {
+    return transaction(async () => {
         const keymap = await getItemById<VideoKeyMap>(VIDEO_KEYMAP_KEY, {});
         return Object.keys(keymap).map(k => k.split(':') as VideoKey);
     });
 }
 
 function registerVideo(platform: string, id: string): Promise<void> {
-    return execInSequence(async () => {
+    return transaction(async () => {
         const keymap = await getItemById<VideoKeyMap>(VIDEO_KEYMAP_KEY, {});
         keymap[`${platform}:${id}`] = 1;
         await setItems({ [VIDEO_KEYMAP_KEY]: keymap });
@@ -42,7 +42,7 @@ function registerVideo(platform: string, id: string): Promise<void> {
 }
 
 function unregisterVideo(platform: string, id: string): Promise<void> {
-    return execInSequence(async () => {
+    return transaction(async () => {
         const keymap = await getItemById<VideoKeyMap>(VIDEO_KEYMAP_KEY, {});
         delete keymap[`${platform}:${id}`];
         await setItems({ [VIDEO_KEYMAP_KEY]: keymap });
@@ -171,7 +171,7 @@ export async function getScreenshotList(infoList: ScreenshotInfo[]): Promise<Ima
 
 async function publishScreenshotNo(platform: string, videoId: string): Promise<number> {
     const id = getScreenshotNoId(platform, videoId);
-    return execInSequence(async () => {
+    return transaction(async () => {
         const no = await getItemById<number>(id, 0) + 1;
         await setItems({ [id]: no });
         return no;
@@ -276,7 +276,7 @@ export function clearAll(): Promise<void> {
 
 let current: Promise<any> = Promise.resolve();
 
-function execInSequence<T>(f: () => Promise<T>): Promise<T> {
+export function transaction<T>(f: () => Promise<T>): Promise<T> {
     current = current.then(f);
     return current;
 }

@@ -14,9 +14,14 @@
  *  limitations under the License.
  */
 
-const windowById: { [key: number]: PopupWindow } = {};
+import * as storage from '../storage';
+
+const WINDOW_SIZE_KEY = 'window-size';
+type WindowSizeSet = Record<string, { width: number, height: number }>;
+
 const onCloseById: { [key: number]: () => void } = {};
-const windowByName: { [key: string]: PopupWindow } = {};
+const popupWindowById: { [key: number]: PopupWindow } = {};
+const popupWindowByName: { [key: string]: PopupWindow } = {};
 
 export default class PopupWindow {
     readonly name: string;
@@ -24,11 +29,23 @@ export default class PopupWindow {
     private window: chrome.windows.Window | null;
     private opening: boolean;
 
+    static loadWindowSizeSet(): Promise<WindowSizeSet> {
+        return storage.getItemById<WindowSizeSet>(WINDOW_SIZE_KEY, {});
+    }
+
+    static saveWindowSizeSet(size: WindowSizeSet): Promise<void> {
+        return storage.setItems({
+            [WINDOW_SIZE_KEY]: size,
+        });
+    }
+
     static create(name: string, url: string): PopupWindow {
-        if (name in windowByName) {
-            return windowByName[name];
+        if (name in popupWindowByName) {
+            return popupWindowByName[name];
         }
-        return new this(name, url);
+        const window = new this(name, url);
+        popupWindowByName[name] = window;
+        return window;
     }
 
     private constructor(name: string, url: string) {
@@ -36,43 +53,54 @@ export default class PopupWindow {
         this.url = url;
         this.window = null;
         this.opening = false;
-        windowByName[name] = this;
     }
 
-    show(): void {
+    getWindow(): chrome.windows.Window | null {
+        return this.window;
+    }
+
+    async show(): Promise<void> {
         if (this.opening) {
             return;
         }
 
-        if (this.window !== null) {
-            chrome.windows.update(this.window.id!, { focused: true });
+        if (this.window !== null && this.window.id !== undefined) {
+            chrome.windows.update(this.window.id, { focused: true });
             return;
         }
 
         this.opening = true;
-        loadWindowSize(this.name)
-            .then(size => {
-                chrome.windows.create({
-                    type: 'popup',
-                    url: this.url,
-                    width: size.width,
-                    height: size.height,
-                }, window => {
-                    if (window) {
-                        this.window = window;
-                        this.opening = false;
-                        const windowId = window.id!;
-                        windowById[windowId] = this;
-                        onCloseById[windowId] = () => {
-                            this.onClose(windowId);
-                        };
-                    }
-                });
+        const sizeSet = await PopupWindow.loadWindowSizeSet();
+        const size = (this.name in sizeSet) ? sizeSet[this.name] : {};
+
+        return new Promise((resolve, reject) => {
+            chrome.windows.create({
+                type: 'popup',
+                url: this.url,
+                ...size,
+            }, window => {
+                if (window !== undefined && window.id !== undefined) {
+                    this.window = window;
+                    this.opening = false;
+                    const windowId = window.id;
+                    popupWindowById[windowId] = this;
+                    onCloseById[windowId] = () => {
+                        this.onClose(windowId);
+                    };
+                    resolve();
+                }
+                else {
+                    reject();
+                }
             });
+        });
     }
 
     private onClose(windowId: number) {
-        delete windowById[windowId];
+        if (windowId in popupWindowById) {
+            delete popupWindowByName[popupWindowById[windowId].name];
+        }
+        delete popupWindowById[windowId];
         delete onCloseById[windowId];
         if (this.window?.id === windowId) {
             this.window = null;
@@ -88,29 +116,15 @@ chrome.windows.onRemoved.addListener(windowId => {
 
 chrome.windows.onBoundsChanged.addListener(window => {
     if (window.id !== undefined) {
-        if (window.id in windowById) {
-            saveWindowSize(windowById[window.id].name, window.width!, window.height!);
+        if (window.id in popupWindowById) {
+            const popup = popupWindowById[window.id];
+            storage.transaction(async () => {
+                const size = await PopupWindow.loadWindowSizeSet();
+                if (window.width !== undefined && window.height !== undefined) {
+                    size[popup.name] = { width: window.width, height: window.height };
+                }
+                return PopupWindow.saveWindowSizeSet(size);
+            });
         }
     }
 });
-
-function loadWindowSize(name: string): Promise<{ width: number, height: number }> {
-    const WINDOW_SIZE_KEY = `window:size:${name}`;
-    return new Promise(resolve => {
-        chrome.storage.local.get(
-            { [WINDOW_SIZE_KEY]: { width: null, height: null } },
-            items => {
-                resolve(items[WINDOW_SIZE_KEY] as { width: number, height: number });
-            });
-    });
-}
-
-function saveWindowSize(name: string, width: number, height: number): Promise<void> {
-    const WINDOW_SIZE_KEY = `window:size:${name}`;
-    return new Promise(resolve => {
-        chrome.storage.local.set(
-            { [WINDOW_SIZE_KEY]: { width, height } },
-            () => resolve()
-        );
-    });
-}

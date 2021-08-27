@@ -218,6 +218,8 @@ function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, im
 
 async function clearAllScreenshot(): Promise<void> {
     const p = await prefs.loadPreferences();
+    const windowSizeSet = await PopupWindow.loadWindowSizeSet();
     await storage.clearAll();
     await prefs.savePreferences(p);
+    await PopupWindow.saveWindowSizeSet(windowSizeSet);
 }
