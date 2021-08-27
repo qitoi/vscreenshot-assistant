@@ -42,6 +42,16 @@ const VideoHeaderInformation: React.FC = () => {
         return null;
     }
 
+    const date = Intl.DateTimeFormat(undefined, {
+        weekday: 'short',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    }).format(new Date(video.date));
+
     return (
         <Box w="100%" overflow="hidden">
             <HStack w="100%" spacing={1}>
@@ -53,7 +63,7 @@ const VideoHeaderInformation: React.FC = () => {
             </HStack>
             <HStack>
                 <Box whiteSpace="nowrap">
-                    {(new Date(video.date)).toDateString()}
+                    {date}
                 </Box>
                 {hashtagEnabled && video && video.hashtags && video.hashtags.length > 0 && (
                     <CheckboxGroup key={videoKey} value={selectedHashtags} onChange={handleSelectedHashtagsChange}>
