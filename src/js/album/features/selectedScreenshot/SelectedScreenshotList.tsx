@@ -56,28 +56,28 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: Selec
     return (
         <HStack ref={ref}
                 position="sticky"
+                w="100%"
+                minW="fit-content"
                 bottom={0}
                 alignItems="flex-end"
                 p="1rem"
                 visibility={loaded ? 'visible' : 'hidden'}
                 bg="gray.300">
             <Spacer />
-            <VStack>
-                <Grid w="100%"
-                      gridTemplateColumns={`repeat(4, minmax(${thumbPrefs.width / 2}px, ${thumbPrefs.width}px))`}
-                      gap={2}
-                      flexWrap="nowrap"
-                      justifyContent="center">
-                    {screenshots.map(s =>
-                        <SelectedScreenshot
-                            key={getScreenshotKey(s)}
-                            info={s}
-                            screenshot={s.thumbnail}
-                            onLoad={handleLoad}
-                            onClick={onClick} />
-                    )}
-                </Grid>
-            </VStack>
+            <Grid w="100%"
+                  gridTemplateColumns={`repeat(4, minmax(${thumbPrefs.width / 4}px, ${thumbPrefs.width}px))`}
+                  gap={2}
+                  flexWrap="nowrap"
+                  justifyContent="center">
+                {screenshots.map(s =>
+                    <SelectedScreenshot
+                        key={getScreenshotKey(s)}
+                        info={s}
+                        screenshot={s.thumbnail}
+                        onLoad={handleLoad}
+                        onClick={onClick} />
+                )}
+            </Grid>
             <Box>
                 <Button colorScheme="twitter" onClick={handleClick}><LocalizedText messageId="album_share_screenshot_button" /></Button>
             </Box>
