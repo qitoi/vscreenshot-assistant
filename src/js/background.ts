@@ -16,25 +16,28 @@
 
 // album window
 
-import PopupWindow from './lib/background/popup-window';
 import { ImageDataUrl, VideoInfo } from './lib/types';
 import * as messages from './lib/messages';
 import * as port from './lib/port';
 import * as storage from './lib/storage';
 import * as prefs from './lib/prefs';
+import * as popup from './lib/background/popup-window';
 import { loadPreferences } from './lib/prefs';
 import { createThumbnail } from './lib/background/thumbnail';
 import { makeAnimation } from './lib/background/animation';
 
 
-const albumWindow = PopupWindow.create('album', 'album.html');
+prefs.watch();
+popup.watch();
 
+
+// アルバムウィンドウの作成・表示
+
+const albumWindow = popup.PopupWindow.create('album', 'album.html', true);
 chrome.browserAction.onClicked.addListener(() => {
     albumWindow.show();
 });
 
-
-prefs.watch();
 
 // スクリーンショットキャプチャやスクリーンショット削除メッセージ対応
 
@@ -218,8 +221,8 @@ function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, im
 
 async function clearAllScreenshot(): Promise<void> {
     const p = await prefs.loadPreferences();
-    const windowSizeSet = await PopupWindow.loadWindowSizeSet();
+    const windowSizeSet = await popup.loadWindowSizeSet();
     await storage.clearAll();
     await prefs.savePreferences(p);
-    await PopupWindow.saveWindowSizeSet(windowSizeSet);
+    await popup.saveWindowSizeSet(windowSizeSet);
 }

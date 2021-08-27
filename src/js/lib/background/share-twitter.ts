@@ -18,6 +18,7 @@ import { ImageDataUrl, ScreenshotInfo, VideoInfo } from '../types';
 import platforms from '../platforms';
 import * as storage from '../storage';
 import * as prefs from '../prefs';
+import * as popup from './popup-window';
 
 
 const TWITTER_SHARE_URL = 'https://twitter.com/intent/tweet';
@@ -61,20 +62,19 @@ async function shareScreenshotOnTwitter(video: VideoInfo, screenshots: ImageData
     const url = new URL(TWITTER_SHARE_URL);
     url.search = new URLSearchParams(options).toString();
 
-    chrome.windows.create({
-        url: url.toString(),
-        type: 'popup',
-    }, window => {
-        if (window !== undefined) {
-            const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
-                if (window.tabs !== undefined && window.tabs.length > 0) {
-                    if (tabId == window.tabs[0].id && changeInfo.status === 'complete') {
-                        chrome.tabs.onUpdated.removeListener(handler);
-                        chrome.tabs.sendMessage(window.tabs[0].id, { event: 'share-screenshot', screenshots: screenshots });
-                    }
+    const popupWindow = popup.PopupWindow.create('twitter', url.toString(), false);
+    await popupWindow.show();
+
+    const window = popupWindow.getWindow();
+    if (window !== null) {
+        const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+            if (window.tabs !== undefined && window.tabs.length > 0) {
+                if (tabId == window.tabs[0].id && changeInfo.status === 'complete') {
+                    chrome.tabs.onUpdated.removeListener(handler);
+                    chrome.tabs.sendMessage(window.tabs[0].id, { event: 'share-screenshot', screenshots: screenshots });
                 }
-            };
-            chrome.tabs.onUpdated.addListener(handler);
-        }
-    });
+            }
+        };
+        chrome.tabs.onUpdated.addListener(handler);
+    }
 }
