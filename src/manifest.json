@@ -49,6 +49,6 @@
   "web_accessible_resources": [
     "js/inject-twitter.js"
   ],
-  "content_security_policy": "script-src 'self'; object-src 'self'; worker-src 'self' data:",
+  "content_security_policy": "script-src 'self'; object-src 'self'; worker-src 'self' blob: data:",
   "default_locale": "ja"
 }
