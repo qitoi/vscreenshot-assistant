@@ -19,24 +19,28 @@ import { Select } from '@chakra-ui/react';
 
 import { getLocalizedText } from '../../../lib/components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
-import { VideoSortOrder, VideoSortOrders } from './VideoSort';
-import { selectVideoSortOrder, setSortOrder } from './videoSlice';
+import { VideoSortOrder, VideoSortOrders } from '../../../lib/background/video-sort';
+import { selectVideoSortOrder, setVideoSortOrder } from './videoSlice';
 
 const VideoSortOrderSelect: React.FC = () => {
     const dispatch = useDispatch();
     const order = useSelector(selectVideoSortOrder);
 
     const videoSortOrderLabels = React.useMemo<Record<VideoSortOrder, string>>(() => ({
-        [VideoSortOrders.VideoDateAsc]: getLocalizedText('album_video_order_video_date_asc'),
-        [VideoSortOrders.VideoDateDesc]: getLocalizedText('album_video_order_video_date_desc'),
-        [VideoSortOrders.LastUpdateAsc]: getLocalizedText('album_video_order_last_update_asc'),
         [VideoSortOrders.LastUpdateDesc]: getLocalizedText('album_video_order_last_update_desc'),
+        [VideoSortOrders.LastUpdateAsc]: getLocalizedText('album_video_order_last_update_asc'),
+        [VideoSortOrders.VideoDateDesc]: getLocalizedText('album_video_order_video_date_desc'),
+        [VideoSortOrders.VideoDateAsc]: getLocalizedText('album_video_order_video_date_asc'),
     }), []);
 
     const handleChangeSortOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const order: VideoSortOrder = +e.target.value as VideoSortOrder;
-        dispatch(setSortOrder(order));
+        dispatch(setVideoSortOrder({ order }));
     };
+
+    if (order === null) {
+        return null;
+    }
 
     return (
         <Select value={order} onChange={handleChangeSortOrder}>

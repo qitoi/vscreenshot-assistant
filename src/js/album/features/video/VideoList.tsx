@@ -18,10 +18,9 @@ import * as React from 'react';
 import { Box, Center, VStack } from '@chakra-ui/react';
 
 import { getVideoKey, VideoInfo } from '../../../lib/types';
-import * as storage from '../../../lib/storage';
 import { useDispatch, useSelector } from '../../store';
 import { setActiveVideo } from '../activeVideo/activeVideoSlice';
-import { selectVideoList, setVideoList } from './videoSlice';
+import { selectVideoList, fetchVideoList } from './videoSlice';
 import VideoThumbnail from './VideoThumbnail';
 import VideoSortOrderSelect from './VideoSortOrderSelect';
 
@@ -31,10 +30,9 @@ const VideoList: React.FC = () => {
     const videos = useSelector(selectVideoList);
 
     React.useEffect(() => {
-        storage.getVideoInfoList()
-            .then(videos => {
+        dispatch(fetchVideoList())
+            .then(() => {
                 setIsLoaded(true);
-                dispatch(setVideoList(videos));
             });
     }, [dispatch]);
 

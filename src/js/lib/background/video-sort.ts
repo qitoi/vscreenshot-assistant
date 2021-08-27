@@ -14,34 +14,38 @@
  *  limitations under the License.
  */
 
-import { VideoInfo } from '../../../lib/types';
+import { VideoInfo } from '../types';
+import * as storage from '../storage';
 
 export const VideoSortOrders = {
-    VideoDateAsc: 0,
-    VideoDateDesc: 1,
-    LastUpdateAsc: 2,
-    LastUpdateDesc: 3,
+    LastUpdateDesc: 0,
+    LastUpdateAsc: 1,
+    VideoDateDesc: 2,
+    VideoDateAsc: 3,
 } as const;
 
 export type VideoSortOrder = typeof VideoSortOrders[keyof typeof VideoSortOrders];
 
+export const DefaultSortOrder = VideoSortOrders.LastUpdateDesc;
+
+
 const VideoSorter: { [key: string]: (a: VideoInfo, b: VideoInfo) => number } = {
-    [VideoSortOrders.VideoDateAsc]: (a, b) => a.date - b.date,
-    [VideoSortOrders.VideoDateDesc]: (a, b) => b.date - a.date,
-    [VideoSortOrders.LastUpdateAsc]: (a, b) => a.lastUpdated - b.lastUpdated,
     [VideoSortOrders.LastUpdateDesc]: (a, b) => b.lastUpdated - a.lastUpdated,
+    [VideoSortOrders.LastUpdateAsc]: (a, b) => a.lastUpdated - b.lastUpdated,
+    [VideoSortOrders.VideoDateDesc]: (a, b) => b.date - a.date,
+    [VideoSortOrders.VideoDateAsc]: (a, b) => a.date - b.date,
 };
 
 
-const VIDEO_SORT_ORDER_KEY = 'video:sort:order';
+const VIDEO_SORT_ORDER_KEY = 'video-sort-order';
 
-export function loadVideoSortOrder(): VideoSortOrder {
-    const order = localStorage.getItem(VIDEO_SORT_ORDER_KEY);
-    return (order !== null) ? +order as VideoSortOrder : VideoSortOrders.VideoDateAsc;
+export async function loadVideoSortOrder(): Promise<VideoSortOrder> {
+    const order = await storage.getItemById<VideoSortOrder>(VIDEO_SORT_ORDER_KEY);
+    return order ?? DefaultSortOrder;
 }
 
-export function saveVideoSortOrder(order: VideoSortOrder): void {
-    localStorage.setItem(VIDEO_SORT_ORDER_KEY, '' + order);
+export function saveVideoSortOrder(order: VideoSortOrder): Promise<void> {
+    return storage.setItems({ [VIDEO_SORT_ORDER_KEY]: +order });
 }
 
 export function sortVideo(videos: VideoInfo[], order: VideoSortOrder): VideoInfo[] {

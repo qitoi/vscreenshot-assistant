@@ -14,34 +14,38 @@
  *  limitations under the License.
  */
 
-import { ScreenshotInfo } from '../../../lib/types';
+import { ScreenshotInfo } from '../types';
+import * as storage from '../storage';
 
 export const ScreenshotSortOrders = {
-    CaptureDateAsc: 0,
-    CaptureDateDesc: 1,
-    VideoPosAsc: 2,
-    VideoPosDesc: 3,
+    CaptureDateDesc: 0,
+    CaptureDateAsc: 1,
+    VideoPosDesc: 2,
+    VideoPosAsc: 3,
 } as const;
 
 export type ScreenshotSortOrder = typeof ScreenshotSortOrders[keyof typeof ScreenshotSortOrders];
 
+export const DefaultSortOrder = ScreenshotSortOrders.CaptureDateDesc;
+
+
 const ScreenshotSorter: { [key: string]: (a: ScreenshotInfo, b: ScreenshotInfo) => number } = {
-    [ScreenshotSortOrders.CaptureDateAsc]: (a, b) => a.datetime - b.datetime,
     [ScreenshotSortOrders.CaptureDateDesc]: (a, b) => b.datetime - a.datetime,
-    [ScreenshotSortOrders.VideoPosAsc]: (a, b) => a.pos - b.pos,
+    [ScreenshotSortOrders.CaptureDateAsc]: (a, b) => a.datetime - b.datetime,
     [ScreenshotSortOrders.VideoPosDesc]: (a, b) => b.pos - a.pos,
+    [ScreenshotSortOrders.VideoPosAsc]: (a, b) => a.pos - b.pos,
 };
 
 
-const SCREENSHOT_SORT_ORDER_KEY = 'screenshot:sort:order';
+const SCREENSHOT_SORT_ORDER_KEY = 'screenshot-sort-order';
 
-export function loadScreenshotSortOrder(): ScreenshotSortOrder {
-    const order = localStorage.getItem(SCREENSHOT_SORT_ORDER_KEY);
-    return (order !== null) ? +order as ScreenshotSortOrder : ScreenshotSortOrders.CaptureDateAsc;
+export async function loadScreenshotSortOrder(): Promise<ScreenshotSortOrder> {
+    const order = await storage.getItemById<ScreenshotSortOrder>(SCREENSHOT_SORT_ORDER_KEY);
+    return order ?? DefaultSortOrder;
 }
 
-export function saveScreenshotSortOrder(order: ScreenshotSortOrder): void {
-    localStorage.setItem(SCREENSHOT_SORT_ORDER_KEY, '' + order);
+export async function saveScreenshotSortOrder(order: ScreenshotSortOrder): Promise<void> {
+    return storage.setItems({ [SCREENSHOT_SORT_ORDER_KEY]: +order });
 }
 
 export function sortScreenshot(screenshots: ScreenshotInfo[], order: ScreenshotSortOrder): ScreenshotInfo[] {

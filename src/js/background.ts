@@ -22,7 +22,8 @@ import * as port from './lib/port';
 import * as storage from './lib/storage';
 import * as prefs from './lib/prefs';
 import * as popup from './lib/background/popup-window';
-import { loadPreferences } from './lib/prefs';
+import * as videoSort from './lib/background/video-sort';
+import * as screenshotSort from './lib/background/screenshot-sort';
 import { createThumbnail } from './lib/background/thumbnail';
 import { makeAnimation } from './lib/background/animation';
 
@@ -140,7 +141,7 @@ port.listenPort().addListener(port => {
         switch (message.type) {
             case 'anime-frame': {
                 if (animeCapture.thumbnail === null) {
-                    animeCapture.thumbnail = loadPreferences().then(prefs => createThumbnail(message.image, prefs.thumbnail.width, prefs.thumbnail.height));
+                    animeCapture.thumbnail = prefs.loadPreferences().then(prefs => createThumbnail(message.image, prefs.thumbnail.width, prefs.thumbnail.height));
                 }
                 animeCapture.frames.push(
                     createThumbnail(message.image, animeCapture.width, animeCapture.height)
@@ -220,9 +221,17 @@ function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, im
 
 
 async function clearAllScreenshot(): Promise<void> {
+    // スクリーンショット以外の設定を退避
     const p = await prefs.loadPreferences();
     const windowSizeSet = await popup.loadWindowSizeSet();
+    const videoSortOrder = await videoSort.loadVideoSortOrder();
+    const screenshotSortOrder = await screenshotSort.loadScreenshotSortOrder();
+
     await storage.clearAll();
+
+    // 復元
     await prefs.savePreferences(p);
     await popup.saveWindowSizeSet(windowSizeSet);
+    await videoSort.saveVideoSortOrder(videoSortOrder);
+    await screenshotSort.saveScreenshotSortOrder(screenshotSortOrder);
 }

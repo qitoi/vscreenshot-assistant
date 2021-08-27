@@ -19,24 +19,32 @@ import { Select } from '@chakra-ui/react';
 
 import { getLocalizedText } from '../../../lib/components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
-import { ScreenshotSortOrder, ScreenshotSortOrders } from './ScreenshotSort';
-import { selectScreenshotSortOrder, setSortOrder } from './screenshotSlice';
+import { ScreenshotSortOrder, ScreenshotSortOrders } from '../../../lib/background/screenshot-sort';
+import { fetchScreenshotSortOrder, selectScreenshotSortOrder, setScreenshotSortOrder } from './screenshotSlice';
 
 const ScreenshotSortOrderSelect: React.FC = () => {
     const dispatch = useDispatch();
     const order = useSelector(selectScreenshotSortOrder);
 
+    React.useEffect(() => {
+        dispatch(fetchScreenshotSortOrder());
+    }, [dispatch]);
+
     const screenshotSortOrderLabels = React.useMemo<Record<ScreenshotSortOrder, string>>(() => ({
-        [ScreenshotSortOrders.CaptureDateAsc]: getLocalizedText('album_screenshot_order_capture_date_asc'),
-        [ScreenshotSortOrders.CaptureDateDesc]: getLocalizedText('album_screenshot_order_capture_date_desc'),
-        [ScreenshotSortOrders.VideoPosAsc]: getLocalizedText('album_screenshot_order_video_pos_asc'),
         [ScreenshotSortOrders.VideoPosDesc]: getLocalizedText('album_screenshot_order_video_pos_desc'),
+        [ScreenshotSortOrders.VideoPosAsc]: getLocalizedText('album_screenshot_order_video_pos_asc'),
+        [ScreenshotSortOrders.CaptureDateDesc]: getLocalizedText('album_screenshot_order_capture_date_desc'),
+        [ScreenshotSortOrders.CaptureDateAsc]: getLocalizedText('album_screenshot_order_capture_date_asc'),
     }), []);
 
     const handleChangeSortOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const order = (+e.target.value) as ScreenshotSortOrder;
-        dispatch(setSortOrder({ order: order }));
+        dispatch(setScreenshotSortOrder({ order: order }));
     };
+
+    if (order === null) {
+        return null;
+    }
 
     return (
         <Select value={order} onChange={handleChangeSortOrder}>
