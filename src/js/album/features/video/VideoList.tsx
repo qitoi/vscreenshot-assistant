@@ -45,11 +45,11 @@ const VideoList: React.FC = () => {
     return (
         <VStack h="100%" spacing={0} m={0} p={0}>
             <Center w="100%" h="5em" p="1em" bg="gray.500" color="white" fontSize="lg" flexShrink={0}>
-                {isLoaded && (
+                {isLoaded && videos.length > 0 && (
                     <VideoSortOrderSelect />
                 )}
             </Center>
-            {isLoaded && (
+            {isLoaded && videos.length > 0 && (
                 <Box w="100%" h="100%" overflowY="scroll" userSelect="none">
                     <VStack py="1em">
                         {videos.map((v) =>
