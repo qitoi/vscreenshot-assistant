@@ -37,7 +37,9 @@ const SPWN: Platform = {
 
     async initVideoInfo(videoId): Promise<any> {
         const resp = await fetch(`https://public.spwn.jp/event-pages/${videoId}/data.json`);
-        return resp.json();
+        const info = await resp.json();
+        info.basic_data.twitterHashTag = (info.basic_data.twitterHashTag as string[]).filter(t => t !== '');
+        return info;
     },
 
     getVideoTitle(videoId: string, info: any): string {
