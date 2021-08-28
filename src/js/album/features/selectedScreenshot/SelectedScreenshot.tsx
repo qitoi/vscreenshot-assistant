@@ -43,6 +43,7 @@ export const SelectedScreenshot: React.FC<SelectedScreenshotProps> = ({ info, sc
              position="relative"
              rounded="md"
              overflow="clip"
+             bgColor="white"
              onClick={handleClick}
              onMouseEnter={() => setIsShown.on()}
              onMouseLeave={() => setIsShown.off()}>

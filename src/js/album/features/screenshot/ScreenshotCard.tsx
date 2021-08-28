@@ -73,6 +73,7 @@ const ScreenshotCard = ({ info, isChecked, disabled, selectable, onClick, onExpa
                     position="relative"
                     rounded="md"
                     overflow="clip"
+                    bgColor="white"
                     onClick={handleClick}
                     cursor={disabled ? 'default' : clickable ? 'pointer' : 'not-allowed'}
                     onMouseEnter={handleMouseOver}
