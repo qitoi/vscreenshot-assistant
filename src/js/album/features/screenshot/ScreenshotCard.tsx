@@ -95,12 +95,12 @@ const ScreenshotCard = ({ info, isChecked, disabled, selectable, onClick, onExpa
             <Fade in={isShown}>
                 <HStack w="100%" position="absolute" bottom={0} left={0} spacing={0} bgColor="rgba(0, 0, 0, 0)">
                     <Spacer />
-                    <Box p={1}
+                    <Box p="2px"
                          cursor="pointer"
                          onClick={handleExpandClick}
                          transition="transform 0.05s ease-out"
                          _hover={{ transform: 'scale(1.2)' }}>
-                        <MdFullscreen color="white" size="2rem" />
+                        <MdFullscreen color="white" size="32px" />
                     </Box>
                 </HStack>
             </Fade>
