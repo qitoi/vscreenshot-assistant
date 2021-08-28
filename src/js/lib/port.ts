@@ -86,9 +86,10 @@ export class Port {
 
         this.port.onDisconnect.addListener(() => {
             this._disconnected = true;
-            this.onDisconnect.clear();
             this.onMessage.clear();
+
             this.onDisconnectDispatcher.dispatch();
+            this.onDisconnect.clear();
         });
 
         const evt = new Event<PortMessageParam<MessageRequest>>();

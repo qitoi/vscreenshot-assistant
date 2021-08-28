@@ -45,15 +45,27 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
 
     // backgroundとのコネクション開始
     const port = new Port(id);
+    port.onDisconnect.addListener(() => {
+        setContent('エラーが発生しました');
+        setTimeout(() => {
+            toast.hideToast();
+        }, 3000);
+    });
 
     // キャプチャ終了待ち
     const canvases = await capture;
 
-    setCaption(getLocalizedText('contents_animation_convert_caption'));
+    setCaption(getLocalizedText('contents_animation_resize_caption'));
     setContent('0.00 %');
 
     // キャプチャしたフレームを全てbackgroundに送信
-    const firstFrame = await sendFrame(port, id, canvases, prefs);
+    const firstFrame = await sendFrame(port, id, canvases, prefs, progress => {
+        const percent = (progress * 100).toFixed(2);
+        setContent(`${percent} %`);
+    });
+
+    setCaption(getLocalizedText('contents_animation_convert_caption'));
+    setContent('0.00 %');
 
     // GIF変換の進捗メッセージ受信
     port.onMessage.addListener(message => {
@@ -96,9 +108,13 @@ async function startCaptureAnimation(video: HTMLVideoElement, interval: number, 
 }
 
 
-async function sendFrame(port: Port, id: string, canvases: HTMLCanvasElement[], prefs: prefs.Preferences): Promise<ImageDataUrl> {
+async function sendFrame(port: Port, id: string, canvases: HTMLCanvasElement[], prefs: prefs.Preferences, onProgress: (progress: number) => void): Promise<ImageDataUrl> {
     let firstFrame: ImageDataUrl = '';
     let no = 0;
+    let completed = 0;
+    const promises: Promise<void>[] = [];
+    const total = canvases.length;
+
     for (const canvas of canvases) {
         no += 1;
         const image = convertToDataURL(canvas, prefs);
@@ -113,9 +129,19 @@ async function sendFrame(port: Port, id: string, canvases: HTMLCanvasElement[], 
             no,
             image,
         };
-        port.sendMessage(frame);
+
+        promises.push(new Promise<void>(resolve => {
+            port.sendMessage(frame, () => {
+                completed += 1;
+                onProgress(completed / total);
+                resolve();
+            });
+        }));
+
         await new Promise(resolve => setTimeout(resolve, 0));
     }
+
+    await Promise.all(promises);
 
     return firstFrame;
 }

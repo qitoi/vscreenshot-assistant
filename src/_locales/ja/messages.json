@@ -187,6 +187,9 @@
       }
     }
   },
+  "contents_animation_resize_caption": {
+    "message": "アニメーションGIFリサイズ中"
+  },
   "contents_animation_convert_caption": {
     "message": "アニメーションGIF変換中"
   }

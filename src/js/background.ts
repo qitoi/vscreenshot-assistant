@@ -143,13 +143,15 @@ port.listenPort().addListener(port => {
                 if (animeCapture.thumbnail === null) {
                     animeCapture.thumbnail = prefs.loadPreferences().then(prefs => createThumbnail(message.image, prefs.thumbnail.width, prefs.thumbnail.height));
                 }
-                animeCapture.frames.push(
-                    createThumbnail(message.image, animeCapture.width, animeCapture.height)
-                        .then((resize): AnimeFrame => ({
-                            no: message.no,
-                            image: resize,
-                        }))
-                );
+
+                const resize = createThumbnail(message.image, animeCapture.width, animeCapture.height)
+                    .then((resize): AnimeFrame => ({
+                        no: message.no,
+                        image: resize,
+                    }));
+
+                resize.then(() => message.sendResponse({ type: 'anime-frame-response', status: 'complete' }));
+                animeCapture.frames.push(resize);
                 break;
             }
             case 'anime-end': {
