@@ -21,7 +21,7 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
 import { ImageDataUrl } from '../../lib/types';
-import { convertScreenshotToFile, getFileExt } from '../../lib/data-url';
+import { convertScreenshotToFile, decodeDataURL, getFileExt } from '../../lib/data-url';
 
 
 const FileDownloadIcon = chakra(MdFileDownload);
@@ -60,6 +60,14 @@ type LightboxProps<T> = {
     loadImage: (i: T) => Promise<ImageDataUrl>,
     onClose: () => void,
 };
+
+
+function revokeImage(src: string) {
+    if (src.startsWith('blob:')) {
+        URL.revokeObjectURL(src);
+    }
+}
+
 
 function getShowTargets<T>(list: T[], target: T, loop: boolean): (T | null)[] {
     const targets: (T | null)[] = [];
@@ -126,6 +134,12 @@ function getImages<T>(list: T[], target: T | null, loop: boolean, getKey: (t: T)
             else {
                 images[index] = { key, src: chrome.runtime.getURL('img/empty.png'), empty: true };
             }
+        }
+    }
+
+    for (const prev of prevImages) {
+        if (!images.some(v => v.key === prev.key)) {
+            revokeImage(prev.src);
         }
     }
 
@@ -208,7 +222,7 @@ function useCustomLightboxLoad<T>(getKey: (t: T) => string, loadImage: (t: T) =>
                 const key = getKey(t);
                 dispatch({ type: 'loading', key });
                 loadImage(t).then(image => {
-                    dispatch({ type: 'loaded', key, image });
+                    dispatch({ type: 'loaded', key, image: URL.createObjectURL(decodeDataURL(image)) });
                 });
             }
         }
@@ -264,6 +278,13 @@ const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, onClose }
         URL.revokeObjectURL(blobUrl);
     }, [main]);
 
+    const handleClose = () => {
+        revokeImage(main.src);
+        revokeImage(next.src);
+        revokeImage(prev.src);
+        onClose();
+    };
+
     return (
         <Lightbox
             mainSrc={main.src}
@@ -284,7 +305,7 @@ const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, onClose }
             ]}
             onMoveNextRequest={moveNext}
             onMovePrevRequest={movePrev}
-            onCloseRequest={onClose}
+            onCloseRequest={handleClose}
             animationOnKeyInput={true}
         />
     );
