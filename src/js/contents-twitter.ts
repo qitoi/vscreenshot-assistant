@@ -20,14 +20,14 @@ import { convertScreenshotToFile } from './lib/data-url';
 chrome.runtime.onMessage.addListener(message => {
     switch (message.event) {
         case 'share-screenshot': {
-            pasteScreenshot(message.screenshots);
+            pasteScreenshot(message.images);
             break;
         }
     }
 });
 
-function pasteScreenshot(screenshots: ImageDataUrl[]): void {
-    const files = screenshots.map(s => convertScreenshotToFile(s));
+function pasteScreenshot(images: ImageDataUrl[]): void {
+    const files = images.map(s => convertScreenshotToFile(s));
     const id = setInterval(() => {
         const dropArea = document.querySelector('div.public-DraftEditor-content');
         if (dropArea !== null) {

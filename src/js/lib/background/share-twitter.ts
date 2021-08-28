@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { ImageDataUrl, ScreenshotInfo, VideoInfo } from '../types';
+import { ScreenshotInfo, VideoInfo } from '../types';
 import platforms from '../platforms';
 import * as storage from '../storage';
 import * as prefs from '../prefs';
@@ -30,13 +30,9 @@ type TweetOptions = {
 };
 
 
-export function shareScreenshot(video: VideoInfo, screenshots: ScreenshotInfo[], hashtags: string[]): void {
-    storage.getScreenshotList(screenshots).then(images => {
-        shareScreenshotOnTwitter(video, images, hashtags);
-    });
-}
+export async function shareScreenshot(video: VideoInfo, screenshots: ScreenshotInfo[], hashtags: string[]): Promise<void> {
+    const images = await storage.getScreenshotList(screenshots);
 
-async function shareScreenshotOnTwitter(video: VideoInfo, screenshots: ImageDataUrl[], hashtags: string[]): Promise<void> {
     const options: TweetOptions = {};
     const text: string[] = [];
 
@@ -71,7 +67,7 @@ async function shareScreenshotOnTwitter(video: VideoInfo, screenshots: ImageData
             if (window.tabs !== undefined && window.tabs.length > 0) {
                 if (tabId == window.tabs[0].id && changeInfo.status === 'complete') {
                     chrome.tabs.onUpdated.removeListener(handler);
-                    chrome.tabs.sendMessage(window.tabs[0].id, { event: 'share-screenshot', screenshots: screenshots });
+                    chrome.tabs.sendMessage(window.tabs[0].id, { event: 'share-screenshot', images });
                 }
             }
         };
