@@ -47,7 +47,7 @@ function setupCaptureHotkey(platform: Platform, prefs: prefs.Preferences) {
     if (prefs.animation.enabled) {
         bindHotkey(prefs.animation.captureHotkey, onKeyUp => {
             if (platform.checkVideoPage()) {
-                const complete = animation.capture(platform, onKeyUp, prefs);
+                const complete = captureAnimation(platform, onKeyUp, prefs);
                 captureComplete(complete, prefs);
             }
         });
@@ -75,6 +75,26 @@ function bindHotkey(hotkey: string, onKeyDown: (onKeyUp: Promise<void>) => void)
             }
         }
     });
+}
+
+
+function captureAnimation(platform: Platform, onKeyUp: Promise<void>, prefs: prefs.Preferences): Promise<ImageDataUrl> {
+    // ブラウザからフォーカスが外れたらキャプチャを停止する
+    let handleBlur: (() => void) | null = null;
+    const onBlur = new Promise<void>(resolve => {
+        handleBlur = resolve;
+        window.addEventListener('blur', handleBlur, { once: true });
+    });
+    const stop = Promise.race([onKeyUp, onBlur]);
+
+    const complete = animation.capture(platform, stop, prefs);
+    complete.then(() => {
+        if (handleBlur !== null) {
+            window.removeEventListener('blur', handleBlur);
+        }
+    });
+
+    return complete;
 }
 
 
