@@ -151,10 +151,12 @@ function showProgressToast(prefs: prefs.Preferences): { toast: Toast, setCaption
     const div = document.createElement('div');
 
     const caption = document.createElement('p');
+    caption.textContent = '&nbsp;';
     caption.style['margin'] = '0';
     caption.style['padding'] = '0';
 
     const content = document.createElement('p');
+    content.textContent = '&nbsp;';
     content.style['margin'] = '0';
     content.style['padding'] = '0';
     content.style['textAlign'] = 'center';
