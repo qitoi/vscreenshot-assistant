@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { chakra, forwardRef, HTMLChakraProps, PropsOf, ThemingProps } from '@chakra-ui/system';
 import { callAll, Omit } from '@chakra-ui/utils';
-import { Checkbox, Tag, useCheckboxGroupContext, useCheckbox, UseCheckboxProps, TagProps } from '@chakra-ui/react';
+import { Tag, useCheckboxGroupContext, useCheckbox, UseCheckboxProps, TagProps } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
 

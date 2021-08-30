@@ -15,11 +15,12 @@
  */
 
 import * as React from 'react';
-import { chakra, Box, Checkbox, Fade, HStack, Spacer } from '@chakra-ui/react';
-import { MdFullscreen } from 'react-icons/md';
+import { Box, chakra } from '@chakra-ui/react';
+import { MdCheckBox, MdCheckBoxOutlineBlank, MdFullscreen } from 'react-icons/md';
 
 import { ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
 import { AnimationMark } from '../../components/AnimationMark';
+import { FadeBox } from '../../components/FadeBox';
 import LazyLoadScreenshotThumbnail from './LazyLoadScreenshotThumbnail';
 
 
@@ -27,24 +28,23 @@ type ScreenshotCardProps = {
     info: ScreenshotInfo,
     isChecked: boolean,
     disabled: boolean,
-    selectable: boolean,
+    className?: string,
     onClick: (info: ScreenshotInfo, thumbnail: ImageDataUrl) => void,
     onExpandClick: (info: ScreenshotInfo) => void,
 };
 
-const ScreenshotCard = ({ info, isChecked, disabled, selectable, onClick, onExpandClick }: ScreenshotCardProps) => {
+const ScreenshotCard = ({ info, isChecked, disabled, className, onClick, onExpandClick }: ScreenshotCardProps) => {
     const [isShown, setIsShown] = React.useState<boolean>(false);
     const [isClickable, setIsClickable] = React.useState<boolean>(false);
     const ref = React.useRef<HTMLImageElement>(null);
     const [visible, setVisible] = React.useState<boolean>(false);
 
-    const clickable = (!disabled && selectable) || isChecked;
     const handleClick = React.useCallback((e: React.MouseEvent<HTMLDivElement & HTMLButtonElement>) => {
         e.preventDefault();
-        if (isClickable && clickable && ref.current !== null) {
+        if (isClickable && !disabled && ref.current !== null) {
             onClick(info, ref.current.src);
         }
-    }, [info, clickable, onClick, isClickable]);
+    }, [info, disabled, onClick, isClickable]);
 
     const handleExpandClick = React.useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
@@ -68,14 +68,14 @@ const ScreenshotCard = ({ info, isChecked, disabled, selectable, onClick, onExpa
     }, []);
 
     return (
-        <chakra.div w="100%"
+        <chakra.div className={className}
+                    w="100%"
                     display={visible ? undefined : 'none'}
                     position="relative"
                     rounded="md"
                     overflow="clip"
                     bgColor="white"
                     onClick={handleClick}
-                    cursor={disabled ? 'default' : clickable ? 'pointer' : 'not-allowed'}
                     onMouseEnter={handleMouseOver}
                     onMouseLeave={handleMouseOut}
                     onMouseMove={handleMouseOver}>
@@ -86,25 +86,32 @@ const ScreenshotCard = ({ info, isChecked, disabled, selectable, onClick, onExpa
                 no={info.no}
                 onLoad={handleLoad}
                 onVisible={handleVisible} />
-            <Fade in={isShown || isChecked}>
-                <Box w="100%" h="100%" position="absolute" top={0} left={0} bgColor="rgba(0, 0, 0, 0.5)" />
-            </Fade>
+            <FadeBox show={isShown || isChecked} />
+            {!disabled && (
+                <Box position="absolute"
+                     top={0}
+                     left={0}
+                     p="2px">
+                    {isChecked ? (
+                        <MdCheckBox color="white" size="24px" />
+                    ) : (
+                        <MdCheckBoxOutlineBlank color="white" size="24px" />
+                    )}
+                </Box>
+            )}
             {info.anime && (
                 <AnimationMark position="absolute" bottom={0} left={0} m="0.2em" />
             )}
-            <Fade in={isShown}>
-                <HStack w="100%" position="absolute" bottom={0} left={0} spacing={0} bgColor="rgba(0, 0, 0, 0)">
-                    <Spacer />
-                    <Box p="2px"
-                         cursor="pointer"
-                         onClick={handleExpandClick}
-                         transition="transform 0.05s ease-out"
-                         _hover={{ transform: 'scale(1.2)' }}>
-                        <MdFullscreen color="white" size="32px" />
-                    </Box>
-                </HStack>
-            </Fade>
-            {!disabled && <Checkbox isChecked={isChecked} position="absolute" p={1} top={0} left={0} />}
+            <Box position="absolute"
+                 cursor="pointer"
+                 bottom={0}
+                 right={0}
+                 p="2px"
+                 onClick={handleExpandClick}
+                 transition="transform 0.05s ease-out"
+                 _hover={{ transform: 'scale(1.2)' }}>
+                <MdFullscreen color="white" size="32px" />
+            </Box>
         </chakra.div>
     );
 };

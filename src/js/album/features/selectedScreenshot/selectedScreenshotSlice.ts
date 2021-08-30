@@ -20,6 +20,10 @@ import { compareScreenshotInfo, compareVideoInfo, ImageDataUrl, ScreenshotInfo, 
 import { RootState } from '../../store';
 import { setActiveVideo } from '../activeVideo/activeVideoSlice';
 
+
+const SELECTED_SCREENSHOT_MAX_COUNT = 4;
+
+
 export type ScreenshotInfoWithThumbnail = ScreenshotInfo & {
     thumbnail: ImageDataUrl,
 };
@@ -80,7 +84,14 @@ export function isSelectableScreenshot(selected: ScreenshotInfoWithThumbnail[], 
     if (screenshot.anime) {
         return selected.length === 0;
     }
-    return selected.length < 4 && selected.every(s => !s.anime);
+    return selected.length < SELECTED_SCREENSHOT_MAX_COUNT && selected.every(s => !s.anime);
+}
+
+export function isFulfilledSelectedScreenshot(selected: ScreenshotInfoWithThumbnail[]): boolean {
+    if (selected.length === 1 && selected[0].anime) {
+        return true;
+    }
+    return selected.length === SELECTED_SCREENSHOT_MAX_COUNT;
 }
 
 export default slice.reducer;

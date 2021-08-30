@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 import { Box, Grid } from '@chakra-ui/react';
+import { Global } from '@emotion/react';
 
 import { compareScreenshotInfo, getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
 import * as storage from '../../../lib/storage';
@@ -25,7 +26,7 @@ import SelectedScreenshotList from '../selectedScreenshot/SelectedScreenshotList
 import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
 import { fetchScreenshotList, selectScreenshotList } from './screenshotSlice';
 import {
-    isSelectableScreenshot,
+    isFulfilledSelectedScreenshot,
     removeSelectedScreenshot,
     selectSelectedScreenshot,
     toggleSelectedScreenshot,
@@ -33,6 +34,7 @@ import {
 import { selectThumbnailPreferences, selectTweetEnabled } from '../preferences/preferencesSlice';
 import ScreenshotCard from './ScreenshotCard';
 import CustomLightbox from '../../components/CustomLightbox';
+
 
 const ScreenshotList: React.FC = () => {
     const dispatch = useDispatch();
@@ -70,8 +72,19 @@ const ScreenshotList: React.FC = () => {
     const loadImage = React.useCallback((s: ScreenshotInfo) => storage.getScreenshot(s.platform, s.videoId, s.no), []);
     const handleLightboxClose = React.useCallback(() => setLightboxScreenshot(null), []);
 
+    const fulfilled = isFulfilledSelectedScreenshot(selected);
+    const tweetDisabled = video?.private || !tweetEnabled;
+
     return (
         <Box w="100%" h="100%" minH="100%" userSelect="none">
+            <Global styles={{
+                '.screenshot-card-checked': {
+                    cursor: tweetDisabled ? 'default' : 'pointer',
+                },
+                '.screenshot-card-unchecked': {
+                    cursor: tweetDisabled ? 'default' : fulfilled ? 'not-allowed' : 'pointer',
+                },
+            }} />
             <Grid
                 w="100%"
                 minH={`calc(100% - 1rem - ${selectedHeight}px)`}
@@ -79,16 +92,19 @@ const ScreenshotList: React.FC = () => {
                 templateColumns={`repeat(auto-fill, minmax(${thumbnailPreferences.width}px, 1fr))`}
                 autoRows="min-content"
                 gap={2}>
-                {video !== null && screenshots.map(s => (
-                    <ScreenshotCard
-                        key={getScreenshotKey(s)}
-                        info={s}
-                        disabled={video.private || !tweetEnabled}
-                        selectable={isSelectableScreenshot(selected, s)}
-                        isChecked={selected.some(ss => compareScreenshotInfo(ss, s))}
-                        onClick={handleClickScreenshot}
-                        onExpandClick={handleExpandScreenshot} />
-                ))}
+                {video !== null && screenshots.map(s => {
+                    const isChecked = selected.some(ss => compareScreenshotInfo(ss, s));
+                    return (
+                        <ScreenshotCard
+                            key={getScreenshotKey(s)}
+                            className={isChecked ? 'screenshot-card-checked' : 'screenshot-card-unchecked'}
+                            info={s}
+                            disabled={tweetDisabled}
+                            isChecked={isChecked}
+                            onClick={handleClickScreenshot}
+                            onExpandClick={handleExpandScreenshot} />
+                    );
+                })}
             </Grid>
             <Box h="1rem" />
             {video !== null && (
