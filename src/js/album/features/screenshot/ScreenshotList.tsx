@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Box, Grid } from '@chakra-ui/react';
 import { Global } from '@emotion/react';
 
-import { compareScreenshotInfo, getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
+import { getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
 import * as storage from '../../../lib/storage';
 import { useDispatch, useSelector } from '../../store';
 import useParameterizedSelector from '../../hooks/useParameterizedSelector';
@@ -74,6 +74,10 @@ const ScreenshotList: React.FC = () => {
 
     const fulfilled = isFulfilledSelectedScreenshot(selected);
     const tweetDisabled = video?.private || !tweetEnabled;
+    const selectedSet = selected.reduce<Set<number>>((acc, current) => {
+        acc.add(current.no);
+        return acc;
+    }, new Set<number>());
 
     return (
         <Box w="100%" h="100%" minH="100%" userSelect="none">
@@ -93,7 +97,7 @@ const ScreenshotList: React.FC = () => {
                 autoRows="min-content"
                 gap={2}>
                 {video !== null && screenshots.map(s => {
-                    const isChecked = selected.some(ss => compareScreenshotInfo(ss, s));
+                    const isChecked = selectedSet.has(s.no);
                     return (
                         <ScreenshotCard
                             key={getScreenshotKey(s)}
