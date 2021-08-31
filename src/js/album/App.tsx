@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Box, ChakraProvider, Flex } from '@chakra-ui/react';
+import { Box, ChakraProvider, extendTheme, Flex } from '@chakra-ui/react';
 
 import * as prefs from '../lib/prefs';
 import { useWatchStorageChange } from './hooks/useWatchStorageChange';
@@ -25,6 +25,20 @@ import Sidebar from './components/Sidebar';
 import VideoHeader from './features/video/VideoHeader';
 import VideoList from './features/video/VideoList';
 import ScreenshotList from './features/screenshot/ScreenshotList';
+
+
+const theme = extendTheme({
+    boxShadow: 'none',
+    components: {
+        Link: {
+            baseStyle: {
+                _focus: {
+                    boxShadow: 'none',
+                },
+            },
+        },
+    }
+});
 
 
 const App: React.FC = () => {
@@ -43,7 +57,7 @@ const App: React.FC = () => {
     }, [dispatch]);
 
     return (
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
             <Flex wrap="nowrap" bgColor="gray.100" draggable={false}>
                 <Sidebar>
                     <VideoList />
