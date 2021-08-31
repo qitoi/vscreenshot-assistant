@@ -19,6 +19,8 @@ export default interface Platform {
 
     getVideoUrl(videoId: string): string;
 
+    getVideoPosUrl(videoId: string, pos: number): string | null;
+
     checkVideoPage(): boolean;
 
     getVideoId(): string | null;

@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Box, CheckboxGroup, HStack, Link } from '@chakra-ui/react';
 import { LockIcon } from '@chakra-ui/icons';
 
-import platforms from '../../../lib/platforms';
+import * as platforms from '../../../lib/platforms';
 import { getVideoKey } from '../../../lib/types';
 import * as datetime from '../../../lib/datetime';
 import { useDispatch, useSelector } from '../../store';
@@ -49,7 +49,7 @@ const VideoHeaderInformation: React.FC = () => {
         <Box w="100%" overflow="hidden">
             <HStack w="100%" spacing={1}>
                 {video.private && <LockIcon boxSize="1em" color="yellow.400" />}
-                <Link href={platforms.getVideoURL(video.platform, video.videoId)} isExternal={true}
+                <Link href={platforms.getVideoUrl(video.platform, video.videoId)} isExternal={true}
                       whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
                     {video.title} / {video.author}
                 </Link>

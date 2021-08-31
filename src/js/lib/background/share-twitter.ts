@@ -15,7 +15,7 @@
  */
 
 import { ScreenshotInfo, VideoInfo } from '../types';
-import platforms from '../platforms';
+import * as platforms from '../platforms';
 import * as storage from '../storage';
 import * as prefs from '../prefs';
 import * as popup from './popup-window';
@@ -46,7 +46,7 @@ export async function shareScreenshot(video: VideoInfo, screenshots: ScreenshotI
     }
 
     if (tweetPrefs.tweetUrl) {
-        options.url = platforms.getVideoURL(video.platform, video.videoId);
+        options.url = platforms.getVideoUrl(video.platform, video.videoId);
     }
     if (text.length > 0) {
         options.text = text.join(' / ');

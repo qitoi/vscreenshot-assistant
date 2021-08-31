@@ -23,6 +23,10 @@ const SPWN: Platform = {
         return `https://spwn.jp/events/${videoId}`;
     },
 
+    getVideoPosUrl(videoId: string, pos: number): string | null {
+        return null;
+    },
+
     checkVideoPage(): boolean {
         return document.location.pathname.substring(document.location.pathname.lastIndexOf('/') + 1) === 'streaming';
     },

@@ -23,8 +23,10 @@ const platforms: { [key: string]: Platform } = {
     [SPWN.PLATFORM_ID]: SPWN,
 };
 
-export default {
-    getVideoURL(platform: string, videoId: string): string {
-        return platforms[platform]?.getVideoUrl(videoId);
-    }
-};
+export function getVideoUrl(platform: string, videoId: string): string {
+    return platforms[platform]?.getVideoUrl(videoId);
+}
+
+export function getVideoPosUrl(platform: string, videoId: string, pos: number): string | null {
+    return platforms[platform]?.getVideoPosUrl(videoId, pos);
+}

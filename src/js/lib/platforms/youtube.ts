@@ -26,6 +26,10 @@ const Youtube: Platform = {
         return `https://www.youtube.com/watch?v=${videoId}`;
     },
 
+    getVideoPosUrl(videoId: string, pos: number): string | null {
+        return this.getVideoUrl(videoId) + `&t=${Math.floor(pos)}s`;
+    },
+
     checkVideoPage(): boolean {
         return document.location.pathname === '/watch';
     },
