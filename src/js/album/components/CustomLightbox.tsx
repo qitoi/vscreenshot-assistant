@@ -21,7 +21,7 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
 import { ImageDataUrl } from '../../lib/types';
-import { convertScreenshotToFile, decodeDataURL, getFileExt } from '../../lib/data-url';
+import { decodeDataURL, getFileExt } from '../../lib/data-url';
 
 
 const FileDownloadIcon = chakra(MdFileDownload);
@@ -30,12 +30,16 @@ const FileDownloadIcon = chakra(MdFileDownload);
 type ExpandImage = {
     key: string,
     src: string,
+    type: string,
+    size: number,
     empty: boolean,
 };
 
 const initialExpandImage: ExpandImage = {
     key: '',
     src: '',
+    type: '',
+    size: 0,
     empty: true,
 };
 
@@ -43,7 +47,7 @@ type ActionType<T> =
     { type: 'list', list: T[], loop: boolean, getKey: (t: T) => string }
     | { type: 'select', target: T, getKey: (t: T) => string }
     | { type: 'loading', key: string }
-    | { type: 'loaded', key: string, image: string };
+    | { type: 'loaded', key: string, image: string, fileType: string, size: number };
 
 type StateType<T> = {
     current: T | null,
@@ -132,7 +136,7 @@ function getImages<T>(list: T[], target: T | null, loop: boolean, getKey: (t: T)
             }
             // 未ロードであれば仮画像を設定しつつロード待ち
             else {
-                images[index] = { key, src: chrome.runtime.getURL('img/empty.png'), empty: true };
+                images[index] = { key, src: chrome.runtime.getURL('img/empty.png'), type: 'image/png', size: 0, empty: true };
             }
         }
     }
@@ -189,6 +193,8 @@ function reducer<T>(state: StateType<T>, action: ActionType<T>): StateType<T> {
             for (const p of images) {
                 if (p.key === action.key) {
                     p.src = action.image;
+                    p.type = action.fileType;
+                    p.size = action.size;
                     p.empty = false;
                 }
             }
@@ -222,7 +228,8 @@ function useCustomLightboxLoad<T>(getKey: (t: T) => string, loadImage: (t: T) =>
                 const key = getKey(t);
                 dispatch({ type: 'loading', key });
                 loadImage(t).then(image => {
-                    dispatch({ type: 'loaded', key, image: URL.createObjectURL(decodeDataURL(image)) });
+                    const blob = decodeDataURL(image);
+                    dispatch({ type: 'loaded', key, image: URL.createObjectURL(blob), fileType: blob.type, size: blob.size });
                 });
             }
         }
@@ -269,13 +276,10 @@ const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, onClose }
     }, [setCurrent, current, list]);
 
     const handleDownload = React.useCallback(() => {
-        const blob = convertScreenshotToFile(main.src);
-        const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = 'image' + getFileExt(blob.type);
+        a.href = main.src;
+        a.download = 'image' + getFileExt(main.type);
         a.click();
-        URL.revokeObjectURL(blobUrl);
     }, [main]);
 
     const handleClose = () => {
