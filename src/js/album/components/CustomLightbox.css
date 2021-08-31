@@ -1,0 +1,8 @@
+.ril-outer {
+    user-select: none;
+}
+
+.ril-caption-content {
+    width: 100%;
+    font-size: 120%;
+}

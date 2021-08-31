@@ -15,13 +15,15 @@
  */
 
 import * as React from 'react';
-import { chakra, IconButton } from '@chakra-ui/react';
+import { Box, chakra, HStack, IconButton, Spacer, Text } from '@chakra-ui/react';
 import { MdFileDownload } from 'react-icons/md';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import * as prettyBytes from 'pretty-bytes';
 
 import { ImageDataUrl } from '../../lib/types';
 import { decodeDataURL, getFileExt } from '../../lib/data-url';
+import './CustomLightbox.css';
 
 
 const FileDownloadIcon = chakra(MdFileDownload);
@@ -62,6 +64,7 @@ type LightboxProps<T> = {
     loop: boolean,
     getKey: (i: T) => string;
     loadImage: (i: T) => Promise<ImageDataUrl>,
+    getInfoNode?: (i: T) => React.ReactNode,
     onClose: () => void,
 };
 
@@ -244,7 +247,7 @@ function useCustomLightboxLoad<T>(getKey: (t: T) => string, loadImage: (t: T) =>
 }
 
 
-const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, onClose }: LightboxProps<T>): React.ReactElement => {
+const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, getInfoNode, onClose }: LightboxProps<T>): React.ReactElement => {
     const { setList, setCurrent, current, images: [main, next, prev] } = useCustomLightboxLoad(getKey, loadImage);
 
     // 初期リスト・リスト更新時の反映
@@ -289,6 +292,9 @@ const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, onClose }
         onClose();
     };
 
+    const no = (current !== null) ? list.indexOf(current) + 1 : 0;
+    const fileSize = prettyBytes(main.size, { binary: true, minimumFractionDigits: 0, maximumFractionDigits: 1 });
+
     return (
         <Lightbox
             mainSrc={main.src}
@@ -307,6 +313,23 @@ const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, onClose }
                             _focus={{ boxShadow: 'none' }}
                             onClick={handleDownload} />
             ]}
+            imageTitle={(
+                <Box>
+                    <chakra.span position="relative">
+                        <chakra.span visibility="hidden">{list.length}</chakra.span>
+                        <chakra.span position="absolute" right={0}>{no}</chakra.span>
+                    </chakra.span>
+                    <chakra.span>&nbsp;/&nbsp;</chakra.span>
+                    <chakra.span>{list.length}</chakra.span>
+                </Box>
+            )}
+            imageCaption={(
+                <HStack w="100%" spacing={8}>
+                    {(current !== null && getInfoNode !== undefined) ? getInfoNode(current) : undefined}
+                    <Spacer />
+                    <Text>{fileSize}</Text>
+                </HStack>
+            )}
             onMoveNextRequest={moveNext}
             onMovePrevRequest={movePrev}
             onCloseRequest={handleClose}

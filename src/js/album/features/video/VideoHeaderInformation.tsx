@@ -20,6 +20,7 @@ import { LockIcon } from '@chakra-ui/icons';
 
 import platforms from '../../../lib/platforms';
 import { getVideoKey } from '../../../lib/types';
+import * as datetime from '../../../lib/datetime';
 import { useDispatch, useSelector } from '../../store';
 import { HashtagCheckbox } from '../../components/HashtagCheckbox';
 import { selectActiveVideo, selectHashtags, setHashtags } from '../activeVideo/activeVideoSlice';
@@ -42,15 +43,7 @@ const VideoHeaderInformation: React.FC = () => {
         return null;
     }
 
-    const date = Intl.DateTimeFormat(undefined, {
-        weekday: 'short',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-    }).format(new Date(video.date));
+    const date = datetime.format(video.date);
 
     return (
         <Box w="100%" overflow="hidden">

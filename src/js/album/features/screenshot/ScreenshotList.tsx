@@ -15,11 +15,13 @@
  */
 
 import * as React from 'react';
-import { Box, Grid } from '@chakra-ui/react';
+import { Box, Grid, HStack } from '@chakra-ui/react';
 import { Global } from '@emotion/react';
 
 import { getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
 import * as storage from '../../../lib/storage';
+import * as datetime from '../../../lib/datetime';
+import { LocalizedText } from '../../../lib/components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import SelectedScreenshotList from '../selectedScreenshot/SelectedScreenshotList';
@@ -125,6 +127,15 @@ const ScreenshotList: React.FC = () => {
                     loop={true}
                     getKey={getKey}
                     loadImage={loadImage}
+                    getInfoNode={s => (
+                        <HStack spacing={8}>
+                            <Box><LocalizedText messageId="album_screenshot_capture_date" />: {datetime.format(s.datetime)}</Box>
+                            <Box>
+                                <LocalizedText messageId="album_screenshot_video_pos" />: {s.pos.toFixed(2)}
+                                <LocalizedText messageId="album_screenshot_video_pos_unit" />
+                            </Box>
+                        </HStack>
+                    )}
                     onClose={handleLightboxClose} />
             )}
         </Box>

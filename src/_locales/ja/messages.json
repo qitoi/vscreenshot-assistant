@@ -173,6 +173,15 @@
   "album_share_screenshot_button": {
     "message": "Share"
   },
+  "album_screenshot_capture_date": {
+    "message": "撮影日時"
+  },
+  "album_screenshot_video_pos": {
+    "message": "再生位置"
+  },
+  "album_screenshot_video_pos_unit": {
+    "message": "秒"
+  },
   "contents_animation_capture_caption": {
     "message": "アニメーションGIF撮影中"
   },
