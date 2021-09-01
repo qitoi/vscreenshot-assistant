@@ -15,9 +15,10 @@
  */
 
 import * as React from 'react';
-import { Box, Fade, useBoolean } from '@chakra-ui/react';
+import { Box, useBoolean } from '@chakra-ui/react';
 
 import { VideoInfo } from '../../../lib/types';
+import { FadeBox } from '../../components/FadeBox';
 import LazyLoadVideoThumbnail from './LazyLoadVideoThumbnail';
 
 type VideoThumbnailProps = {
@@ -46,15 +47,7 @@ const VideoThumbnail = ({ info, onSelected }: VideoThumbnailProps) => {
                 rounded="md"
                 overflow="clip">
                 <LazyLoadVideoThumbnail platform={info.platform} videoId={info.videoId} />
-                <Fade in={isShown}>
-                    <Box
-                        position="absolute"
-                        w="100%"
-                        h="100%"
-                        top={0}
-                        left={0}
-                        bgColor="rgba(0, 0, 0, 0.5)" />
-                </Fade>
+                <FadeBox show={isShown} />
             </Box>
         </Box>
     );

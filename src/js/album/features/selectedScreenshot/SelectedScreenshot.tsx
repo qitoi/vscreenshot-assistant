@@ -15,11 +15,12 @@
  */
 
 import * as React from 'react';
-import { AspectRatio, Box, Fade, Image, useBoolean } from '@chakra-ui/react';
+import { AspectRatio, Box, Image, useBoolean } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 
 import { ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
 import { AnimationMark } from '../../components/AnimationMark';
+import { FadeBox } from '../../components/FadeBox';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
 
 type SelectedScreenshotProps = React.PropsWithChildren<{
@@ -51,9 +52,7 @@ export const SelectedScreenshot: React.FC<SelectedScreenshotProps> = ({ info, sc
                 <AspectRatio w="100%" ratio={thumbnailPreferences.width / thumbnailPreferences.height}>
                     <Image src={screenshot} w="100%" style={{ objectFit: 'contain' }} draggable={false} onLoad={onLoad} />
                 </AspectRatio>
-                <Fade in={isShown}>
-                    <Box w="100%" h="100%" position="absolute" top={0} left={0} bgColor="rgba(0, 0, 0, 0.5)" />
-                </Fade>
+                <FadeBox show={isShown} />
                 {info.anime && (
                     <AnimationMark position="absolute" bottom={0} left={0} m="0.2em" />
                 )}
