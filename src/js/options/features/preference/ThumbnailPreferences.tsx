@@ -17,10 +17,10 @@
 import * as React from 'react';
 
 import { Preferences } from '../../../lib/prefs';
+import ControlGroup from '../../components/ControlGroup';
+import NumberInputControl from '../../components/NumberInputControl';
+import LabeledControl from '../../components/LabeledControl';
 import PreferenceBlock from './PreferenceBlock';
-import ControlGroup from './ControlGroup';
-import NumberInputControl from './NumberInputControl';
-import LabeledControl from './LabeledControl';
 
 const ThumbnailPreferences: React.FC = () => {
     return (

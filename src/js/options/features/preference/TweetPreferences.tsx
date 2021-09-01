@@ -18,10 +18,10 @@ import * as React from 'react';
 import { Box } from '@chakra-ui/react';
 
 import { Preferences } from '../../../lib/prefs';
+import SwitchControl from '../../components/SwitchControl';
+import ControlGroup from '../../components/ControlGroup';
+import LabeledControl from '../../components/LabeledControl';
 import PreferenceBlock from './PreferenceBlock';
-import SwitchControl from './SwitchControl';
-import ControlGroup from './ControlGroup';
-import LabeledControl from './LabeledControl';
 
 const TweetPreferences: React.FC = () => {
     return (

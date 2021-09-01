@@ -17,12 +17,12 @@
 import * as React from 'react';
 
 import { FileType, Preferences } from '../../../lib/prefs';
+import ControlGroup from '../../components/ControlGroup';
+import RadioItem from '../../components/RadioItem';
+import NumberInputControl from '../../components/NumberInputControl';
+import LabeledControl from '../../components/LabeledControl';
+import RadioGroupControl from '../../components/RadioGroupControl';
 import PreferenceBlock from './PreferenceBlock';
-import ControlGroup from './ControlGroup';
-import RadioItem from './RadioItem';
-import NumberInputControl from './NumberInputControl';
-import LabeledControl from './LabeledControl';
-import RadioGroupControl from './RadioGroupControl';
 
 const ScreenshotPreferences: React.FC = () => {
     return (

@@ -18,12 +18,12 @@ import * as React from 'react';
 import { Box } from '@chakra-ui/react';
 
 import { Preferences } from '../../../lib/prefs';
+import ControlGroup from '../../components/ControlGroup';
+import NumberInputControl from '../../components/NumberInputControl';
+import LabeledControl from '../../components/LabeledControl';
+import SwitchControl from '../../components/SwitchControl';
+import HotkeyInputControl from '../../components/HotkeyInputControl';
 import PreferenceBlock from './PreferenceBlock';
-import ControlGroup from './ControlGroup';
-import NumberInputControl from './NumberInputControl';
-import LabeledControl from './LabeledControl';
-import SwitchControl from './SwitchControl';
-import HotkeyInputControl from './HotkeyInputControl';
 
 const AnimationPreferences: React.FC = () => {
     return (

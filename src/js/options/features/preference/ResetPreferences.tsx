@@ -21,9 +21,9 @@ import * as messages from '../../../lib/messages';
 import * as prefs from '../../../lib/prefs';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
 import Dialog from '../../../lib/components/Dialog';
+import ControlGroup from '../../components/ControlGroup';
+import LabeledControl from '../../components/LabeledControl';
 import PreferenceBlock from './PreferenceBlock';
-import ControlGroup from './ControlGroup';
-import LabeledControl from './LabeledControl';
 
 const ResetPreferences: React.FC = () => {
     const [isOpenResetPrefs, setIsOpenResetPrefs] = React.useState<boolean>(false);

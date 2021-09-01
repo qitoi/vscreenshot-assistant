@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Box, FormLabel, FormLabelProps, HStack, Spacer, VStack } from '@chakra-ui/react';
 
-import { LocalizedText, MessageId } from '../../../lib/components/LocalizedText';
+import { LocalizedText, MessageId } from '../../lib/components/LocalizedText';
 
 type LabeledControlProps = FormLabelProps & {
     messageId: MessageId,

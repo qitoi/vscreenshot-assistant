@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Box, Collapse, FormControl, FormControlProps, FormLabel, useFormControlContext, VStack } from '@chakra-ui/react';
 import { FieldPath, FieldPathValue, UnpackNestedValue, useFormContext } from 'react-hook-form';
 
-import { LocalizedText, MessageId } from '../../../lib/components/LocalizedText';
+import { LocalizedText, MessageId } from '../../lib/components/LocalizedText';
 
 type ControlGroupProps<T> = Omit<FormControlProps, 'label'> & {
     label?: MessageId,

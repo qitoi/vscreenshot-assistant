@@ -19,14 +19,14 @@ import { Box, HStack } from '@chakra-ui/react';
 
 import { Preferences, ToastPosition, ToastPositions } from '../../../lib/prefs';
 import { MessageId } from '../../../lib/components/LocalizedText';
+import SwitchControl from '../../components/SwitchControl';
+import ControlGroup from '../../components/ControlGroup';
+import HotkeyInputControl from '../../components/HotkeyInputControl';
+import LabeledControl from '../../components/LabeledControl';
+import RadioItem from '../../components/RadioItem';
+import RadioGroupControl from '../../components/RadioGroupControl';
+import NumberInputControl from '../../components/NumberInputControl';
 import PreferenceBlock from './PreferenceBlock';
-import SwitchControl from './SwitchControl';
-import ControlGroup from './ControlGroup';
-import HotkeyInputControl from './HotkeyInputControl';
-import LabeledControl from './LabeledControl';
-import RadioItem from './RadioItem';
-import RadioGroupControl from './RadioGroupControl';
-import NumberInputControl from './NumberInputControl';
 
 const GeneralPreferences: React.FC = () => {
     const toastPositionItems: Record<ToastPosition, MessageId> = {
