@@ -16,9 +16,10 @@
 
 import { ImageDataUrl } from '../types';
 import * as messages from '../messages';
-import * as prefs from '../prefs';
-import Platform from '../platforms/platform';
 import { MessageRequest, MessageResponse } from '../messages';
+import * as prefs from '../prefs';
+import { downloadImage } from '../download';
+import Platform from '../platforms/platform';
 
 
 let currentPlatform: Platform | null = null;
@@ -41,21 +42,6 @@ export async function getVideoInfo(platform: Platform): Promise<{ videoId: strin
     }
 
     return { videoId, videoInfo };
-}
-
-
-export function downloadImage(url: string): Promise<ImageDataUrl> {
-    return new Promise<ImageDataUrl>(resolve => {
-        fetch(url)
-            .then(res => res.blob())
-            .then(body => {
-                const reader = new FileReader();
-                reader.readAsDataURL(body);
-                reader.onload = () => {
-                    resolve(reader.result as ImageDataUrl);
-                };
-            });
-    });
 }
 
 
@@ -90,6 +76,7 @@ export function saveScreenshot(platform: Platform, videoId: string, videoInfo: a
             private: platform.isPrivate(videoId, videoInfo),
             ratio: ratio,
         },
+        thumbnailUrl: platform.getVideoThumbnailUrl(videoId, videoInfo),
         pos: pos,
         datetime: (new Date()).getTime(),
     };
@@ -102,7 +89,7 @@ export function saveScreenshot(platform: Platform, videoId: string, videoInfo: a
             }
 
             if (message.status === 'video-thumbnail') {
-                const thumbnail = await downloadImage(platform.getVideoThumbnailUrl(videoId, videoInfo));
+                const thumbnail = await downloadImage(platform.getVideoThumbnailUrl(videoId, videoInfo), false);
                 const thumbnailParam: messages.VideoThumbnailRequest = {
                     type: 'video-thumbnail',
                     videoInfo: message.videoInfo,

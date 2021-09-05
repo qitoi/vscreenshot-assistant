@@ -21,6 +21,7 @@ import * as messages from './lib/messages';
 import * as port from './lib/port';
 import * as storage from './lib/storage';
 import * as prefs from './lib/prefs';
+import { downloadImage } from './lib/download';
 import * as popup from './lib/background/popup-window';
 import * as videoSort from './lib/background/video-sort';
 import * as screenshotSort from './lib/background/screenshot-sort';
@@ -203,6 +204,23 @@ function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, im
         lastUpdated: param.datetime,
     };
 
+    const videoThumbnail = storage.existsVideoThumbnail(param.platform, param.videoId)
+        .then(exists => {
+            if (exists) {
+                return true;
+            }
+            // backgroundでサムネイルのダウンロードを試す
+            return downloadImage(param.thumbnailUrl, true)
+                .then(thumbnail => {
+                    storage.saveVideoThumbnail(param.platform, param.videoId, thumbnail);
+                    return true;
+                })
+                .catch(() => {
+                    // ダウンロードに失敗したらcontents側でのダウンロードを試す
+                    return false;
+                });
+        });
+
     return Promise.all([
         image,
         thumbnail,
@@ -210,7 +228,7 @@ function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, im
         .then(([image, thumbnail]) => Promise.all([
             image,
             thumbnail,
-            storage.existsVideoThumbnail(param.platform, param.videoId)
+            videoThumbnail,
         ]))
         .then(([image, thumbnail, existsVideoThumbnail]) => {
             storage.saveScreenshot(param.platform, param.videoId, isAnime, param.pos, param.datetime, image, thumbnail);

@@ -5,7 +5,9 @@
   "manifest_version": 2,
   "permissions": [
     "storage",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "https://i.ytimg.com/*",
+    "https://public.spwn.jp/*"
   ],
   "background": {
     "scripts": [

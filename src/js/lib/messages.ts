@@ -48,6 +48,7 @@ export type CaptureRequestBase = {
     videoId: string,
     // video
     videoInfo: Omit<VideoInfo, 'platform' | 'videoId' | 'lastUpdated'>,
+    thumbnailUrl: string,
     // screenshot
     pos: number,
     datetime: number,
