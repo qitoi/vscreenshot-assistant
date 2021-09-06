@@ -74,8 +74,14 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
             break;
         }
         case 'video-thumbnail': {
-            storage.saveVideoThumbnail(message.videoInfo.platform, message.videoInfo.videoId, message.thumbnail);
-            storage.saveVideoInfo({ ...message.videoInfo, lastUpdated: Date.now() });
+            prefs.loadPreferences()
+                .then(prefs => {
+                    return createThumbnail(message.thumbnail, prefs.thumbnail.width, prefs.thumbnail.height);
+                })
+                .then(resized => {
+                    storage.saveVideoThumbnail(message.videoInfo.platform, message.videoInfo.videoId, message.thumbnail, resized);
+                    storage.saveVideoInfo({ ...message.videoInfo, lastUpdated: Date.now() });
+                });
             break;
         }
         case 'remove-video': {
@@ -211,8 +217,13 @@ function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, im
             }
             // backgroundでサムネイルのダウンロードを試す
             return downloadImage(param.thumbnailUrl, true)
-                .then(thumbnail => {
-                    storage.saveVideoThumbnail(param.platform, param.videoId, thumbnail);
+                .then(async thumbnail => {
+                    const p = await prefs.loadPreferences();
+                    const resized = await createThumbnail(thumbnail, p.thumbnail.width, p.thumbnail.height);
+                    return { thumbnail, resized };
+                })
+                .then(({ thumbnail, resized }) => {
+                    storage.saveVideoThumbnail(param.platform, param.videoId, thumbnail, resized);
                     return true;
                 })
                 .catch(() => {

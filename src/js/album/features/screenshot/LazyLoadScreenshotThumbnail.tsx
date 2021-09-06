@@ -76,7 +76,7 @@ const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadS
                 minW={`${thumbnailPreferences.width}px`}
                 minH={`${thumbnailPreferences.height}px`}
                 ratio={thumbnailPreferences.width / thumbnailPreferences.height}
-            >
+                bgColor="white">
                 <Image
                     ref={refs}
                     src=""

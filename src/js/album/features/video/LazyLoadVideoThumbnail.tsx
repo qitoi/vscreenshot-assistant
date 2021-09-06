@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Image } from '@chakra-ui/react';
+import { AspectRatio, Image } from '@chakra-ui/react';
 import { useInView } from 'react-intersection-observer';
 
 import * as storage from '../../../lib/storage';
@@ -35,13 +35,20 @@ const LazyLoadVideoThumbnail = ({ platform, videoId }: LazyLoadVideoThumbnailPro
     const thumbnailPreferences = useSelector(selectThumbnailPreferences);
 
     React.useEffect(() => {
-        storage.getVideoThumbnail(platform, videoId).then(image => {
+        storage.getVideoResizedThumbnail(platform, videoId).then(image => {
             setImage(image);
         });
     }, [inView, platform, videoId]);
 
     return (
-        <Image ref={ref} src={image} w={`${thumbnailPreferences.width}px`} draggable={false} />
+        <AspectRatio
+            w="100%"
+            minW={`${thumbnailPreferences.width}px`}
+            minH={`${thumbnailPreferences.height}px`}
+            ratio={thumbnailPreferences.width / thumbnailPreferences.height}
+            bgColor="white">
+            <Image ref={ref} src={image} w={`${thumbnailPreferences.width}px`} draggable={false} style={{ objectFit: 'contain' }} />
+        </AspectRatio>
     );
 };
 

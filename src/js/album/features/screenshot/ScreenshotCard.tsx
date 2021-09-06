@@ -74,7 +74,6 @@ const ScreenshotCard = ({ info, isChecked, disabled, className, onClick, onExpan
                     position="relative"
                     rounded="md"
                     overflow="clip"
-                    bgColor="white"
                     onClick={handleClick}
                     onMouseEnter={handleMouseOver}
                     onMouseLeave={handleMouseOut}

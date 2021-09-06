@@ -88,10 +88,12 @@ export async function removeVideoInfo(platform: string, videoId: string): Promis
     ]);
 }
 
-export async function saveVideoThumbnail(platform: string, videoId: string, thumbnail: ImageDataUrl): Promise<void> {
+export async function saveVideoThumbnail(platform: string, videoId: string, thumbnail: ImageDataUrl, resized: ImageDataUrl): Promise<void> {
     const thumbId = getVideoThumbnailId(platform, videoId);
+    const resizedId = getVideoResizedThumbnailId(platform, videoId);
     return setItems({
         [thumbId]: thumbnail,
+        [resizedId]: resized,
     });
 }
 
@@ -151,6 +153,11 @@ export async function getVideoThumbnail(platform: string, videoId: string): Prom
     return getItemById<ImageDataUrl>(id);
 }
 
+export async function getVideoResizedThumbnail(platform: string, videoId: string): Promise<ImageDataUrl> {
+    const id = getVideoResizedThumbnailId(platform, videoId);
+    return getItemById<ImageDataUrl>(id);
+}
+
 export async function getScreenshotThumbnail(platform: string, videoId: string, no: number): Promise<ImageDataUrl> {
     const id = getScreenshotThumbnailId(platform, videoId, no);
     return getItemById<ImageDataUrl>(id);
@@ -197,6 +204,10 @@ function getVideoInfoId(platform: string, videoId: string): string {
 
 function getVideoThumbnailId(platform: string, videoId: string): string {
     return `v:t:${platform}:${videoId}`;
+}
+
+function getVideoResizedThumbnailId(platform: string, videoId: string): string {
+    return `v:r:${platform}:${videoId}`;
 }
 
 function getVideoSelectedHashtagsId(platform: string, videoId: string): string {
