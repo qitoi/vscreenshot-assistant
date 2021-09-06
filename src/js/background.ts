@@ -54,34 +54,14 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
             const image = Promise.resolve(message.image);
 
             saveScreenshot(message, false, image, thumbnail)
-                .then(({ existsVideoThumbnail, videoInfo }) => {
+                .then(() => {
                     const response: (message: messages.CaptureResponse) => void = sendResponse;
-                    if (existsVideoThumbnail) {
-                        response({
-                            type: 'capture-response',
-                            status: 'complete',
-                        });
-                    }
-                    else {
-                        response({
-                            type: 'capture-response',
-                            status: 'video-thumbnail',
-                            videoInfo,
-                        });
-                    }
+                    response({
+                        type: 'capture-response',
+                        status: 'complete',
+                    });
                 });
 
-            break;
-        }
-        case 'video-thumbnail': {
-            prefs.loadPreferences()
-                .then(prefs => {
-                    return createThumbnail(message.thumbnail, prefs.thumbnail.width, prefs.thumbnail.height);
-                })
-                .then(resized => {
-                    storage.saveVideoThumbnail(message.videoInfo.platform, message.videoInfo.videoId, message.thumbnail, resized);
-                    storage.saveVideoInfo({ ...message.videoInfo, lastUpdated: Date.now() });
-                });
             break;
         }
         case 'remove-video': {
@@ -180,20 +160,11 @@ port.listenPort().addListener(port => {
                 );
 
                 saveScreenshot(message, true, image, thumbnail)
-                    .then(({ existsVideoThumbnail, videoInfo }) => {
-                        if (existsVideoThumbnail) {
-                            message.sendResponse({
-                                type: 'anime-end-response',
-                                status: 'complete',
-                            });
-                        }
-                        else {
-                            message.sendResponse({
-                                type: 'anime-end-response',
-                                status: 'video-thumbnail',
-                                videoInfo,
-                            });
-                        }
+                    .then(() => {
+                        message.sendResponse({
+                            type: 'anime-end-response',
+                            status: 'complete',
+                        });
                     });
                 break;
             }
@@ -202,7 +173,7 @@ port.listenPort().addListener(port => {
 });
 
 
-function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, image: Promise<ImageDataUrl>, thumbnail: Promise<ImageDataUrl>): Promise<{ existsVideoThumbnail: boolean, videoInfo: VideoInfo }> {
+async function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, image: Promise<ImageDataUrl>, thumbnail: Promise<ImageDataUrl>): Promise<void> {
     const videoInfo: VideoInfo = {
         ...param.videoInfo,
         platform: param.platform,
@@ -210,43 +181,26 @@ function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, im
         lastUpdated: param.datetime,
     };
 
-    const videoThumbnail = storage.existsVideoThumbnail(param.platform, param.videoId)
-        .then(exists => {
-            if (exists) {
-                return true;
-            }
-            // backgroundでサムネイルのダウンロードを試す
-            return downloadImage(param.thumbnailUrl, true)
-                .then(async thumbnail => {
-                    const p = await prefs.loadPreferences();
-                    const resized = await createThumbnail(thumbnail, p.thumbnail.width, p.thumbnail.height);
-                    return { thumbnail, resized };
-                })
-                .then(({ thumbnail, resized }) => {
-                    storage.saveVideoThumbnail(param.platform, param.videoId, thumbnail, resized);
-                    return true;
-                })
-                .catch(() => {
-                    // ダウンロードに失敗したらcontents側でのダウンロードを試す
-                    return false;
-                });
-        });
+    // 動画サムネイルが保存されていない場合はダウンロードする
+    const videoThumbnailExists = await storage.existsVideoThumbnail(param.platform, param.videoId);
+    let videoThumbnail: Promise<{ image: ImageDataUrl, resized: ImageDataUrl } | null> = Promise.resolve(null);
+    if (!videoThumbnailExists) {
+        const p = await prefs.loadPreferences();
+        videoThumbnail = downloadImage(param.thumbnailUrl, true)
+            .then(async image => ({
+                image,
+                resized: await createThumbnail(image, p.thumbnail.width, p.thumbnail.height),
+            }));
+    }
 
-    return Promise.all([
-        image,
-        thumbnail,
-    ])
-        .then(([image, thumbnail]) => Promise.all([
-            image,
-            thumbnail,
-            videoThumbnail,
-        ]))
-        .then(([image, thumbnail, existsVideoThumbnail]) => {
+    return Promise.all([image, thumbnail, videoThumbnail])
+        .then(([image, thumbnail, videoThumbnail]) => {
             storage.saveScreenshot(param.platform, param.videoId, isAnime, param.pos, param.datetime, image, thumbnail);
-            if (existsVideoThumbnail) {
-                storage.saveVideoInfo({ ...videoInfo, lastUpdated: Date.now() });
+            // 新規保存する動画サムネイルがある場合は保存
+            if (videoThumbnail !== null) {
+                storage.saveVideoThumbnail(param.platform, param.videoId, videoThumbnail.image, videoThumbnail.resized);
             }
-            return { existsVideoThumbnail, videoInfo };
+            storage.saveVideoInfo({ ...videoInfo, lastUpdated: Date.now() });
         });
 }
 

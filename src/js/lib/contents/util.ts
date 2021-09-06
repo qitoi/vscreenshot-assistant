@@ -85,19 +85,10 @@ export function saveScreenshot(platform: Platform, videoId: string, videoInfo: a
         sender.sendMessage(captureParam, async (message) => {
             if (message.status === 'error') {
                 reject(message.error);
-                return;
             }
-
-            if (message.status === 'video-thumbnail') {
-                const thumbnail = await downloadImage(platform.getVideoThumbnailUrl(videoId, videoInfo), false);
-                const thumbnailParam: messages.VideoThumbnailRequest = {
-                    type: 'video-thumbnail',
-                    videoInfo: message.videoInfo,
-                    thumbnail: thumbnail,
-                };
-                messages.sendMessage(thumbnailParam);
+            else {
+                resolve();
             }
-            resolve();
         });
     });
 }

@@ -30,7 +30,6 @@ export type MessageResponse = MapValues<RequestResponseMap>;
 
 type RequestResponseMap = [
     [CaptureRequest, CaptureResponse],
-    [VideoThumbnailRequest, never],
     [AnimeFrameRequest, AnimeFrameResponse],
     [AnimeEndRequest, AnimeEndResponse],
     [AnimeEncodeProgressRequest, never],
@@ -58,16 +57,7 @@ export type CaptureRequest = CaptureRequestBase & {
     type: 'capture',
     image: ImageDataUrl,
 };
-export type CaptureResponse = Response<CaptureRequest, {
-    status: 'video-thumbnail',
-    videoInfo: VideoInfo,
-}>;
-
-export type VideoThumbnailRequest = {
-    type: 'video-thumbnail',
-    videoInfo: VideoInfo,
-    thumbnail: ImageDataUrl,
-};
+export type CaptureResponse = Response<CaptureRequest>;
 
 
 export type AnimeFrameRequest = {
@@ -84,10 +74,7 @@ export type AnimeEndRequest = CaptureRequestBase & {
     id: string,
     interval: number,
 };
-export type AnimeEndResponse = Response<AnimeEndRequest, {
-    status: 'video-thumbnail',
-    videoInfo: VideoInfo,
-}>;
+export type AnimeEndResponse = Response<AnimeEndRequest>;
 
 
 type AnimeEncodeProgressRequest = {
