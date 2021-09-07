@@ -37,11 +37,6 @@ const GeneralPreferences: React.FC = () => {
     };
     return (
         <PreferenceBlock name="General">
-            <ControlGroup>
-                <LabeledControl messageId="prefs_general_hotkey">
-                    <HotkeyInputControl<Preferences> name="general.captureHotkey" w="12em" />
-                </LabeledControl>
-            </ControlGroup>
             <Box w="100%">
                 <ControlGroup isEnabledHover>
                     <LabeledControl messageId="prefs_general_notify_toast">

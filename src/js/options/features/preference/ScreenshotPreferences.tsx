@@ -22,11 +22,17 @@ import RadioItem from '../../components/RadioItem';
 import NumberInputControl from '../../components/NumberInputControl';
 import LabeledControl from '../../components/LabeledControl';
 import RadioGroupControl from '../../components/RadioGroupControl';
+import HotkeyInputControl from '../../components/HotkeyInputControl';
 import PreferenceBlock from './PreferenceBlock';
 
 const ScreenshotPreferences: React.FC = () => {
     return (
         <PreferenceBlock name="Screenshot">
+            <ControlGroup>
+                <LabeledControl messageId="prefs_screenshot_hotkey">
+                    <HotkeyInputControl<Preferences> name="screenshot.captureHotkey" w="12em" />
+                </LabeledControl>
+            </ControlGroup>
             <ControlGroup w="100%">
                 <LabeledControl isVertical messageId="prefs_screenshot_format">
                     <RadioGroupControl<Preferences> name="screenshot.fileType">

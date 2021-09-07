@@ -37,7 +37,7 @@ export function Setup(platform: Platform): void {
 function setupCaptureHotkey(platform: Platform, prefs: prefs.Preferences) {
     hotkeys.unbind();
 
-    bindHotkey(prefs.general.captureHotkey, () => {
+    bindHotkey(prefs.screenshot.captureHotkey, () => {
         if (platform.checkVideoPage()) {
             const complete = screenshot.capture(platform, prefs);
             captureComplete(complete, prefs);

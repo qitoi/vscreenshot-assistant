@@ -35,12 +35,12 @@ const isToastPosition = (type: any): type is ToastPosition => Object.values(Toas
 
 export type Preferences = {
     general: {
-        captureHotkey: string,
         notifyToast: boolean,
         notifyPosition: ToastPosition,
         notifyDuration: number,
     },
     screenshot: {
+        captureHotkey: string,
         fileType: FileType,
         quality: number,
     },
@@ -66,14 +66,21 @@ export type Preferences = {
 
 export const DefaultPreferences: Preferences = {
     general: {
-        captureHotkey: 'alt+s',
         notifyToast: true,
         notifyPosition: ToastPositions.LeftBottom,
         notifyDuration: 1000,
     },
     screenshot: {
+        captureHotkey: 'alt+s',
         fileType: 'image/jpeg',
         quality: 94,
+    },
+    animation: {
+        enabled: true,
+        captureHotkey: 'alt+v',
+        width: 640,
+        height: 640,
+        interval: 50,
     },
     thumbnail: {
         width: 320,
@@ -86,13 +93,6 @@ export const DefaultPreferences: Preferences = {
         tweetAuthor: false,
         tweetHashtag: true,
     },
-    animation: {
-        enabled: true,
-        captureHotkey: 'alt+v',
-        width: 640,
-        height: 640,
-        interval: 50,
-    },
 };
 
 function completePreferences(prefs: Preferences): Preferences {
@@ -100,12 +100,12 @@ function completePreferences(prefs: Preferences): Preferences {
     const completeToastPosition = (value?: any): ToastPosition => isToastPosition(value) ? value : DefaultPreferences.general.notifyPosition;
     return {
         general: {
-            captureHotkey: prefs?.general?.captureHotkey || DefaultPreferences.general.captureHotkey,
             notifyToast: Boolean(prefs?.general?.notifyToast ?? DefaultPreferences.general.notifyToast),
             notifyPosition: completeToastPosition(prefs?.general?.notifyPosition),
             notifyDuration: Math.min(Math.max(Math.round(+(prefs?.general?.notifyDuration ?? DefaultPreferences.general.notifyDuration)), 100), 60000),
         },
         screenshot: {
+            captureHotkey: prefs?.screenshot?.captureHotkey || DefaultPreferences.screenshot.captureHotkey,
             fileType: completeFileType(prefs?.screenshot?.fileType),
             quality: Math.min(Math.max(Math.round(+(prefs?.screenshot?.quality ?? DefaultPreferences.screenshot.quality)), 0), 100),
         },

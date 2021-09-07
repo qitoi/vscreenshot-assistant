@@ -8,9 +8,6 @@
   "prefs_tab_license": {
     "message": "ライセンス"
   },
-  "prefs_general_hotkey": {
-    "message": "スクリーンショット撮影のキー設定"
-  },
   "prefs_general_notify_toast": {
     "message": "スクリーンショット撮影時に画面に通知"
   },
@@ -31,6 +28,9 @@
   },
   "prefs_general_notify_duration": {
     "message": "通知の表示時間"
+  },
+  "prefs_screenshot_hotkey": {
+    "message": "スクリーンショット撮影のキー設定"
   },
   "prefs_screenshot_format": {
     "message": "ファイルフォーマット"

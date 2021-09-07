@@ -68,8 +68,8 @@ const PreferenceForm: React.FC = () => {
                         <VStack w="60em" mx="auto">
                             <GeneralPreferences />
                             <ScreenshotPreferences />
-                            <ThumbnailPreferences />
                             <AnimationPreferences />
+                            <ThumbnailPreferences />
                             <TweetPreferences />
                             <ResetPreferences />
                         </VStack>
