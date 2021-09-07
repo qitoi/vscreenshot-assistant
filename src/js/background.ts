@@ -48,12 +48,9 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
     switch (message.type) {
         case 'capture': {
             // スクリーンショットのサムネイル作成
-            const thumbnail = prefs.loadPreferences().then(prefs => {
-                return createThumbnail(message.image, prefs.thumbnail.width, prefs.thumbnail.height);
-            });
             const image = Promise.resolve(message.image);
 
-            saveScreenshot(message, false, image, thumbnail)
+            saveScreenshot(message, false, image, image)
                 .then(() => {
                     const response: (message: messages.CaptureResponse) => void = sendResponse;
                     response({
@@ -128,7 +125,7 @@ port.listenPort().addListener(port => {
         switch (message.type) {
             case 'anime-frame': {
                 if (animeCapture.thumbnail === null) {
-                    animeCapture.thumbnail = prefs.loadPreferences().then(prefs => createThumbnail(message.image, prefs.thumbnail.width, prefs.thumbnail.height));
+                    animeCapture.thumbnail = Promise.resolve(message.image);
                 }
 
                 const resize = createThumbnail(message.image, animeCapture.width, animeCapture.height)
@@ -173,7 +170,8 @@ port.listenPort().addListener(port => {
 });
 
 
-async function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, image: Promise<ImageDataUrl>, thumbnail: Promise<ImageDataUrl>): Promise<void> {
+async function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, image: Promise<ImageDataUrl>, imageForThumbnail: Promise<ImageDataUrl>): Promise<void> {
+    const p = await prefs.loadPreferences();
     const videoInfo: VideoInfo = {
         ...param.videoInfo,
         platform: param.platform,
@@ -181,16 +179,26 @@ async function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boole
         lastUpdated: param.datetime,
     };
 
+    // スクリーンショットのサムネイル作成
+    const thumbnail: Promise<ImageDataUrl> = imageForThumbnail.then(image => createThumbnail(image, p.thumbnail.width, p.thumbnail.height));
+
     // 動画サムネイルが保存されていない場合はダウンロードする
+    type VideoThumbnail = { image: ImageDataUrl, resized: ImageDataUrl };
+    let videoThumbnail: Promise<VideoThumbnail | null> = Promise.resolve(null);
     const videoThumbnailExists = await storage.existsVideoThumbnail(param.platform, param.videoId);
-    let videoThumbnail: Promise<{ image: ImageDataUrl, resized: ImageDataUrl } | null> = Promise.resolve(null);
     if (!videoThumbnailExists) {
-        const p = await prefs.loadPreferences();
-        videoThumbnail = downloadImage(param.thumbnailUrl, true)
-            .then(async image => ({
-                image,
-                resized: await createThumbnail(image, p.thumbnail.width, p.thumbnail.height),
-            }));
+        const download = (param.thumbnailUrl !== '') ? downloadImage(param.thumbnailUrl, true) : Promise.reject();
+        videoThumbnail =
+            download
+                .then(async image => ({
+                    image,
+                    resized: await createThumbnail(image, p.thumbnail.width, p.thumbnail.height),
+                }))
+                // サムネイルのURLが取得できない場合やサムネイルのダウンロードに失敗した場合、キャプチャ画像用のサムネイル画像で代用
+                .catch(async () => ({
+                    image: await imageForThumbnail,
+                    resized: await thumbnail,
+                }));
     }
 
     return Promise.all([image, thumbnail, videoThumbnail])
