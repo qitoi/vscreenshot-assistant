@@ -7,7 +7,8 @@
     "storage",
     "unlimitedStorage",
     "https://i.ytimg.com/*",
-    "https://public.spwn.jp/*"
+    "https://public.spwn.jp/*",
+    "https://img.cdn.nimg.jp/*"
   ],
   "background": {
     "scripts": [
@@ -41,6 +42,14 @@
       ],
       "js": [
         "js/contents-spwn.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://*.nicovideo.jp/*"
+      ],
+      "js": [
+        "js/contents-nicovideo.js"
       ]
     }
   ],
