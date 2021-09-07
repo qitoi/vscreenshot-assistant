@@ -14,8 +14,6 @@
  *  limitations under the License.
  */
 
-// album window
-
 import { ImageDataUrl, VideoInfo } from './lib/types';
 import * as messages from './lib/messages';
 import * as port from './lib/port';
