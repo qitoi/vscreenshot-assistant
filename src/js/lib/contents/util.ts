@@ -18,13 +18,12 @@ import { ImageDataUrl } from '../types';
 import * as messages from '../messages';
 import { MessageRequest, MessageResponse } from '../messages';
 import * as prefs from '../prefs';
-import { downloadImage } from '../download';
-import Platform from '../platforms/platform';
+import { Platform, PlatformVideoInfo } from '../platforms/platform';
 
 
 let currentPlatform: Platform | null = null;
 let currentVideoId: string | null = null;
-let currentVideoInfo: any = null;
+let currentVideoInfo: PlatformVideoInfo | null = null;
 
 export async function getVideoInfo(platform: Platform): Promise<{ videoId: string, videoInfo: any }> {
     const videoId = platform.getVideoId();
@@ -35,7 +34,7 @@ export async function getVideoInfo(platform: Platform): Promise<{ videoId: strin
     }
 
     if (currentPlatform !== platform || currentVideoId !== videoId) {
-        videoInfo = await platform.initVideoInfo(videoId);
+        videoInfo = await platform.getVideoInfo(videoId);
         currentPlatform = platform;
         currentVideoInfo = videoInfo;
         currentVideoId = videoId;
@@ -63,20 +62,20 @@ type MessageSender = {
     sendMessage: (req: MessageRequest, callback: (res: MessageResponse) => void) => void,
 };
 
-export function saveScreenshot(platform: Platform, videoId: string, videoInfo: any, pos: number, ratio: number, param: messages.CaptureRequestAdditionalType, sender: MessageSender): Promise<void> {
+export function saveScreenshot(platform: Platform, videoId: string, videoInfo: PlatformVideoInfo, pos: number, ratio: number, param: messages.CaptureRequestAdditionalType, sender: MessageSender): Promise<void> {
     const captureParam: messages.CaptureMessageRequest = {
         ...param,
         platform: platform.PLATFORM_ID,
         videoId: videoId,
         videoInfo: {
-            title: platform.getVideoTitle(videoId, videoInfo),
-            author: platform.getAuthor(videoId, videoInfo),
-            hashtags: platform.getHashtags(videoId, videoInfo),
-            date: platform.getVideoDate(videoId, videoInfo),
-            private: platform.isPrivate(videoId, videoInfo),
+            title: videoInfo.title,
+            author: videoInfo.author,
+            hashtags: videoInfo.hashtags,
+            date: videoInfo.date,
+            private: videoInfo.private,
             ratio: ratio,
         },
-        thumbnailUrl: platform.getVideoThumbnailUrl(videoId, videoInfo),
+        thumbnailUrl: videoInfo.thumbnailUrl,
         pos: pos,
         datetime: (new Date()).getTime(),
     };

@@ -18,7 +18,7 @@ import hotkeys from 'hotkeys-js';
 
 import { ImageDataUrl } from '../types';
 import * as prefs from '../prefs';
-import Platform from '../platforms/platform';
+import { Platform } from '../platforms/platform';
 import * as screenshot from './screenshot';
 import * as animation from './animation';
 import { showScreenshotToast } from './toast';

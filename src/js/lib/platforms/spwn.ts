@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import Platform from './platform';
+import { Platform, PlatformVideoInfo } from './platform';
 
 const SPWN: Platform = {
     PLATFORM_ID: 'spwn',
@@ -23,7 +23,7 @@ const SPWN: Platform = {
         return `https://spwn.jp/events/${videoId}`;
     },
 
-    getVideoPosUrl(videoId: string, pos: number): string | null {
+    getVideoPosUrl(): string | null {
         return null;
     },
 
@@ -39,38 +39,24 @@ const SPWN: Platform = {
         return document.querySelector('div#video video') as HTMLVideoElement;
     },
 
-    async initVideoInfo(videoId): Promise<any> {
+    async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
         const resp = await fetch(`https://public.spwn.jp/event-pages/${videoId}/data.json`);
         const info = await resp.json();
-        info.basic_data.twitterHashTag = (info.basic_data.twitterHashTag as string[]).filter(t => t !== '');
-        return info;
-    },
 
-    getVideoTitle(videoId: string, info: any): string {
-        return info.basic_data.title;
-    },
-
-    getAuthor(videoId: string, info: any): string {
-        return info.basic_data.artists;
-    },
-
-    getVideoDate(videoId: string, info: any): number {
+        // date
         const d = info.basic_data.startTime.value.split('_')[1].split('-');
         const date = d.slice(0, 3).join('-');
         const time = d[3];
-        return new Date(`${date} ${time}`).getTime();
-    },
+        const datetime = new Date(`${date} ${time}`).getTime();
 
-    getVideoThumbnailUrl(videoId: string, info: any): string {
-        return `https://public.spwn.jp/event-pages/${videoId}${info.basic_data.banner_img_path}`;
-    },
-
-    getHashtags(videoId: string, info: any): string[] {
-        return info.basic_data.twitterHashTag;
-    },
-
-    isPrivate(): boolean {
-        return false;
+        return {
+            title: info.basic_data.title ?? '-',
+            author: info.basic_data.artists ?? '-',
+            date: datetime,
+            thumbnailUrl: `https://public.spwn.jp/event-pages/${videoId}${info.basic_data.banner_img_path}`,
+            hashtags: ((info.basic_data.twitterHashTag ?? []) as string[]).filter(t => t !== ''),
+            private: false,
+        };
     },
 };
 

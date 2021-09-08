@@ -14,7 +14,16 @@
  *  limitations under the License.
  */
 
-export default interface Platform {
+export type PlatformVideoInfo = {
+    title: string,
+    author: string,
+    date: number,
+    thumbnailUrl: string | null,
+    hashtags: string[],
+    private: boolean,
+};
+
+export interface Platform {
     readonly PLATFORM_ID: string;
 
     getVideoUrl(videoId: string): string;
@@ -27,17 +36,5 @@ export default interface Platform {
 
     getVideoElement(): HTMLVideoElement;
 
-    initVideoInfo(videoId: string): Promise<any>;
-
-    getVideoTitle(videoId: string, info: any): string;
-
-    getAuthor(videoId: string, info: any): string;
-
-    getVideoDate(videoId: string, info: any): number;
-
-    getVideoThumbnailUrl(videoId: string, info: any): string;
-
-    getHashtags(videoId: string, info: any): string[];
-
-    isPrivate(videoId: string, info: any): boolean;
+    getVideoInfo(videoId: string): Promise<PlatformVideoInfo>;
 }

@@ -14,8 +14,7 @@
  *  limitations under the License.
  */
 
-import Platform from './platform';
-
+import { Platform, PlatformVideoInfo } from './platform';
 import { extractHashtags } from './util';
 
 
@@ -43,27 +42,10 @@ const Youtube: Platform = {
         return document.querySelector('video.video-stream') as HTMLVideoElement;
     },
 
-    async initVideoInfo(): Promise<any> {
-        return new Promise(resolve => {
-            const info: any = JSON.parse((document.querySelector('script#scriptTag') as HTMLElement)?.innerText);
+    async getVideoInfo(): Promise<PlatformVideoInfo> {
+        const info: any = JSON.parse((document.querySelector('script#scriptTag') as HTMLElement)?.innerText);
 
-            const anchors = Array.from(document.querySelectorAll('a[href*="/hashtag/"]')) as HTMLAnchorElement[];
-            const hashtags: Record<string, boolean> = {};
-            for (const anchor of anchors) {
-                const tags = extractHashtags(anchor.textContent ?? '');
-                for (const tag of tags) {
-                    if (tag !== undefined && tag !== '') {
-                        hashtags[tag] = true;
-                    }
-                }
-            }
-            info.hashtags = Object.keys(hashtags);
-
-            resolve(info);
-        });
-    },
-
-    getVideoDate(videoId: string, info: any): number {
+        // 動画の公開日時
         let dateStr = null;
         if ('publication' in info) {
             // live streaming / live streaming archive / premiere video
@@ -77,28 +59,31 @@ const Youtube: Platform = {
                 dateStr = (document.querySelector('div#info-strings>yt-formatted-string') as HTMLElement)?.innerText;
             }
         }
-        return (new Date(dateStr)).getTime();
-    },
+        const date = (new Date(dateStr)).getTime();
 
-    getVideoThumbnailUrl(videoId: string, info: any): string {
-        return (info?.thumbnailUrl ?? [])[0] ?? null;
-    },
+        // anchorタグからハッシュタグを抽出
+        const anchors = Array.from(document.querySelectorAll('a[href*="/hashtag/"]')) as HTMLAnchorElement[];
+        const hashtags: Record<string, boolean> = {};
+        for (const anchor of anchors) {
+            const tags = extractHashtags(anchor.textContent ?? '');
+            for (const tag of tags) {
+                if (tag !== undefined && tag !== '') {
+                    hashtags[tag] = true;
+                }
+            }
+        }
 
-    getVideoTitle(videoId: string, info: any): string {
-        return info?.name;
-    },
+        // メンバー限定や限定公開かどうか
+        const isPrivate = document.querySelector('ytd-video-primary-info-renderer .ytd-badge-supported-renderer > span') !== null;
 
-    getAuthor(videoId: string, info: any): string {
-        return info?.author;
-    },
-
-    getHashtags(videoId: string, info: any): string[] {
-        return info.hashtags;
-    },
-
-    isPrivate(): boolean {
-        const label = (document.querySelector('ytd-video-primary-info-renderer .ytd-badge-supported-renderer > span') as HTMLElement)?.innerText;
-        return label !== undefined;
+        return {
+            title: info?.name ?? '-',
+            author: info?.author ?? '-',
+            date: date,
+            thumbnailUrl: (info?.thumbnailUrl ?? [])[0] ?? null,
+            hashtags: Object.keys(hashtags),
+            private: isPrivate,
+        };
     },
 };
 

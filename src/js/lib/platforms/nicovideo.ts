@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import Platform from './platform';
+import { Platform, PlatformVideoInfo } from './platform';
 
 
 const NicoVideo: Platform = {
@@ -55,58 +55,34 @@ const NicoVideo: Platform = {
         return document.querySelector('#MainVideoPlayer video, video') as HTMLVideoElement;
     },
 
-    async initVideoInfo(videoId: string): Promise<any> {
-        return new Promise(resolve => {
-            // live
-            if (videoId.startsWith('lv')) {
-                const info = JSON.parse((document.querySelector('#embedded-data') as HTMLElement)?.getAttribute('data-props') ?? '{}');
-                const thumbnail = info?.program?.thumbnail;
-                const thumb = thumbnail?.huge?.s1920x1080 ?? thumbnail?.huge?.s1280x720 ?? thumbnail?.huge?.s640x360 ?? thumbnail?.huge?.s352x198;
-                resolve({
-                    title: info?.program?.title ?? '-',
-                    author: ((info?.socialGroup?.type === 'channel') ? (info?.socialGroup?.name) : (info?.program?.supplier?.name)) ?? '-',
-                    videoDate: (info?.program?.beginTime ?? 0) * 1000,
-                    thumbnail: thumb ?? '',
-                    hashtags: info?.program?.twitter?.hashTags ?? [],
-                });
-            }
-            // video
-            else {
-                const info = JSON.parse((document.querySelector('#js-initial-watch-data') as HTMLElement)?.getAttribute('data-api-data') ?? '{}')
-                const thumbnail = info?.video?.thumbnail;
-                resolve({
-                    title: info?.video?.title ?? '-',
-                    author: info?.channel?.name ?? info?.owner?.nickname ?? '-',
-                    videoDate: (new Date(info?.video?.registeredAt ?? 0)).getTime(),
-                    thumbnail: thumbnail?.ogp ?? thumbnail?.player ?? thumbnail?.largeUrl ?? thumbnail?.middleUrl ?? thumbnail?.url ?? '',
-                    hashtags: [],
-                });
-            }
-        });
-    },
-
-    getVideoDate(videoId: string, info: any): number {
-        return info.videoDate;
-    },
-
-    getVideoThumbnailUrl(videoId: string, info: any): string {
-        return info.thumbnail;
-    },
-
-    getVideoTitle(videoId: string, info: any): string {
-        return info.title;
-    },
-
-    getAuthor(videoId: string, info: any): string {
-        return info.author;
-    },
-
-    getHashtags(videoId: string, info: any): string[] {
-        return info.hashtags;
-    },
-
-    isPrivate(): boolean {
-        return false;
+    async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
+        // live
+        if (videoId.startsWith('lv')) {
+            const info = JSON.parse((document.querySelector('#embedded-data') as HTMLElement)?.getAttribute('data-props') ?? '{}');
+            const thumbnail = info?.program?.thumbnail;
+            const thumbnailUrl = thumbnail?.huge?.s1920x1080 ?? thumbnail?.huge?.s1280x720 ?? thumbnail?.huge?.s640x360 ?? thumbnail?.huge?.s352x198;
+            return {
+                title: info?.program?.title ?? '-',
+                author: ((info?.socialGroup?.type === 'channel') ? (info?.socialGroup?.name) : (info?.program?.supplier?.name)) ?? '-',
+                date: (info?.program?.beginTime ?? 0) * 1000,
+                thumbnailUrl: thumbnailUrl,
+                hashtags: info?.program?.twitter?.hashTags ?? [],
+                private: false,
+            };
+        }
+        // video
+        else {
+            const info = JSON.parse((document.querySelector('#js-initial-watch-data') as HTMLElement)?.getAttribute('data-api-data') ?? '{}');
+            const thumbnail = info?.video?.thumbnail;
+            return {
+                title: info?.video?.title ?? '-',
+                author: info?.channel?.name ?? info?.owner?.nickname ?? '-',
+                date: (new Date(info?.video?.registeredAt ?? 0)).getTime(),
+                thumbnailUrl: thumbnail?.ogp ?? thumbnail?.player ?? thumbnail?.largeUrl ?? thumbnail?.middleUrl ?? thumbnail?.url ?? '',
+                hashtags: [],
+                private: false,
+            };
+        }
     },
 };
 

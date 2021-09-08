@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import Platform from './platforms/platform';
+import { Platform } from './platforms/platform';
 import Youtube from './platforms/youtube';
 import SPWN from './platforms/spwn';
 import NicoVideo from './platforms/nicovideo';

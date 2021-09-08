@@ -185,7 +185,7 @@ async function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boole
     let videoThumbnail: Promise<VideoThumbnail | null> = Promise.resolve(null);
     const videoThumbnailExists = await storage.existsVideoThumbnail(param.platform, param.videoId);
     if (!videoThumbnailExists) {
-        const download = (param.thumbnailUrl !== '') ? downloadImage(param.thumbnailUrl, true) : Promise.reject();
+        const download = (param.thumbnailUrl !== null) ? downloadImage(param.thumbnailUrl, true) : Promise.reject();
         videoThumbnail =
             download
                 .then(async image => ({
