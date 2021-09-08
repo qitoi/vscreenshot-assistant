@@ -71,13 +71,13 @@ export const DefaultPreferences: Preferences = {
         notifyDuration: 1000,
     },
     screenshot: {
-        captureHotkey: 'alt+s',
+        captureHotkey: 'shift+s',
         fileType: 'image/jpeg',
         quality: 94,
     },
     animation: {
         enabled: true,
-        captureHotkey: 'alt+v',
+        captureHotkey: 'shift+v',
         width: 640,
         height: 640,
         interval: 50,
