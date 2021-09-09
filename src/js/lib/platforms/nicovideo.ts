@@ -34,10 +34,12 @@ const NicoVideo: Platform = {
         const url = this.getVideoUrl(videoId);
         // live
         if (videoId.startsWith('lv')) {
-            const s = t % 60;
-            const m = Math.floor(t / 60) % 60;
-            const h = Math.floor(t / 60 / 60);
-            return `${url}#${h}:${m}:${s}`;
+            // 途中再生や再生位置の移動により撮影時の時間が正しく取れないため無効化
+            return null;
+            // const s = t % 60;
+            // const m = Math.floor(t / 60) % 60;
+            // const h = Math.floor(t / 60 / 60);
+            // return `${url}#${h}:${m}:${s}`;
         }
         // video
         return `${url}?from=${t}`;
