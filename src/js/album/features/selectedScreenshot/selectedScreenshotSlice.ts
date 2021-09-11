@@ -22,6 +22,7 @@ import { setActiveVideo } from '../activeVideo/activeVideoSlice';
 
 
 const SELECTED_SCREENSHOT_MAX_COUNT = 4;
+const SELECTED_ANIME_MAX_COUNT = 1;
 
 
 export type ScreenshotInfoWithThumbnail = ScreenshotInfo & {
@@ -82,13 +83,13 @@ const slice = createSlice({
 
 export function isSelectableScreenshot(selected: ScreenshotInfoWithThumbnail[], screenshot: ScreenshotInfo): boolean {
     if (screenshot.anime) {
-        return selected.length === 0;
+        return selected.length < SELECTED_ANIME_MAX_COUNT;
     }
     return selected.length < SELECTED_SCREENSHOT_MAX_COUNT && selected.every(s => !s.anime);
 }
 
 export function isFulfilledSelectedScreenshot(selected: ScreenshotInfoWithThumbnail[]): boolean {
-    if (selected.length === 1 && selected[0].anime) {
+    if (selected.length === SELECTED_ANIME_MAX_COUNT && selected[0].anime) {
         return true;
     }
     return selected.length === SELECTED_SCREENSHOT_MAX_COUNT;
