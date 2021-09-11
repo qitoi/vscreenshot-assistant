@@ -70,8 +70,9 @@ const VideoHeaderMenu: React.FC = () => {
             const zipBlob = await archive(video);
             const a = document.createElement('a') as HTMLAnchorElement;
             const zip = URL.createObjectURL(zipBlob);
+            const filename = video.title;
             a.href = zip;
-            a.download = 'images.zip';
+            a.download = ((filename !== '') ? filename : 'images') + '.zip';
             a.click();
             URL.revokeObjectURL(zip);
         }
