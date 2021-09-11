@@ -51,6 +51,14 @@
       "js": [
         "js/contents-nicovideo.js"
       ]
+    },
+    {
+      "matches": [
+        "https://*.twitch.tv/*"
+      ],
+      "js": [
+        "js/contents-twitch.js"
+      ]
     }
   ],
   "options_ui": {
