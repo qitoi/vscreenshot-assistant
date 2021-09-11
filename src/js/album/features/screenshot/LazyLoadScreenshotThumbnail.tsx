@@ -48,8 +48,10 @@ const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadS
             if (thumbnail !== null) {
                 if (ref.current && ref.current.src === '') {
                     ref.current.onload = () => {
-                        onLoad();
-                        onVisible();
+                        if (ref.current !== null) {
+                            onLoad();
+                            onVisible();
+                        }
                     };
                     ref.current.src = thumbnail;
                     dispatch(removeThumbnail({ platform, videoId, no }));
@@ -60,7 +62,11 @@ const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadS
                     if (inView) {
                         storage.getScreenshotThumbnail(platform, videoId, no).then(image => {
                             if (ref.current) {
-                                ref.current.onload = onLoad;
+                                ref.current.onload = () => {
+                                    if (ref.current !== null) {
+                                        onLoad();
+                                    }
+                                };
                                 ref.current.src = image;
                             }
                         });
