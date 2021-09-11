@@ -17,28 +17,43 @@
 import * as fflate from 'fflate';
 import PCancelable from 'p-cancelable';
 
-import { ScreenshotInfo } from '../types';
+import { ScreenshotInfo, VideoInfo } from '../types';
 import * as storage from '../storage';
 import { decodeBase64, getFileExt, parseDataURL } from '../data-url';
 
 type ProgressCallback = (current: number, max: number) => void;
 
-export function collectFiles(screenshots: ScreenshotInfo[], progress?: ProgressCallback): PCancelable<fflate.AsyncZippable> {
+export function collectFiles(video: VideoInfo, screenshots: ScreenshotInfo[], progress?: ProgressCallback): PCancelable<fflate.AsyncZippable> {
     return new PCancelable<fflate.AsyncZippable>(async (resolve, reject, onCancel) => {
         let cancel = false;
         onCancel(() => cancel = true);
 
         const files: fflate.AsyncZippable = {};
-        const max = screenshots.length;
+        const max = screenshots.length + 1;
         let current = 0;
 
-        for (const s of screenshots) {
-            if (cancel) {
-                return;
-            }
+        if (progress !== undefined) {
+            progress(current, max);
+        }
+
+        // サムネイルの取得
+        {
+            const img = await storage.getVideoThumbnail(video.platform, video.videoId);
+            const [mime, data] = parseDataURL(img);
+            const ext = getFileExt(mime);
+            const filename = `thumbnail${ext}`;
+            files[filename] = [decodeBase64(data), { mtime: video.lastUpdated }];
+            current += 1;
 
             if (progress !== undefined) {
                 progress(current, max);
+            }
+        }
+
+        // スクリーンショットの取得
+        for (const s of screenshots) {
+            if (cancel) {
+                return;
             }
 
             const img = await storage.getScreenshot(s.platform, s.videoId, s.no);
@@ -47,10 +62,10 @@ export function collectFiles(screenshots: ScreenshotInfo[], progress?: ProgressC
             const filename = `image_${s.no}${ext}`;
             files[filename] = [decodeBase64(data), { mtime: s.datetime }];
             current += 1;
-        }
 
-        if (progress !== undefined) {
-            progress(current, max);
+            if (progress !== undefined) {
+                progress(current, max);
+            }
         }
 
         resolve(files);

@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from '../../store';
 import useArchive from '../../hooks/useArchive';
 import Dialog from '../../../lib/components/Dialog';
 import DownloadDialog from '../../components/DownloadDialog';
-import { selectActiveVideo, setActiveVideo } from '../activeVideo/activeVideoSlice';
+import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from './videoSlice';
 import CustomLightbox from '../../components/CustomLightbox';
 
@@ -67,7 +67,7 @@ const VideoHeaderMenu: React.FC = () => {
         }
 
         try {
-            const zipBlob = await archive(video.platform, video.videoId);
+            const zipBlob = await archive(video);
             const a = document.createElement('a') as HTMLAnchorElement;
             const zip = URL.createObjectURL(zipBlob);
             a.href = zip;
