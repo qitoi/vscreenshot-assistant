@@ -68,9 +68,10 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
         const zipBlob = await archiveCancelable;
 
         setCancelable(null);
+        setProgressHandler(() => undefined);
 
         return zipBlob;
-    }, []);
+    }, [setProgressHandler]);
 
     return [archiveFunc, cancelFunc, setProgressHandler];
 }

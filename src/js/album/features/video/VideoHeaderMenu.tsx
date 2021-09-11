@@ -87,7 +87,6 @@ const VideoHeaderMenu: React.FC = () => {
 
     const handleDownloadCancel = React.useCallback(() => {
         cancel();
-        setIsDownloadOpen(false);
     }, [cancel]);
 
     const handleShowThumbnail = React.useCallback(() => {
