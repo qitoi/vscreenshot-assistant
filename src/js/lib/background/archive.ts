@@ -59,7 +59,8 @@ export function collectFiles(video: VideoInfo, screenshots: ScreenshotInfo[], pr
             const img = await storage.getScreenshot(s.platform, s.videoId, s.no);
             const [mime, data] = parseDataURL(img);
             const ext = getFileExt(mime);
-            const filename = `image_${s.no}${ext}`;
+            const no = ('' + s.no).padStart(4, '0');
+            const filename = `screenshot_${no}${ext}`;
             files[filename] = [decodeBase64(data), { mtime: s.datetime }];
             current += 1;
 
