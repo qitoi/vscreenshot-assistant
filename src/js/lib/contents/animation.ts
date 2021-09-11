@@ -26,7 +26,7 @@ import { showToast, Toast } from './toast';
 
 export async function capture(platform: Platform, stop: Promise<void>, prefs: prefs.Preferences): Promise<ImageDataUrl> {
     const video = platform.getVideoElement();
-    const pos = video.currentTime;
+    const pos = platform.getVideoPos(video);
     const ratio = video.videoWidth / video.videoHeight;
     const interval = prefs.animation.interval;
 

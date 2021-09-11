@@ -23,7 +23,7 @@ import { captureVideo, convertToDataURL, getVideoInfo, saveScreenshot } from './
 
 export async function capture(platform: Platform, prefs: prefs.Preferences): Promise<ImageDataUrl> {
     const video = platform.getVideoElement();
-    const pos = video.currentTime;
+    const pos = platform.getVideoPos(video);
     const ratio = video.videoWidth / video.videoHeight;
     const canvas = captureVideo(video);
 

@@ -36,5 +36,7 @@ export interface Platform {
 
     getVideoElement(): HTMLVideoElement;
 
+    getVideoPos(video: HTMLVideoElement): number;
+
     getVideoInfo(videoId: string): Promise<PlatformVideoInfo>;
 }

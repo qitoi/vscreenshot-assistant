@@ -42,6 +42,10 @@ const Youtube: Platform = {
         return document.querySelector('video.video-stream') as HTMLVideoElement;
     },
 
+    getVideoPos(video: HTMLVideoElement): number {
+        return video.currentTime;
+    },
+
     async getVideoInfo(): Promise<PlatformVideoInfo> {
         const info: any = JSON.parse((document.querySelector('script#scriptTag') as HTMLElement)?.innerText);
 

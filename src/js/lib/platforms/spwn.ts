@@ -39,6 +39,10 @@ const SPWN: Platform = {
         return document.querySelector('div#video video') as HTMLVideoElement;
     },
 
+    getVideoPos(video: HTMLVideoElement): number {
+        return video.currentTime;
+    },
+
     async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
         const resp = await fetch(`https://public.spwn.jp/event-pages/${videoId}/data.json`);
         const info = await resp.json();

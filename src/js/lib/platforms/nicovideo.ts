@@ -57,6 +57,10 @@ const NicoVideo: Platform = {
         return document.querySelector('#MainVideoPlayer video, video') as HTMLVideoElement;
     },
 
+    getVideoPos(video: HTMLVideoElement): number {
+        return video.currentTime;
+    },
+
     async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
         // live
         if (videoId.startsWith('lv')) {
