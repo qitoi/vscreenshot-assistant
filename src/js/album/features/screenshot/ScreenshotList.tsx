@@ -77,19 +77,31 @@ const ScreenshotList: React.FC = () => {
 
     const fulfilled = isFulfilledSelectedScreenshot(selected);
     const tweetDisabled = video?.private || !tweetEnabled;
-    const selectedSet = selected.reduce<Set<number>>((acc, current) => {
-        acc.add(current.no);
-        return acc;
-    }, new Set<number>());
+    const selectedSet = new Set<number>();
+    let animeSelected = false;
+    for (const s of selected) {
+        selectedSet.add(s.no);
+        if (s.anime) {
+            animeSelected = true;
+        }
+    }
 
     return (
         <Box w="100%" h="100%" minH="100%" userSelect="none">
             <Global styles={{
+                // 選択済みのものはツイートが有効であれば常に選択可能
                 '.screenshot-card-checked': {
                     cursor: tweetDisabled ? 'default' : 'pointer',
                 },
-                '.screenshot-card-unchecked': {
-                    cursor: tweetDisabled ? 'default' : fulfilled ? 'not-allowed' : 'pointer',
+                // 未選択のアニメ
+                '.screenshot-card-unchecked.screenshot-card-anime': {
+                    // ツイートが無効化されていればデフォルト、選択済みが一杯か、選択されているものがアニメでなければ無効化、それ以外は選択可能
+                    cursor: tweetDisabled ? 'default' : (fulfilled || (selected.length > 0 && !animeSelected)) ? 'not-allowed' : 'pointer',
+                },
+                // 未選択のスクリーンショット
+                '.screenshot-card-unchecked.screenshot-card-screenshot': {
+                    // ツイートが無効化されていればデフォルト、選択済みが一杯か、選択されているものがアニメであれば無効化、それ以外は選択可能
+                    cursor: tweetDisabled ? 'default' : (fulfilled || (selected.length > 0 && animeSelected)) ? 'not-allowed' : 'pointer',
                 },
             }} />
             <Grid
@@ -101,10 +113,13 @@ const ScreenshotList: React.FC = () => {
                 gap={2}>
                 {video !== null && screenshots.map(s => {
                     const isChecked = selectedSet.has(s.no);
+                    const classNames = [];
+                    classNames.push(isChecked ? 'screenshot-card-checked' : 'screenshot-card-unchecked');
+                    classNames.push(s.anime ? 'screenshot-card-anime' : 'screenshot-card-screenshot');
                     return (
                         <ScreenshotCard
                             key={getScreenshotKey(s)}
-                            className={isChecked ? 'screenshot-card-checked' : 'screenshot-card-unchecked'}
+                            className={classNames.join(' ')}
                             info={s}
                             disabled={tweetDisabled}
                             isChecked={isChecked}
