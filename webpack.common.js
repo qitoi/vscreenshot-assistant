@@ -2,10 +2,11 @@ const path = require('path');
 const glob = require('glob');
 const CopyPlugin = require('copy-webpack-plugin');
 
-const ts = path.resolve(__dirname, 'src', 'js', '*.ts');
-const tsx = path.resolve(__dirname, 'src', 'js', '*.tsx');
+const tsContents = glob.sync(path.resolve(__dirname, 'src', 'js', 'contents-!(twitter)*.ts'));
+const tsOthers = glob.sync(path.resolve(__dirname, 'src', 'js', '*.ts')).filter(file => !tsContents.includes(file));
+const tsx = glob.sync(path.resolve(__dirname, 'src', 'js', '*.tsx'));
 
-const entries = (files) => glob.sync(files).reduce((acc, file) => {
+const entries = (files) => files.reduce((acc, file) => {
     const name = path.basename(file, path.extname(file));
     acc[name] = file;
     return acc;
@@ -45,7 +46,23 @@ const commonConfig = {
 module.exports = [
     {
         ...commonConfig,
-        entry: entries(ts),
+        entry: entries(tsContents),
+        optimization: {
+            splitChunks: {
+                cacheGroups: {
+                    vendor: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: 'vendor-contents',
+                        chunks: 'initial',
+                        minChunks: 2,
+                    },
+                },
+            },
+        },
+    },
+    {
+        ...commonConfig,
+        entry: entries(tsOthers),
     },
     {
         ...commonConfig,

@@ -25,15 +25,8 @@
         "https://*.youtube.com/*"
       ],
       "js": [
+        "js/vendor-contents.js",
         "js/contents-youtube.js"
-      ]
-    },
-    {
-      "matches": [
-        "https://twitter.com/intent/tweet*"
-      ],
-      "js": [
-        "js/contents-twitter.js"
       ]
     },
     {
@@ -41,6 +34,7 @@
         "https://*.spwn.jp/*"
       ],
       "js": [
+        "js/vendor-contents.js",
         "js/contents-spwn.js"
       ]
     },
@@ -49,6 +43,7 @@
         "https://*.nicovideo.jp/*"
       ],
       "js": [
+        "js/vendor-contents.js",
         "js/contents-nicovideo.js"
       ]
     },
@@ -57,7 +52,16 @@
         "https://*.twitch.tv/*"
       ],
       "js": [
+        "js/vendor-contents.js",
         "js/contents-twitch.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://twitter.com/intent/tweet*"
+      ],
+      "js": [
+        "js/contents-twitter.js"
       ]
     }
   ],
