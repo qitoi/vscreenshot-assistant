@@ -17,9 +17,9 @@
 import * as React from 'react';
 import { Select } from '@chakra-ui/react';
 
-import { getLocalizedText } from '../../../lib/components/LocalizedText';
-import { useDispatch, useSelector } from '../../store';
+import { getLocalizedText } from '../../../lib/localize';
 import { VideoSortOrder, VideoSortOrders } from '../../../lib/background/video-sort';
+import { useDispatch, useSelector } from '../../store';
 import { selectVideoSortOrder, setVideoSortOrder } from './videoSlice';
 
 const VideoSortOrderSelect: React.FC = () => {

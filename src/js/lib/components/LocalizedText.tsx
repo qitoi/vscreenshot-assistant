@@ -15,19 +15,12 @@
  */
 
 import * as React from 'react';
-
-import * as message from '../../../_locales/ja/messages.json';
-
-export type MessageId = keyof typeof message;
+import { getLocalizedText, MessageId } from '../localize';
 
 type LocalizedTextProps = {
     messageId: MessageId,
     substitutions?: string[],
 };
-
-export function getLocalizedText(messageId: MessageId, substitutions?: string[]): string {
-    return chrome.i18n.getMessage(messageId, substitutions);
-}
 
 export function useLocalizedText(messageId: MessageId, substitutions?: string[]): string {
     return React.useMemo(() => getLocalizedText(messageId, substitutions), [messageId, ...(substitutions ?? [])]);

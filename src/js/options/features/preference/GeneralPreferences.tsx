@@ -18,10 +18,9 @@ import * as React from 'react';
 import { Box, HStack } from '@chakra-ui/react';
 
 import { Preferences, ToastPosition, ToastPositions } from '../../../lib/prefs';
-import { MessageId } from '../../../lib/components/LocalizedText';
+import { MessageId } from '../../../lib/localize';
 import SwitchControl from '../../components/SwitchControl';
 import ControlGroup from '../../components/ControlGroup';
-import HotkeyInputControl from '../../components/HotkeyInputControl';
 import LabeledControl from '../../components/LabeledControl';
 import RadioItem from '../../components/RadioItem';
 import RadioGroupControl from '../../components/RadioGroupControl';

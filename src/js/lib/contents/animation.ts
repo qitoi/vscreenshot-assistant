@@ -19,7 +19,7 @@ import * as messages from '../messages';
 import { Port } from '../port';
 import * as prefs from '../prefs';
 import { Platform } from '../platforms/platform';
-import { getLocalizedText } from '../components/LocalizedText';
+import { getLocalizedText } from '../localize';
 import { captureVideo, convertToDataURL, getVideoInfo, saveScreenshot } from './util';
 import { showToast, Toast } from './toast';
 
