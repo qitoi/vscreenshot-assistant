@@ -170,8 +170,8 @@
   "album_download_preparing_label": {
     "message": "ZIPファイル準備中..."
   },
-  "album_share_screenshot_button": {
-    "message": "Share"
+  "album_tweet_screenshot_button": {
+    "message": "Tweet"
   },
   "album_screenshot_capture_date": {
     "message": "撮影日時"
