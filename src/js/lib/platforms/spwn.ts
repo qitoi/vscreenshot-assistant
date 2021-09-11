@@ -14,6 +14,8 @@
  *  limitations under the License.
  */
 
+import * as striptags from 'striptags';
+
 import { Platform, PlatformVideoInfo } from './platform';
 
 const SPWN: Platform = {
@@ -55,7 +57,7 @@ const SPWN: Platform = {
 
         return {
             title: info.basic_data.title ?? '-',
-            author: info.basic_data.artists ?? '-',
+            author: striptags(info.basic_data.artists ?? '-'),
             date: datetime,
             thumbnailUrl: `https://public.spwn.jp/event-pages/${videoId}${info.basic_data.banner_img_path}`,
             hashtags: ((info.basic_data.twitterHashTag ?? []) as string[]).filter(t => t !== ''),
