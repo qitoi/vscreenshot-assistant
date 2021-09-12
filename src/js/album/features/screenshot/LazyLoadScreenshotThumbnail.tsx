@@ -61,7 +61,7 @@ const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadS
                 if (ref.current && ref.current.src === '') {
                     if (inView) {
                         storage.getScreenshotThumbnail(platform, videoId, no).then(image => {
-                            if (ref.current) {
+                            if (ref.current !== null && image !== null) {
                                 ref.current.onload = () => {
                                     if (ref.current !== null) {
                                         onLoad();

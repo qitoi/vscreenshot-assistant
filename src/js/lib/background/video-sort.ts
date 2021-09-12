@@ -39,9 +39,8 @@ const VideoSorter: { [key: string]: (a: VideoInfo, b: VideoInfo) => number } = {
 
 const VIDEO_SORT_ORDER_KEY = 'video-sort-order';
 
-export async function loadVideoSortOrder(): Promise<VideoSortOrder> {
-    const order = await storage.getItemById<VideoSortOrder>(VIDEO_SORT_ORDER_KEY);
-    return order ?? DefaultSortOrder;
+export function loadVideoSortOrder(): Promise<VideoSortOrder> {
+    return storage.getItemById<VideoSortOrder>(VIDEO_SORT_ORDER_KEY, DefaultSortOrder);
 }
 
 export function saveVideoSortOrder(order: VideoSortOrder): Promise<void> {

@@ -36,7 +36,9 @@ const LazyLoadVideoThumbnail = ({ platform, videoId }: LazyLoadVideoThumbnailPro
 
     React.useEffect(() => {
         storage.getVideoResizedThumbnail(platform, videoId).then(image => {
-            setImage(image);
+            if (image !== null) {
+                setImage(image);
+            }
         });
     }, [inView, platform, videoId]);
 

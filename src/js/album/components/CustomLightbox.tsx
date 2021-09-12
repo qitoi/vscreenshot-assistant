@@ -63,7 +63,7 @@ type LightboxProps<T> = {
     initial: T,
     loop: boolean,
     getKey: (i: T) => string;
-    loadImage: (i: T) => Promise<ImageDataUrl>,
+    loadImage: (i: T) => Promise<ImageDataUrl | null>,
     getInfoNode?: (i: T) => React.ReactNode,
     onClose: () => void,
 };
@@ -210,7 +210,7 @@ function reducer<T>(state: StateType<T>, action: ActionType<T>): StateType<T> {
 }
 
 
-function useCustomLightboxLoad<T>(getKey: (t: T) => string, loadImage: (t: T) => Promise<ImageDataUrl>) {
+function useCustomLightboxLoad<T>(getKey: (t: T) => string, loadImage: (t: T) => Promise<ImageDataUrl | null>) {
     const [state, dispatch] = React.useReducer<React.Reducer<StateType<T>, ActionType<T>>>(reducer, { images: getInitialImages(), list: [], loop: false, current: null });
 
     const setList = React.useCallback((list: T[], loop: boolean) => {
@@ -231,8 +231,10 @@ function useCustomLightboxLoad<T>(getKey: (t: T) => string, loadImage: (t: T) =>
                 const key = getKey(t);
                 dispatch({ type: 'loading', key });
                 loadImage(t).then(image => {
-                    const blob = decodeDataURL(image);
-                    dispatch({ type: 'loaded', key, image: URL.createObjectURL(blob), fileType: blob.type, size: blob.size });
+                    if (image !== null) {
+                        const blob = decodeDataURL(image);
+                        dispatch({ type: 'loaded', key, image: URL.createObjectURL(blob), fileType: blob.type, size: blob.size });
+                    }
                 });
             }
         }

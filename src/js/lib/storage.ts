@@ -17,6 +17,9 @@
 import { ImageDataUrl, ScreenshotInfo, VideoInfo } from './types';
 
 
+export type NonUndefined<T> = T extends undefined ? never : T;
+
+
 // video keys
 
 const VIDEO_KEYMAP_KEY = 'video-keys';
@@ -105,8 +108,7 @@ export async function existsVideoThumbnail(platform: string, videoId: string): P
 
 export async function getVideoSelectedHashtags(platform: string, videoId: string): Promise<string[]> {
     const hashtagsId = getVideoSelectedHashtagsId(platform, videoId);
-    return getItemById<string[] | undefined>(hashtagsId)
-        .then(hashtags => hashtags ?? []);
+    return getItemById<string[]>(hashtagsId, []);
 }
 
 export async function saveVideoSelectedHashtags(platform: string, videoId: string, hashtags: string[]): Promise<void> {
@@ -149,24 +151,24 @@ export async function getScreenshotInfoList(platform: string, videoId: string): 
 
 // screenshot image
 
-export async function getVideoThumbnail(platform: string, videoId: string): Promise<ImageDataUrl> {
+export async function getVideoThumbnail(platform: string, videoId: string): Promise<ImageDataUrl | null> {
     const id = getVideoThumbnailId(platform, videoId);
-    return getItemById<ImageDataUrl>(id);
+    return getItemById<ImageDataUrl | null>(id, null);
 }
 
-export async function getVideoResizedThumbnail(platform: string, videoId: string): Promise<ImageDataUrl> {
+export async function getVideoResizedThumbnail(platform: string, videoId: string): Promise<ImageDataUrl | null> {
     const id = getVideoResizedThumbnailId(platform, videoId);
-    return getItemById<ImageDataUrl>(id);
+    return getItemById<ImageDataUrl | null>(id, null);
 }
 
-export async function getScreenshotThumbnail(platform: string, videoId: string, no: number): Promise<ImageDataUrl> {
+export async function getScreenshotThumbnail(platform: string, videoId: string, no: number): Promise<ImageDataUrl | null> {
     const id = getScreenshotThumbnailId(platform, videoId, no);
-    return getItemById<ImageDataUrl>(id);
+    return getItemById<ImageDataUrl | null>(id, null);
 }
 
-export async function getScreenshot(platform: string, videoId: string, no: number): Promise<ImageDataUrl> {
+export async function getScreenshot(platform: string, videoId: string, no: number): Promise<ImageDataUrl | null> {
     const id = getScreenshotId(platform, videoId, no);
-    return getItemById<ImageDataUrl>(id);
+    return getItemById<ImageDataUrl | null>(id, null);
 }
 
 export async function getScreenshotList(infoList: ScreenshotInfo[]): Promise<ImageDataUrl[]> {
@@ -234,10 +236,10 @@ function getScreenshotId(platform: string, videoId: string, no: number): string 
 
 // util
 
-export function getItemById<T>(id: string, defaultVal: any = null): Promise<T> {
+export function getItemById<T>(id: string, defaultVal: NonUndefined<T>): Promise<NonUndefined<T>> {
     return new Promise(resolve => {
         chrome.storage.local.get({ [id]: defaultVal }, items => {
-            resolve(items[id] ?? null as T | null);
+            resolve(items[id] as NonUndefined<T>);
         });
     });
 }

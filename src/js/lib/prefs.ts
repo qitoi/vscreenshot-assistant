@@ -151,7 +151,7 @@ export async function loadPreferences(): Promise<Preferences> {
     if (currentPreferences !== null) {
         return Promise.resolve(currentPreferences);
     }
-    return storage.getItemById<Preferences>(PREFERENCES_KEY).then(prefs => completePreferences(prefs));
+    return storage.getItemById<Preferences>(PREFERENCES_KEY, DefaultPreferences).then(prefs => completePreferences(prefs));
 }
 
 export async function savePreferences(prefs: Preferences): Promise<void> {

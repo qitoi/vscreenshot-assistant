@@ -39,12 +39,14 @@ export function collectFiles(video: VideoInfo, screenshots: ScreenshotInfo[], pr
         // サムネイルの取得
         {
             const img = await storage.getVideoThumbnail(video.platform, video.videoId);
-            const [mime, data] = parseDataURL(img);
-            const ext = getFileExt(mime);
-            const filename = `thumbnail${ext}`;
-            files[filename] = [decodeBase64(data), { mtime: video.lastUpdated }];
-            current += 1;
+            if (img !== null) {
+                const [mime, data] = parseDataURL(img);
+                const ext = getFileExt(mime);
+                const filename = `thumbnail${ext}`;
+                files[filename] = [decodeBase64(data), { mtime: video.lastUpdated }];
+            }
 
+            current += 1;
             if (progress !== undefined) {
                 progress(current, max);
             }
@@ -57,13 +59,15 @@ export function collectFiles(video: VideoInfo, screenshots: ScreenshotInfo[], pr
             }
 
             const img = await storage.getScreenshot(s.platform, s.videoId, s.no);
-            const [mime, data] = parseDataURL(img);
-            const ext = getFileExt(mime);
-            const no = ('' + s.no).padStart(4, '0');
-            const filename = `screenshot_${no}${ext}`;
-            files[filename] = [decodeBase64(data), { mtime: s.datetime }];
-            current += 1;
+            if (img !== null) {
+                const [mime, data] = parseDataURL(img);
+                const ext = getFileExt(mime);
+                const no = ('' + s.no).padStart(4, '0');
+                const filename = `screenshot_${no}${ext}`;
+                files[filename] = [decodeBase64(data), { mtime: s.datetime }];
+            }
 
+            current += 1;
             if (progress !== undefined) {
                 progress(current, max);
             }

@@ -39,9 +39,8 @@ const ScreenshotSorter: { [key: string]: (a: ScreenshotInfo, b: ScreenshotInfo) 
 
 const SCREENSHOT_SORT_ORDER_KEY = 'screenshot-sort-order';
 
-export async function loadScreenshotSortOrder(): Promise<ScreenshotSortOrder> {
-    const order = await storage.getItemById<ScreenshotSortOrder>(SCREENSHOT_SORT_ORDER_KEY);
-    return order ?? DefaultSortOrder;
+export function loadScreenshotSortOrder(): Promise<ScreenshotSortOrder> {
+    return storage.getItemById<ScreenshotSortOrder>(SCREENSHOT_SORT_ORDER_KEY, DefaultSortOrder);
 }
 
 export async function saveScreenshotSortOrder(order: ScreenshotSortOrder): Promise<void> {
