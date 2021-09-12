@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Box, HStack } from '@chakra-ui/react';
 
-import { Preferences, ToastPosition, ToastPositions } from '../../../lib/prefs';
+import { ClickIconAction, ClickIconActions, Preferences, ToastPosition, ToastPositions } from '../../../lib/prefs';
 import { MessageId } from '../../../lib/localize';
 import SwitchControl from '../../components/SwitchControl';
 import ControlGroup from '../../components/ControlGroup';
@@ -36,6 +36,18 @@ const GeneralPreferences: React.FC = () => {
     };
     return (
         <PreferenceBlock name="General">
+            <ControlGroup w="100%">
+                <LabeledControl isVertical messageId="prefs_general_click_icon_action">
+                    <RadioGroupControl<Preferences> name="general.clickIconAction">
+                        <RadioItem<ClickIconAction>
+                            value={ClickIconActions.OpenAlbum}
+                            messageId="prefs_general_click_icon_action_open_album" />
+                        <RadioItem<ClickIconAction>
+                            value={ClickIconActions.CaptureScreenshot}
+                            messageId="prefs_general_click_icon_action_capture_screenshot" />
+                    </RadioGroupControl>
+                </LabeledControl>
+            </ControlGroup>
             <Box w="100%">
                 <ControlGroup isEnabledHover>
                     <LabeledControl messageId="prefs_general_notify_toast">

@@ -31,6 +31,17 @@ export function Setup(platform: Platform): void {
     prefs.loadPreferences().then(prefs => {
         setupCaptureHotkey(platform, prefs);
     });
+
+    chrome.runtime.onMessage.addListener(message => {
+        if (message.type === 'capture-screenshot') {
+            if (platform.checkVideoPage()) {
+                prefs.loadPreferences().then(prefs => {
+                    const complete = screenshot.capture(platform, prefs);
+                    captureComplete(complete, prefs);
+                });
+            }
+        }
+    });
 }
 
 

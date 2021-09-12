@@ -11,6 +11,15 @@
   "prefs_tab_license": {
     "message": "ライセンス"
   },
+  "prefs_general_click_icon_action": {
+    "message": "アイコンをクリックしたときの動作"
+  },
+  "prefs_general_click_icon_action_open_album": {
+    "message": "アルバムを表示する"
+  },
+  "prefs_general_click_icon_action_capture_screenshot": {
+    "message": "スクリーンショットを撮影する"
+  },
   "prefs_general_notify_toast": {
     "message": "スクリーンショット撮影時に画面に通知"
   },

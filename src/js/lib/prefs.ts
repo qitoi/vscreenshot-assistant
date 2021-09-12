@@ -20,9 +20,21 @@ import { Event, EventHandler } from './event';
 
 const PREFERENCES_KEY = 'preferences';
 
+
+// アイコンクリック時の挙動設定
+export const ClickIconActions = {
+    OpenAlbum: 0,
+    CaptureScreenshot: 1,
+} as const;
+export type ClickIconAction = typeof ClickIconActions[keyof typeof ClickIconActions];
+const isClickIconAction = (value: any): value is ClickIconAction => Object.values(ClickIconActions).includes(value);
+
+
+// スクリーンショットのファイルフォーマット設定
 const FileTypes = ['image/jpeg', 'image/png'] as const;
 export type FileType = typeof FileTypes[number];
-const isFileType = (type: any): type is FileType => FileTypes.some(t => t === type);
+const isFileType = (value: any): value is FileType => FileTypes.some(t => t === value);
+
 
 export const ToastPositions = {
     LeftBottom: 0,
@@ -35,6 +47,7 @@ const isToastPosition = (type: any): type is ToastPosition => Object.values(Toas
 
 export type Preferences = {
     general: {
+        clickIconAction: ClickIconAction,
         notifyToast: boolean,
         notifyPosition: ToastPosition,
         notifyDuration: number,
@@ -66,6 +79,7 @@ export type Preferences = {
 
 export const DefaultPreferences: Preferences = {
     general: {
+        clickIconAction: ClickIconActions.OpenAlbum,
         notifyToast: true,
         notifyPosition: ToastPositions.LeftBottom,
         notifyDuration: 1000,
@@ -96,10 +110,12 @@ export const DefaultPreferences: Preferences = {
 };
 
 function completePreferences(prefs: Preferences): Preferences {
+    const completeClickIconAction = (value?: any): ClickIconAction => isClickIconAction(value) ? value : DefaultPreferences.general.clickIconAction;
     const completeFileType = (value?: any): FileType => isFileType(value) ? value : DefaultPreferences.screenshot.fileType;
     const completeToastPosition = (value?: any): ToastPosition => isToastPosition(value) ? value : DefaultPreferences.general.notifyPosition;
     return {
         general: {
+            clickIconAction: completeClickIconAction(prefs?.general?.clickIconAction),
             notifyToast: Boolean(prefs?.general?.notifyToast ?? DefaultPreferences.general.notifyToast),
             notifyPosition: completeToastPosition(prefs?.general?.notifyPosition),
             notifyDuration: Math.min(Math.max(Math.round(+(prefs?.general?.notifyDuration ?? DefaultPreferences.general.notifyDuration)), 100), 60000),

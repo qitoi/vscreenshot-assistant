@@ -37,8 +37,19 @@ popup.watch();
 // アルバムウィンドウの作成・表示
 
 const albumWindow = popup.PopupWindow.create('album', 'album.html', true);
-chrome.browserAction.onClicked.addListener(() => {
-    albumWindow.show();
+chrome.browserAction.onClicked.addListener(async tab => {
+    const p = await prefs.loadPreferences();
+    switch (p.general.clickIconAction) {
+        case prefs.ClickIconActions.OpenAlbum: {
+            albumWindow.show();
+            break;
+        }
+        case prefs.ClickIconActions.CaptureScreenshot: {
+            if (tab.id !== undefined) {
+                chrome.tabs.sendMessage(tab.id, { type: 'capture-screenshot' });
+            }
+        }
+    }
 });
 
 
