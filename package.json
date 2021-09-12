@@ -41,7 +41,8 @@
     "react-redux": "^7.2.5",
     "striptags": "^3.2.0",
     "toastify-js": "~1.10.0",
-    "twitter-text": "^3.1.0"
+    "twitter-text": "^3.1.0",
+    "webext-patterns": "^1.1.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.31.0",

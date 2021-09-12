@@ -12,6 +12,7 @@
   "permissions": [
     "storage",
     "unlimitedStorage",
+    "webNavigation",
     "https://i.ytimg.com/*",
     "https://public.spwn.jp/*",
     "https://img.cdn.nimg.jp/*"
@@ -25,9 +26,9 @@
   "browser_action": {
     "default_title": "VScreenshot Assistant",
     "default_icon": {
-      "16": "img/icon-16.png",
-      "24": "img/icon-24.png",
-      "32": "img/icon-32.png"
+      "16": "img/icon-16-disabled.png",
+      "24": "img/icon-24-disabled.png",
+      "32": "img/icon-32-disabled.png"
     }
   },
   "content_scripts": [

@@ -14,6 +14,8 @@
  *  limitations under the License.
  */
 
+import { patternToRegex } from 'webext-patterns';
+
 import { ImageDataUrl, VideoInfo } from './lib/types';
 import * as messages from './lib/messages';
 import * as port from './lib/port';
@@ -36,6 +38,38 @@ popup.watch();
 const albumWindow = popup.PopupWindow.create('album', 'album.html', true);
 chrome.browserAction.onClicked.addListener(() => {
     albumWindow.show();
+});
+
+
+// ページのロード時にアイコンを切り替え
+
+const manifest = chrome.runtime.getManifest();
+const urls = manifest.content_scripts?.filter(c => !c.js?.includes('js/contents-twitter.js'))?.map(c => c.matches ?? []).flat() ?? [];
+const patterns = patternToRegex(...urls);
+chrome.webNavigation.onCommitted.addListener(details => {
+    if (details.frameId !== 0) {
+        return;
+    }
+    if (patterns.test(details.url)) {
+        chrome.browserAction.setIcon({
+            tabId: details.tabId,
+            path: {
+                16: 'img/icon-16.png',
+                24: 'img/icon-24.png',
+                32: 'img/icon-32.png'
+            },
+        });
+    }
+    else {
+        chrome.browserAction.setIcon({
+            tabId: details.tabId,
+            path: {
+                16: 'img/icon-16-disabled.png',
+                24: 'img/icon-24-disabled.png',
+                32: 'img/icon-32-disabled.png'
+            },
+        });
+    }
 });
 
 
