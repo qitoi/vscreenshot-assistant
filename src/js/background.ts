@@ -84,6 +84,10 @@ chrome.webNavigation.onCommitted.addListener(details => {
                 24: 'img/icon-24.png',
                 32: 'img/icon-32.png'
             },
+        }, () => {
+            if (chrome.runtime.lastError !== undefined) {
+                // アイコンを変更する前にタブが閉じられるとエラーが起きるが、問題は無いため参照だけして潰す
+            }
         });
     }
     else {
@@ -94,6 +98,10 @@ chrome.webNavigation.onCommitted.addListener(details => {
                 24: 'img/icon-24-disabled.png',
                 32: 'img/icon-32-disabled.png'
             },
+        }, () => {
+            if (chrome.runtime.lastError !== undefined) {
+                // アイコンを変更する前にタブが閉じられるとエラーが起きるが、問題は無いため参照だけして潰す
+            }
         });
     }
 });
