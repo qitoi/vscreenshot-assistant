@@ -22,6 +22,7 @@ import * as port from './lib/port';
 import * as storage from './lib/storage';
 import * as prefs from './lib/prefs';
 import { downloadImage } from './lib/download';
+import { getLocalizedText } from './lib/localize';
 import * as popup from './lib/background/popup-window';
 import * as videoSort from './lib/background/video-sort';
 import * as screenshotSort from './lib/background/screenshot-sort';
@@ -39,6 +40,20 @@ const albumWindow = popup.PopupWindow.create('album', 'album.html', true);
 chrome.browserAction.onClicked.addListener(() => {
     albumWindow.show();
 });
+
+
+// コンテキストメニューの設定
+
+chrome.contextMenus.create(
+    {
+        type: 'normal',
+        contexts: ['browser_action'],
+        title: getLocalizedText('context_menu_open_album'),
+        onclick: () => {
+            albumWindow.show();
+        },
+    }
+);
 
 
 // ページのロード時にアイコンを切り替え

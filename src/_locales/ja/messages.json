@@ -2,6 +2,9 @@
   "extension_description": {
     "message": "YouTubeの動画再生中にスクリーンショット撮影。撮影したスクリーンショットはTwitter投稿やまとめて保存ができます。"
   },
+  "context_menu_open_album": {
+    "message": "アルバムを表示"
+  },
   "prefs_tab_preferences": {
     "message": "設定"
   },

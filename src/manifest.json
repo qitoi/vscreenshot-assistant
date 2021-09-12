@@ -12,6 +12,7 @@
   "permissions": [
     "storage",
     "unlimitedStorage",
+    "contextMenus",
     "webNavigation",
     "https://i.ytimg.com/*",
     "https://public.spwn.jp/*",
