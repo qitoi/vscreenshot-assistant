@@ -70,8 +70,9 @@ export async function removeVideoInfo(platform: string, videoId: string): Promis
     // video info/thumbnail ids
     const infoId = getVideoInfoId(platform, videoId);
     const thumbId = getVideoThumbnailId(platform, videoId);
+    const resizedId = getVideoResizedThumbnailId(platform, videoId);
     const hashtagsId = getVideoSelectedHashtagsId(platform, videoId);
-    const ids: string[] = [infoId, thumbId, hashtagsId];
+    const ids: string[] = [infoId, thumbId, resizedId, hashtagsId];
 
     // screenshot info/thumbnail/image ids
     const maxNo = await getPublishedScreenshotNo(platform, videoId);
