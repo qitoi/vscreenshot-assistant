@@ -1,8 +1,14 @@
 {
-  "name": "VScreenshot Assistant",
-  "description": "__MSG_extension_description__",
-  "version": "1.0.0",
   "manifest_version": 2,
+  "name": "VScreenshot Assistant",
+  "version": "1.0.0",
+  "default_locale": "ja",
+  "description": "__MSG_extension_description__",
+  "icons": {
+    "16": "img/icon-16.png",
+    "48": "img/icon-48.png",
+    "128": "img/icon-128.png"
+  },
   "permissions": [
     "storage",
     "unlimitedStorage",
@@ -17,7 +23,12 @@
     "persistent": true
   },
   "browser_action": {
-    "default_title": "VScreenshot Assistant"
+    "default_title": "VScreenshot Assistant",
+    "default_icon": {
+      "16": "img/icon-16.png",
+      "24": "img/icon-24.png",
+      "32": "img/icon-32.png"
+    }
   },
   "content_scripts": [
     {
@@ -72,6 +83,5 @@
   "web_accessible_resources": [
     "js/inject-twitter.js"
   ],
-  "content_security_policy": "script-src 'self'; object-src 'self'; worker-src 'self' blob: data:",
-  "default_locale": "ja"
+  "content_security_policy": "script-src 'self'; object-src 'self'; worker-src 'self' blob: data:"
 }
