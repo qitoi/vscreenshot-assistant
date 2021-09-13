@@ -1,0 +1,153 @@
+const path = require('path');
+const glob = require('glob');
+const webpack = require('webpack');
+const { merge } = require('webpack-merge');
+const CopyPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+
+const ENV = process.env?.NODE_ENV ?? 'development';
+const BROWSER = process.env?.BROWSER ?? 'chrome';
+
+const entries = (files) => files.reduce((acc, file) => {
+    const name = path.basename(file, path.extname(file));
+    acc[name] = file;
+    return acc;
+}, {});
+
+const reactAppScripts = glob.sync(path.resolve(__dirname, 'src', 'js', '*.tsx'));
+const contentsScripts = glob.sync(path.resolve(__dirname, 'src', 'js', 'contents-!(twitter)*.ts'));
+const otherScripts = glob.sync(path.resolve(__dirname, 'src', 'js', '*.ts')).filter(file => !contentsScripts.includes(file));
+
+const outputPath = path.resolve(__dirname, 'build', BROWSER);
+
+const commonConfig = {
+    output: {
+        path: outputPath,
+        filename: 'js/[name].js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+            },
+        ],
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    },
+    performance: {
+        hints: false,
+    },
+    plugins: [
+        new webpack.EnvironmentPlugin(['BROWSER']),
+    ],
+};
+
+const envConfig = (ENV === 'production') ? {
+    mode: 'production',
+    optimization: {
+        minimizer: [
+            new TerserPlugin({
+                terserOptions: {
+                    compress: {
+                        defaults: false,
+                        unused: true,
+                    },
+                    format: {
+                        comments: false,
+                    },
+                },
+                extractComments: false,
+            }),
+        ]
+    },
+} : {
+    mode: 'development',
+    devtool: 'inline-source-map',
+    cache: {
+        type: 'filesystem',
+        buildDependencies: {
+            config: [__filename]
+        }
+    },
+};
+
+module.exports = [
+    // アルバム・オプション画面用のスクリプトのコンパイル
+    merge(
+        commonConfig,
+        envConfig,
+        {
+            entry: entries(reactAppScripts),
+            optimization: {
+                splitChunks: {
+                    cacheGroups: {
+                        vendor: {
+                            test: /[\\/]node_modules[\\/](?!@chakra-ui[\\/]theme)/,
+                            name: 'vendor',
+                            chunks: 'initial',
+                        },
+                    },
+                },
+            },
+        },
+    ),
+    // プラットフォーム用のコンテンツスクリプトのビルド
+    merge(
+        commonConfig,
+        envConfig,
+        {
+            entry: entries(contentsScripts),
+            optimization: {
+                splitChunks: {
+                    cacheGroups: {
+                        vendor: {
+                            test: /[\\/]node_modules[\\/]/,
+                            name: 'vendor-contents',
+                            chunks: 'initial',
+                            minChunks: 2,
+                        },
+                    },
+                },
+            },
+        },
+    ),
+    // その他のスクリプトのビルド
+    merge(
+        commonConfig,
+        envConfig,
+        {
+            entry: entries(otherScripts),
+        },
+    ),
+    // staticファイルのコピー
+    {
+        mode: ENV,
+        output: {
+            path: outputPath,
+        },
+        entry: {},
+        plugins: [
+            new CopyPlugin({
+                patterns: [
+                    'LICENSE',
+                    'THIRD-PARTY-NOTICES',
+                    {
+                        from: '**/*.*',
+                        context: 'src',
+                        globOptions: {
+                            ignore: [
+                                '**/src/js',
+                            ],
+                        },
+                    }
+                ],
+            }),
+        ],
+    },
+];
