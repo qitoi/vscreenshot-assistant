@@ -5,6 +5,10 @@ const { merge } = require('webpack-merge');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
+// サポートするブラウザ
+const browsers = ['chrome', 'firefox'];
+const browsersPattern = browsers.join('|');
+
 const ENV = process.env?.NODE_ENV ?? 'development';
 const BROWSER = process.env?.BROWSER ?? 'chrome';
 
@@ -143,9 +147,18 @@ module.exports = [
                         globOptions: {
                             ignore: [
                                 '**/src/js',
+                                `**/*.(${browsersPattern}).[!.]+`,
                             ],
                         },
-                    }
+                    },
+                    {
+                        from: `**/*.${BROWSER}.*`,
+                        to: ({ context, absoluteFilename }) => {
+                            const filename = path.relative(context, absoluteFilename);
+                            return filename.replace(new RegExp(`(${browsersPattern})\\.(?<ext>[^.]+)$`), '$<ext>');
+                        },
+                        context: 'src',
+                    },
                 ],
             }),
         ],
