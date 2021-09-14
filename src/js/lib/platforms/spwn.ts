@@ -37,8 +37,8 @@ const SPWN: Platform = {
         return document.location.pathname.match(/\/(?<videoId>[^/]*?)\/streaming$/)?.groups?.videoId ?? null;
     },
 
-    getVideoElement(): HTMLVideoElement {
-        return document.querySelector('div#video video') as HTMLVideoElement;
+    getVideoElement(): HTMLVideoElement | null {
+        return document.querySelector('div#video video') as HTMLVideoElement | null;
     },
 
     getVideoPos(video: HTMLVideoElement): number {

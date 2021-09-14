@@ -53,8 +53,8 @@ const NicoVideo: Platform = {
         return location.pathname.match(/\/watch\/(?<videoId>[^/]+)/)?.groups?.videoId ?? null;
     },
 
-    getVideoElement(): HTMLVideoElement {
-        return document.querySelector('#MainVideoPlayer video, video') as HTMLVideoElement;
+    getVideoElement(): HTMLVideoElement | null {
+        return document.querySelector('#MainVideoPlayer video, video') as HTMLVideoElement | null;
     },
 
     getVideoPos(video: HTMLVideoElement): number {

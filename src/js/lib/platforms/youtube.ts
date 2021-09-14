@@ -38,8 +38,8 @@ const Youtube: Platform = {
         return params.get('v');
     },
 
-    getVideoElement(): HTMLVideoElement {
-        return document.querySelector('video.video-stream') as HTMLVideoElement;
+    getVideoElement(): HTMLVideoElement | null {
+        return document.querySelector('video.video-stream') as HTMLVideoElement | null;
     },
 
     getVideoPos(video: HTMLVideoElement): number {

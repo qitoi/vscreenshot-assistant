@@ -109,10 +109,12 @@ function captureAnimation(platform: Platform, onKeyUp: Promise<void>, prefs: pre
 }
 
 
-function captureComplete(complete: Promise<ImageDataUrl>, prefs: prefs.Preferences) {
-    if (prefs.general.notifyToast) {
-        complete.then(img => {
-            showScreenshotToast(img, prefs);
-        });
-    }
+function captureComplete(capture: Promise<ImageDataUrl>, prefs: prefs.Preferences) {
+    capture
+        .then(image => {
+            if (prefs.general.notifyToast) {
+                showScreenshotToast(image, prefs);
+            }
+        })
+        .catch(() => null);
 }

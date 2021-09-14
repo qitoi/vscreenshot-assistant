@@ -34,7 +34,7 @@ export interface Platform {
 
     getVideoId(): string | null;
 
-    getVideoElement(): HTMLVideoElement;
+    getVideoElement(): HTMLVideoElement | null;
 
     getVideoPos(video: HTMLVideoElement): number;
 

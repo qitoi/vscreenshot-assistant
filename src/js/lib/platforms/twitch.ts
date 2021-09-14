@@ -87,8 +87,8 @@ const Twitch: Platform = {
         return location.pathname.match(/\/(?<videoId>(videos\/)?[^/]+)/)?.groups?.videoId ?? null;
     },
 
-    getVideoElement(): HTMLVideoElement {
-        return document.querySelector('[data-a-target="video-player"] video') as HTMLVideoElement;
+    getVideoElement(): HTMLVideoElement | null {
+        return document.querySelector('[data-a-target="video-player"] video') as HTMLVideoElement | null;
     },
 
     getVideoPos(video: HTMLVideoElement): number {
