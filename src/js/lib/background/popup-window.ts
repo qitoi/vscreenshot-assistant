@@ -123,18 +123,20 @@ export function watch() {
         }
     });
 
-    chrome.windows.onBoundsChanged.addListener(window => {
-        if (window.id !== undefined) {
-            if (window.id in popupWindowById) {
-                const popup = popupWindowById[window.id];
-                storage.transaction(async () => {
-                    const size = await loadWindowSizeSet();
-                    if (window.width !== undefined && window.height !== undefined) {
-                        size[popup.name] = { width: window.width, height: window.height };
-                    }
-                    return saveWindowSizeSet(size);
-                });
+    if (process.env.BROWSER === 'chrome') {
+        chrome.windows.onBoundsChanged.addListener(window => {
+            if (window.id !== undefined) {
+                if (window.id in popupWindowById) {
+                    const popup = popupWindowById[window.id];
+                    storage.transaction(async () => {
+                        const size = await loadWindowSizeSet();
+                        if (window.width !== undefined && window.height !== undefined) {
+                            size[popup.name] = { width: window.width, height: window.height };
+                        }
+                        return saveWindowSizeSet(size);
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 }
