@@ -65,6 +65,16 @@ chrome.contextMenus.create(
         },
     }
 );
+chrome.contextMenus.create(
+    {
+        type: 'normal',
+        contexts: ['browser_action'],
+        title: getLocalizedText('context_menu_open_option'),
+        onclick: () => {
+            chrome.runtime.openOptionsPage();
+        },
+    }
+);
 
 
 // ページのロード時にアイコンを切り替え

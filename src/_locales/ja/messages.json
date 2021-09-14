@@ -5,6 +5,9 @@
   "context_menu_open_album": {
     "message": "アルバムを表示"
   },
+  "context_menu_open_option": {
+    "message": "設定"
+  },
   "prefs_tab_preferences": {
     "message": "設定"
   },
