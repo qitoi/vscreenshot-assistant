@@ -5,13 +5,16 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack --watch --config webpack.config.js",
     "clean": "rimraf build dist && rimraf node_modules/.cache",
-    "build": "npm run clean && npm run build:chrome && npm run build:firefox",
+    "build": "npm run clean && npm run build:chrome && npm run build:firefox && npm run build:edge",
     "build:chrome": "npm run compile:chrome && npm run package:chrome",
     "build:firefox": "npm run compile:firefox && npm run package:firefox",
+    "build:edge": "npm run compile:edge && npm run package:edge",
     "compile:chrome": "rimraf build/chrome && cross-env NODE_ENV=production BROWSER=chrome webpack --config webpack.config.js",
     "compile:firefox": "rimraf build/firefox && cross-env NODE_ENV=production BROWSER=firefox webpack --config webpack.config.js",
+    "compile:edge": "rimraf build/edge && cross-env NODE_ENV=production BROWSER=edge webpack --config webpack.config.js",
     "package:chrome": "mkdirp dist && cd build && cd chrome && bestzip ../../dist/vscreenshot-assistant-chrome.zip *",
-    "package:firefox": "mkdirp dist && cd build && cd firefox && bestzip ../../dist/vscreenshot-assistant-firefox.zip *"
+    "package:firefox": "mkdirp dist && cd build && cd firefox && bestzip ../../dist/vscreenshot-assistant-firefox.zip *",
+    "package:edge": "mkdirp dist && cd build && cd edge && bestzip ../../dist/vscreenshot-assistant-edge.zip *"
   },
   "author": "qitoi",
   "license": "Apache-2.0",

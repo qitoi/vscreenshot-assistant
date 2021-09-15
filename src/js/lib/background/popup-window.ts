@@ -116,14 +116,14 @@ export class PopupWindow {
     }
 }
 
-export function watch() {
+export function watch(): void {
     chrome.windows.onRemoved.addListener(windowId => {
         if (windowId in onCloseById) {
             onCloseById[windowId]();
         }
     });
 
-    if (process.env.BROWSER === 'chrome') {
+    if (process.env.BROWSER === 'chrome' || process.env.BROWSER === 'edge') {
         chrome.windows.onBoundsChanged.addListener(window => {
             if (window.id !== undefined) {
                 if (window.id in popupWindowById) {

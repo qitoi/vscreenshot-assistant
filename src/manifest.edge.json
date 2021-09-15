@@ -1,0 +1,89 @@
+{
+  "manifest_version": 2,
+  "name": "VScreenshot Assistant",
+  "version": "1.0.0",
+  "default_locale": "ja",
+  "description": "__MSG_extension_description__",
+  "icons": {
+    "16": "img/icon-16.png",
+    "48": "img/icon-48.png",
+    "128": "img/icon-128.png"
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "contextMenus",
+    "webNavigation",
+    "https://i.ytimg.com/*",
+    "https://public.spwn.jp/*",
+    "https://img.cdn.nimg.jp/*"
+  ],
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_title": "VScreenshot Assistant",
+    "default_icon": {
+      "16": "img/icon-16-disabled.png",
+      "24": "img/icon-24-disabled.png",
+      "32": "img/icon-32-disabled.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.youtube.com/*"
+      ],
+      "js": [
+        "js/vendor-contents.js",
+        "js/contents-youtube.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://*.spwn.jp/*"
+      ],
+      "js": [
+        "js/vendor-contents.js",
+        "js/contents-spwn.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://*.nicovideo.jp/*"
+      ],
+      "js": [
+        "js/vendor-contents.js",
+        "js/contents-nicovideo.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://*.twitch.tv/*"
+      ],
+      "js": [
+        "js/vendor-contents.js",
+        "js/contents-twitch.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://twitter.com/intent/tweet*"
+      ],
+      "js": [
+        "js/contents-twitter.js"
+      ]
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "web_accessible_resources": [
+    "js/inject-twitter.js"
+  ],
+  "content_security_policy": "script-src 'self'; object-src 'self'; worker-src 'self' blob: data:"
+}

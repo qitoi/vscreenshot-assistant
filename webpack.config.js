@@ -6,7 +6,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 // サポートするブラウザ
-const browsers = ['chrome', 'firefox'];
+const browsers = ['chrome', 'firefox', 'edge'];
 const browsersPattern = browsers.join('|');
 
 const ENV = process.env?.NODE_ENV ?? 'development';
