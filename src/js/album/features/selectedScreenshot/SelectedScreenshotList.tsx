@@ -15,17 +15,17 @@
  */
 
 import * as React from 'react';
-import { Box, Button, Grid, HStack, Spacer, useBoolean, VStack } from '@chakra-ui/react';
+import { Box, Button, Grid, HStack, Spacer, useBoolean } from '@chakra-ui/react';
 
 import { getScreenshotKey, ScreenshotInfo, VideoInfo } from '../../../lib/types';
-import { shareScreenshot } from '../../../lib/background/share-twitter';
-import { useResizeObserver } from '../../hooks/useResizeObserver';
-import { ScreenshotInfoWithThumbnail } from './selectedScreenshotSlice';
-import { SelectedScreenshot } from './SelectedScreenshot';
 import { LocalizedText } from '../../../lib/components/LocalizedText';
+import * as messages from '../../../lib/messages';
 import { useSelector } from '../../store';
+import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
 import { selectHashtags } from '../activeVideo/activeVideoSlice';
+import { ScreenshotInfoWithThumbnail } from './selectedScreenshotSlice';
+import { SelectedScreenshot } from './SelectedScreenshot';
 
 type SelectedScreenshotListProps = {
     video: VideoInfo,
@@ -46,7 +46,14 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: Selec
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        shareScreenshot(video, screenshots, hashtags);
+
+        const req: messages.ShareScreenshotRequest = {
+            type: 'share-screenshot',
+            video,
+            screenshots,
+            hashtags,
+        };
+        messages.sendMessage(req);
     };
 
     if (screenshots.length === 0) {

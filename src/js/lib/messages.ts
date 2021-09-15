@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { ImageDataUrl, VideoInfo } from './types';
+import { ImageDataUrl, ScreenshotInfo, VideoInfo } from './types';
 
 
 export function sendMessage<T extends MessageRequest>(message: T, callback?: (message: ResponseType<T>) => void): void {
@@ -35,6 +35,7 @@ type RequestResponseMap = [
     [AnimeEncodeProgressRequest, never],
     [RemoveVideoRequest, RemoveVideoResponse],
     [ResetStorageRequest, ResetStorageResponse],
+    [ShareScreenshotRequest, never],
 ];
 
 
@@ -95,6 +96,14 @@ export type ResetStorageRequest = {
     type: 'reset-storage',
 };
 export type ResetStorageResponse = Response<ResetStorageRequest>;
+
+
+export type ShareScreenshotRequest = {
+    type: 'share-screenshot',
+    video: VideoInfo,
+    screenshots: ScreenshotInfo[],
+    hashtags: string[],
+};
 
 
 type Response<T extends { type: string }, P = never> = {

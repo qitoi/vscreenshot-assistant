@@ -28,6 +28,7 @@ import * as videoSort from './lib/background/video-sort';
 import * as screenshotSort from './lib/background/screenshot-sort';
 import { resizeImage } from './lib/background/resize';
 import { makeAnimation } from './lib/background/animation';
+import { shareScreenshot } from './lib/background/share-twitter';
 
 
 prefs.watch();
@@ -151,6 +152,10 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
                 .then(() => {
                     response({ type: 'reset-storage-response', status: 'complete' });
                 });
+            break;
+        }
+        case 'share-screenshot': {
+            shareScreenshot(message.video, message.screenshots, message.hashtags);
             break;
         }
     }
