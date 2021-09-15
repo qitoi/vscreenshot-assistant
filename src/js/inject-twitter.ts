@@ -14,10 +14,20 @@
  *  limitations under the License.
  */
 
+import * as twitterMessage from './lib/twitter-message';
+
 (function () {
-    document.addEventListener('paste-screenshot', e => {
-        share((e as CustomEvent).detail as File[]);
-    });
+    // コンテンツスクリプトからのファイル受信
+    window.addEventListener('message', (() => {
+        const handler = (e: MessageEvent) => {
+            const files = twitterMessage.receiveFiles(e);
+            if (files !== null) {
+                window.removeEventListener('message', handler);
+                share(e.data.files as File[]);
+            }
+        };
+        return handler;
+    })());
 
     function share(files: File[]) {
         const event = new DummyDragEvent('drop', new DummyDataTransfer(files) as any, { bubbles: true, cancelable: true });

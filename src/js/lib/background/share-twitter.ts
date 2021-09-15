@@ -23,6 +23,11 @@ import * as popup from './popup-window';
 
 const TWITTER_SHARE_URL = 'https://twitter.com/intent/tweet';
 
+// twitter側のコンテンツスクリプトへのメッセージ送信待機設定
+const SHARE_SCREENSHOT_MAX_TRIAL = 20;
+const SHARE_SCREENSHOT_INTERVAL = 250;
+
+
 type TweetOptions = {
     url?: string,
     text?: string,
@@ -63,11 +68,25 @@ export async function shareScreenshot(video: VideoInfo, screenshots: ScreenshotI
 
     const window = popupWindow.getWindow();
     if (window !== null) {
+        // twitterのタブの読み込み完了を待ち、完了後にメッセージを送信
         const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
             if (window.tabs !== undefined && window.tabs.length > 0) {
-                if (tabId == window.tabs[0].id && changeInfo.status === 'complete') {
+                if (tabId === window.tabs[0].id && changeInfo.status === 'complete') {
                     chrome.tabs.onUpdated.removeListener(handler);
-                    chrome.tabs.sendMessage(window.tabs[0].id, { event: 'share-screenshot', images });
+
+                    let trial = 0;
+                    const trySend = () => {
+                        chrome.tabs.sendMessage(tabId, { event: 'share-screenshot', images }, () => {
+                            // firefoxでは他部の読み込みが完了したあともしばらくはコネクションが確立できずエラーになるため、成功するまでしばらく送信を繰り返す
+                            if (chrome.runtime.lastError) {
+                                if (trial < SHARE_SCREENSHOT_MAX_TRIAL) {
+                                    setTimeout(trySend, SHARE_SCREENSHOT_INTERVAL);
+                                }
+                            }
+                            trial += 1;
+                        });
+                    };
+                    trySend();
                 }
             }
         };

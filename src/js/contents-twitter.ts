@@ -16,30 +16,51 @@
 
 import { ImageDataUrl } from './lib/types';
 import { convertScreenshotToFile } from './lib/data-url';
+import * as twitterMessage from './lib/twitter-message';
 
-chrome.runtime.onMessage.addListener(message => {
+
+// twitterのファイルドロップ先の生成待機設定
+const DROP_FILES_TRIAL = 20;
+const DROP_FILES_INTERVAL = 500;
+
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    // backgroundからのスクリーンショット受信
     switch (message.event) {
         case 'share-screenshot': {
             pasteScreenshot(message.images);
+            sendResponse();
             break;
         }
     }
 });
 
+
 function pasteScreenshot(images: ImageDataUrl[]): void {
     const files = images.map(s => convertScreenshotToFile(s));
-    const id = setInterval(() => {
-        const dropArea = document.querySelector('div.public-DraftEditor-content');
-        if (dropArea !== null) {
-            clearInterval(id);
 
-            const script = document.createElement('script');
-            script.src = chrome.runtime.getURL('js/inject-twitter.js');
-            script.onload = () => {
-                document.dispatchEvent(new CustomEvent('paste-screenshot', { detail: files }));
-                script.remove();
-            };
-            (document.head || document.documentElement).appendChild(script);
+    let trial = 0;
+    const tryDrop = () => {
+        // ファイルのドロップ先が見つかるまで待機
+        const dropArea = document.querySelector('div.public-DraftEditor-content');
+        if (dropArea === null) {
+            if (trial < DROP_FILES_TRIAL) {
+                setTimeout(tryDrop, DROP_FILES_INTERVAL);
+            }
+            trial += 1;
+            return;
         }
-    }, 500);
+
+        // ページコンテキストで動作できるようにスクリプトを注入する
+        const script = document.createElement('script');
+        script.src = chrome.runtime.getURL('js/inject-twitter.js');
+        script.onload = () => {
+            // スクリプトのロードが完了すれば、ページコンテキストにファイルを送る
+            twitterMessage.sendFiles(files);
+            script.remove();
+        };
+        (document.head || document.documentElement).appendChild(script);
+    };
+
+    tryDrop();
 }
