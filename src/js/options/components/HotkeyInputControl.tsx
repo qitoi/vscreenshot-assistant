@@ -15,89 +15,34 @@
  */
 
 import * as React from 'react';
-import { Input, InputProps, useMergeRefs } from '@chakra-ui/react';
+import { Input, InputProps } from '@chakra-ui/react';
 import { useController, useFormContext } from 'react-hook-form';
-import hotkeys, { KeyHandler } from 'hotkeys-js';
 
+import * as hotkeys from '../../lib/hotkeys';
 import { TypedFieldPath } from './TypedFieldPath';
 
-function codeToKeyName(code: string): string {
-    if (code.startsWith('Key') && code.length === 4) {
-        return code[3].toLowerCase();
-    }
-    if (code.startsWith('Allow') || code.startsWith('Digit')) {
-        return code.substring(5).toLowerCase();
-    }
-    const keymap: Record<string, string> = {
-        Minus: '-',
-        Equal: '=',
-        BracketLeft: '[',
-        BracketRight: ']',
-        Enter: 'enter',
-        Semicolon: ';',
-        Quote: '\'',
-        Backquote: '`',
-        Backslash: '\\',
-        Comma: ',',
-        Period: '.',
-        Slash: '/',
-        Space: 'space',
-    };
-    if (code in keymap) {
-        return keymap[code];
-    }
-    if (/^F\d+$/.test(code)) {
-        return code.toLowerCase();
-    }
-    return '';
-}
-
 type HotkeyInputControlProps<T> = Omit<InputProps, 'ref' | 'name'> & {
-    name: TypedFieldPath<T, string>,
+    name: TypedFieldPath<T, hotkeys.KeyConfig>,
 };
 
 const HotkeyInputControl = <T, >({ name, ...rest }: HotkeyInputControlProps<T>): React.ReactElement => {
     const { control, setValue } = useFormContext<T>();
-    const { field: { ref: fieldRef, ...field } } = useController({ name, control });
-    const handlerRef = React.useRef<KeyHandler | null>(null);
+    const { field: { value } } = useController({ name, control });
 
-    const hotkeyRef = React.useCallback((node: HTMLInputElement) => {
-        if (node === null && handlerRef.current !== null) {
-            hotkeys.unbind('*', handlerRef.current);
-        }
-        else {
-            handlerRef.current = e => {
-                if (e.target !== node) {
-                    return;
+    const ref = React.useCallback((node: HTMLInputElement) => {
+        if (node !== null) {
+            node.addEventListener('keydown', e => {
+                e.preventDefault();
+                const config = hotkeys.getKeyConfigFromKeyboardEvent(e);
+                if (config !== null) {
+                    setValue(name, config as any, { shouldDirty: true });
                 }
-                const keys: string[] = [];
-                if (hotkeys.command) {
-                    keys.push('command');
-                }
-                if (hotkeys.ctrl) {
-                    keys.push('ctrl');
-                }
-                if (hotkeys.alt) {
-                    keys.push('alt');
-                }
-                if (hotkeys.shift) {
-                    keys.push('shift');
-                }
-                const key = codeToKeyName(e.code);
-                if (key !== '') {
-                    keys.push(key);
-                    setValue(name, (keys.join('+')) as any, { shouldDirty: true });
-                }
-            };
-            hotkeys.filter = () => true;
-            hotkeys('*', { element: node }, handlerRef.current);
+            });
         }
     }, [name, setValue]);
 
-    const refs = useMergeRefs(hotkeyRef, fieldRef);
-
     return (
-        <Input ref={refs} {...field} {...rest} readOnly />
+        <Input ref={ref} {...rest} value={hotkeys.getHotkeyString(value)} readOnly />
     );
 };
 

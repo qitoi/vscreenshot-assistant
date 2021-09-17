@@ -15,6 +15,7 @@
  */
 
 import * as storage from './storage';
+import * as hotkeys from './hotkeys';
 import { Event, EventHandler } from './event';
 
 
@@ -53,9 +54,9 @@ export type Preferences = {
         notifyDuration: number,
     },
     screenshot: {
-        captureHotkey: string,
+        captureHotkey: hotkeys.KeyConfig,
         enabledContinuousCapture: boolean,
-        continuousCaptureHotkey: string,
+        continuousCaptureHotkey: hotkeys.KeyConfig,
         continuousCaptureInterval: number,
         fileType: FileType,
         quality: number,
@@ -73,7 +74,7 @@ export type Preferences = {
     },
     animation: {
         enabled: boolean,
-        captureHotkey: string,
+        captureHotkey: hotkeys.KeyConfig,
         width: number,
         height: number,
         interval: number,
@@ -88,16 +89,16 @@ export const DefaultPreferences: Preferences = {
         notifyDuration: 1000,
     },
     screenshot: {
-        captureHotkey: 'shift+s',
+        captureHotkey: hotkeys.getKeyConfig('S', { shift: true }),
         enabledContinuousCapture: false,
-        continuousCaptureHotkey: 'shift+d',
+        continuousCaptureHotkey: hotkeys.getKeyConfig('D', { shift: true }),
         continuousCaptureInterval: 500,
         fileType: 'image/jpeg',
         quality: 94,
     },
     animation: {
         enabled: true,
-        captureHotkey: 'shift+v',
+        captureHotkey: hotkeys.getKeyConfig('V', { shift: true }),
         width: 640,
         height: 640,
         interval: 50,
@@ -119,6 +120,7 @@ function completePreferences(prefs: Preferences): Preferences {
     const completeClickIconAction = (value?: any): ClickIconAction => isClickIconAction(value) ? value : DefaultPreferences.general.clickIconAction;
     const completeFileType = (value?: any): FileType => isFileType(value) ? value : DefaultPreferences.screenshot.fileType;
     const completeToastPosition = (value?: any): ToastPosition => isToastPosition(value) ? value : DefaultPreferences.general.notifyPosition;
+    const completeKeyConfig = (value: any, defaultValue: hotkeys.KeyConfig) => hotkeys.isKeyConfig(value) ? value : defaultValue;
     return {
         general: {
             clickIconAction: completeClickIconAction(prefs?.general?.clickIconAction),
@@ -127,9 +129,9 @@ function completePreferences(prefs: Preferences): Preferences {
             notifyDuration: Math.min(Math.max(Math.round(+(prefs?.general?.notifyDuration ?? DefaultPreferences.general.notifyDuration)), 100), 60000),
         },
         screenshot: {
-            captureHotkey: prefs?.screenshot?.captureHotkey || DefaultPreferences.screenshot.captureHotkey,
+            captureHotkey: completeKeyConfig(prefs?.screenshot?.captureHotkey, DefaultPreferences.screenshot.captureHotkey),
             enabledContinuousCapture: Boolean(prefs?.screenshot?.enabledContinuousCapture ?? DefaultPreferences.screenshot.enabledContinuousCapture),
-            continuousCaptureHotkey: prefs?.screenshot?.continuousCaptureHotkey || DefaultPreferences.screenshot.continuousCaptureHotkey,
+            continuousCaptureHotkey: completeKeyConfig(prefs?.screenshot?.continuousCaptureHotkey, DefaultPreferences.screenshot.continuousCaptureHotkey),
             continuousCaptureInterval: Math.min(Math.max(Math.round(+(prefs?.screenshot?.continuousCaptureInterval ?? DefaultPreferences.screenshot.continuousCaptureInterval)), 1), 9999),
             fileType: completeFileType(prefs?.screenshot?.fileType),
             quality: Math.min(Math.max(Math.round(+(prefs?.screenshot?.quality ?? DefaultPreferences.screenshot.quality)), 0), 100),
@@ -147,7 +149,7 @@ function completePreferences(prefs: Preferences): Preferences {
         },
         animation: {
             enabled: Boolean(prefs?.animation?.enabled ?? DefaultPreferences.animation.enabled),
-            captureHotkey: prefs?.animation?.captureHotkey || DefaultPreferences.animation.captureHotkey,
+            captureHotkey: completeKeyConfig(prefs?.animation?.captureHotkey, DefaultPreferences.animation.captureHotkey),
             width: Math.min(Math.max(Math.round(+(prefs?.animation?.width ?? DefaultPreferences.animation.width)), 1), 9999),
             height: Math.min(Math.max(Math.round(+(prefs?.animation?.height ?? DefaultPreferences.animation.height)), 1), 9999),
             interval: Math.min(Math.max(Math.round(+(prefs?.animation?.interval ?? DefaultPreferences.animation.interval)), 1), 9999),

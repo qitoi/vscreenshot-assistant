@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import hotkeys from 'hotkeys-js';
 
 import { ImageDataUrl } from '../types';
 import * as prefs from '../prefs';
+import * as hotkeys from '../hotkeys';
 import { Platform } from '../platforms/platform';
 import * as screenshot from './screenshot';
 import * as animation from './animation';
@@ -44,64 +44,51 @@ export function Setup(platform: Platform): void {
     });
 }
 
+const unbinder: (() => void)[] = [];
 
 function setupCaptureHotkey(platform: Platform, prefs: prefs.Preferences) {
-    hotkeys.unbind();
+    for (const unbind of unbinder) {
+        unbind();
+    }
+    unbinder.splice(0);
 
-    bindHotkey(prefs.screenshot.captureHotkey, () => {
-        if (platform.checkVideoPage()) {
-            const complete = screenshot.capture(platform, prefs);
-            captureComplete(complete, prefs);
-        }
-    });
-
-    if (prefs.screenshot.enabledContinuousCapture) {
-        bindHotkey(prefs.screenshot.continuousCaptureHotkey, onKeyUp => {
-            const capture = () => {
+    unbinder.push(
+        hotkeys.bindHotkey(window, prefs.screenshot.captureHotkey, () => {
+            if (platform.checkVideoPage()) {
                 const complete = screenshot.capture(platform, prefs);
                 captureComplete(complete, prefs);
-            };
-            capture();
-            const id = setInterval(capture, prefs.screenshot.continuousCaptureInterval);
-            const stop = wrapStopOnBlur(onKeyUp);
-            stop.then(() => {
-                clearInterval(id);
-            });
-        });
+            }
+        })
+    );
+
+    if (prefs.screenshot.enabledContinuousCapture) {
+        unbinder.push(
+            hotkeys.bindHotkey(window, prefs.screenshot.continuousCaptureHotkey, onKeyUp => {
+                const capture = () => {
+                    const complete = screenshot.capture(platform, prefs);
+                    captureComplete(complete, prefs);
+                };
+                capture();
+                const id = setInterval(capture, prefs.screenshot.continuousCaptureInterval);
+                const stop = wrapStopOnBlur(onKeyUp);
+                stop.then(() => {
+                    clearInterval(id);
+                });
+            })
+        );
     }
 
     if (prefs.animation.enabled) {
-        bindHotkey(prefs.animation.captureHotkey, onKeyUp => {
-            if (platform.checkVideoPage()) {
-                const stop = wrapStopOnBlur(onKeyUp);
-                const complete = animation.capture(platform, stop, prefs);
-                captureComplete(complete, prefs);
-            }
-        });
+        unbinder.push(
+            hotkeys.bindHotkey(window, prefs.animation.captureHotkey, onKeyUp => {
+                if (platform.checkVideoPage()) {
+                    const stop = wrapStopOnBlur(onKeyUp);
+                    const complete = animation.capture(platform, stop, prefs);
+                    captureComplete(complete, prefs);
+                }
+            })
+        );
     }
-}
-
-
-function bindHotkey(hotkey: string, onKeyDown: (onKeyUp: Promise<void>) => void) {
-    let pressed = false;
-    let resolve: (() => void) | null = null;
-    hotkeys(hotkey, { keyup: true }, event => {
-        if (!pressed && event.type === 'keydown') {
-            pressed = true;
-            if (resolve !== null) {
-                resolve();
-            }
-            const promise = new Promise<void>(r => resolve = r);
-            onKeyDown(promise);
-        }
-        else if (pressed && event.type === 'keyup') {
-            pressed = false;
-            if (resolve !== null) {
-                resolve();
-                resolve = null;
-            }
-        }
-    });
 }
 
 
