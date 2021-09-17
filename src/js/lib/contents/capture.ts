@@ -55,10 +55,26 @@ function setupCaptureHotkey(platform: Platform, prefs: prefs.Preferences) {
         }
     });
 
+    if (prefs.screenshot.enabledContinuousCapture) {
+        bindHotkey(prefs.screenshot.continuousCaptureHotkey, onKeyUp => {
+            const capture = () => {
+                const complete = screenshot.capture(platform, prefs);
+                captureComplete(complete, prefs);
+            };
+            capture();
+            const id = setInterval(capture, prefs.screenshot.continuousCaptureInterval);
+            const stop = wrapStopOnBlur(onKeyUp);
+            stop.then(() => {
+                clearInterval(id);
+            });
+        });
+    }
+
     if (prefs.animation.enabled) {
         bindHotkey(prefs.animation.captureHotkey, onKeyUp => {
             if (platform.checkVideoPage()) {
-                const complete = captureAnimation(platform, onKeyUp, prefs);
+                const stop = wrapStopOnBlur(onKeyUp);
+                const complete = animation.capture(platform, stop, prefs);
                 captureComplete(complete, prefs);
             }
         });
@@ -89,23 +105,18 @@ function bindHotkey(hotkey: string, onKeyDown: (onKeyUp: Promise<void>) => void)
 }
 
 
-function captureAnimation(platform: Platform, onKeyUp: Promise<void>, prefs: prefs.Preferences): Promise<ImageDataUrl> {
-    // ブラウザからフォーカスが外れたらキャプチャを停止する
+function wrapStopOnBlur(onKeyUp: Promise<void>): Promise<void> {
+    // ブラウザからフォーカスが外れたら停止させる
     let handleBlur: (() => void) | null = null;
     const onBlur = new Promise<void>(resolve => {
         handleBlur = resolve;
         window.addEventListener('blur', handleBlur, { once: true });
     });
-    const stop = Promise.race([onKeyUp, onBlur]);
-
-    const complete = animation.capture(platform, stop, prefs);
-    complete.then(() => {
+    return Promise.race([onKeyUp, onBlur]).then(() => {
         if (handleBlur !== null) {
             window.removeEventListener('blur', handleBlur);
         }
     });
-
-    return complete;
 }
 
 

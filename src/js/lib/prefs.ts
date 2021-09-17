@@ -54,6 +54,9 @@ export type Preferences = {
     },
     screenshot: {
         captureHotkey: string,
+        enabledContinuousCapture: boolean,
+        continuousCaptureHotkey: string,
+        continuousCaptureInterval: number,
         fileType: FileType,
         quality: number,
     },
@@ -86,6 +89,9 @@ export const DefaultPreferences: Preferences = {
     },
     screenshot: {
         captureHotkey: 'shift+s',
+        enabledContinuousCapture: false,
+        continuousCaptureHotkey: 'shift+d',
+        continuousCaptureInterval: 500,
         fileType: 'image/jpeg',
         quality: 94,
     },
@@ -122,6 +128,9 @@ function completePreferences(prefs: Preferences): Preferences {
         },
         screenshot: {
             captureHotkey: prefs?.screenshot?.captureHotkey || DefaultPreferences.screenshot.captureHotkey,
+            enabledContinuousCapture: Boolean(prefs?.screenshot?.enabledContinuousCapture ?? DefaultPreferences.screenshot.enabledContinuousCapture),
+            continuousCaptureHotkey: prefs?.screenshot?.continuousCaptureHotkey || DefaultPreferences.screenshot.continuousCaptureHotkey,
+            continuousCaptureInterval: Math.min(Math.max(Math.round(+(prefs?.screenshot?.continuousCaptureInterval ?? DefaultPreferences.screenshot.continuousCaptureInterval)), 1), 9999),
             fileType: completeFileType(prefs?.screenshot?.fileType),
             quality: Math.min(Math.max(Math.round(+(prefs?.screenshot?.quality ?? DefaultPreferences.screenshot.quality)), 0), 100),
         },

@@ -15,6 +15,7 @@
  */
 
 import * as React from 'react';
+import { Box } from '@chakra-ui/react';
 
 import { FileType, Preferences } from '../../../lib/prefs';
 import ControlGroup from '../../components/ControlGroup';
@@ -23,6 +24,7 @@ import NumberInputControl from '../../components/NumberInputControl';
 import LabeledControl from '../../components/LabeledControl';
 import RadioGroupControl from '../../components/RadioGroupControl';
 import HotkeyInputControl from '../../components/HotkeyInputControl';
+import SwitchControl from '../../components/SwitchControl';
 import PreferenceBlock from './PreferenceBlock';
 
 const ScreenshotPreferences: React.FC = () => {
@@ -33,6 +35,31 @@ const ScreenshotPreferences: React.FC = () => {
                     <HotkeyInputControl<Preferences> name="screenshot.captureHotkey" w="12em" />
                 </LabeledControl>
             </ControlGroup>
+            <Box w="100%">
+                <ControlGroup isEnabledHover>
+                    <LabeledControl messageId="prefs_screenshot_enabled_continuous_capture">
+                        <SwitchControl<Preferences> name="screenshot.enabledContinuousCapture" />
+                    </LabeledControl>
+                </ControlGroup>
+                <ControlGroup<Preferences> conditionKey="screenshot.enabledContinuousCapture" conditionValue={true} hideIfDisabled>
+                    <ControlGroup indent="left">
+                        <LabeledControl messageId="prefs_screenshot_continuous_capture_hotkey">
+                            <HotkeyInputControl<Preferences> name="screenshot.continuousCaptureHotkey" w="12em" />
+                        </LabeledControl>
+                    </ControlGroup>
+                    <ControlGroup indent="left">
+                        <LabeledControl messageId="prefs_screenshot_continuous_capture_interval">
+                            <NumberInputControl<Preferences> name="screenshot.continuousCaptureInterval"
+                                                             w="10em"
+                                                             min={10}
+                                                             max={9999}
+                                                             step={10}
+                                                             precision={0}
+                                                             unit="ms" />
+                        </LabeledControl>
+                    </ControlGroup>
+                </ControlGroup>
+            </Box>
             <ControlGroup w="100%">
                 <LabeledControl isVertical messageId="prefs_screenshot_format">
                     <RadioGroupControl<Preferences> name="screenshot.fileType">

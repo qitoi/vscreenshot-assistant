@@ -47,6 +47,15 @@
   "prefs_screenshot_hotkey": {
     "message": "スクリーンショット撮影のキー設定"
   },
+  "prefs_screenshot_enabled_continuous_capture": {
+    "message": "連続撮影の有効化"
+  },
+  "prefs_screenshot_continuous_capture_hotkey": {
+    "message": "連続撮影のキー設定"
+  },
+  "prefs_screenshot_continuous_capture_interval": {
+    "message": "連続撮影の撮影間隔"
+  },
   "prefs_screenshot_format": {
     "message": "ファイルフォーマット"
   },
