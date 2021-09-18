@@ -2,7 +2,10 @@
     user-select: none;
 }
 
+.ril__toolbarItem {
+    font-size: 1rem;
+}
+
 .ril-caption-content {
     width: 100%;
-    font-size: 120%;
 }

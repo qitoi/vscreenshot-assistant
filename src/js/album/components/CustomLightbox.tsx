@@ -294,7 +294,9 @@ const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, getInfoNo
         onClose();
     };
 
-    const no = (current !== null) ? list.indexOf(current) + 1 : 0;
+    const no = ((current !== null) ? list.indexOf(current) + 1 : 0).toString();
+    const max = list.length.toString();
+    const pad = '0'.repeat(max.length - no.length);
     const fileSize = prettyBytes(main.size, { binary: true, minimumFractionDigits: 0, maximumFractionDigits: 1 });
 
     return (
@@ -316,14 +318,10 @@ const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, getInfoNo
                             onClick={handleDownload} />
             ]}
             imageTitle={(
-                <Box>
-                    <chakra.span position="relative">
-                        <chakra.span visibility="hidden">{list.length}</chakra.span>
-                        <chakra.span position="absolute" right={0}>{no}</chakra.span>
-                    </chakra.span>
-                    <chakra.span>&nbsp;/&nbsp;</chakra.span>
-                    <chakra.span>{list.length}</chakra.span>
-                </Box>
+                <chakra.span fontSize="1rem">
+                    <chakra.span visibility="hidden">{pad}</chakra.span>
+                    <chakra.span>{no}&nbsp;/&nbsp;{list.length}</chakra.span>
+                </chakra.span>
             )}
             imageCaption={(
                 <HStack w="100%" spacing={8}>
