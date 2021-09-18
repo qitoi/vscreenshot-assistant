@@ -57,7 +57,7 @@ export function getKeyConfigFromKeyboardEvent(e: KeyboardEvent): KeyConfig | nul
     const key = (e.key === ' ') ? 'Space' : e.key;
     return {
         code: code,
-        key: key.toUpperCase(),
+        key: key[0].toUpperCase() + key.slice(1),
         command: e.metaKey,
         control: e.ctrlKey,
         alt: e.altKey,
