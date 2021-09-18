@@ -16,6 +16,7 @@
 
 import { Event, EventDispatcher, EventHandler } from './event';
 import { MessageRequest, MessageResponse, ResponseType } from './messages';
+import { listenAuto } from './event-listen';
 
 
 type PortRequestMessage = {
@@ -132,9 +133,8 @@ export class Port {
 export function listenPort(): EventHandler<Port> {
     const evt = new Event<Port>();
 
-    chrome.runtime.onConnect.addListener(p => {
-        const port = new Port(p);
-        evt.dispatch(port);
+    listenAuto(chrome.runtime.onConnect, p => {
+        evt.dispatch(new Port(p));
     });
 
     return evt;

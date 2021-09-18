@@ -18,6 +18,7 @@
 import { ImageDataUrl } from '../types';
 import * as prefs from '../prefs';
 import * as hotkeys from '../hotkeys';
+import { listenAuto } from '../event-listen';
 import { Platform } from '../platforms/platform';
 import * as screenshot from './screenshot';
 import * as animation from './animation';
@@ -32,7 +33,7 @@ export function Setup(platform: Platform): void {
         setupCaptureHotkey(platform, prefs);
     });
 
-    chrome.runtime.onMessage.addListener(message => {
+    listenAuto(chrome.runtime.onMessage, message => {
         if (message.type === 'capture-screenshot') {
             if (platform.checkVideoPage()) {
                 prefs.loadPreferences().then(prefs => {

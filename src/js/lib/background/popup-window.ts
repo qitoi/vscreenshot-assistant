@@ -15,6 +15,7 @@
  */
 
 import * as storage from '../storage';
+import { listenAuto } from '../event-listen';
 
 
 const WINDOW_SIZE_KEY = 'window-size';
@@ -137,15 +138,22 @@ export class PopupWindow {
     }
 }
 
+let watched = false;
+
 export function watch(): void {
-    chrome.windows.onRemoved.addListener(windowId => {
+    if (watched) {
+        return;
+    }
+    watched = true;
+
+    listenAuto(chrome.windows.onRemoved, windowId => {
         if (windowId in onCloseById) {
             onCloseById[windowId]();
         }
     });
 
     if (process.env.BROWSER === 'chrome' || process.env.BROWSER === 'edge') {
-        chrome.windows.onBoundsChanged.addListener(window => {
+        listenAuto(chrome.windows.onBoundsChanged, window => {
             if (window.id !== undefined) {
                 if (window.id in popupWindowById) {
                     const popup = popupWindowById[window.id];

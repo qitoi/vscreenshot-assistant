@@ -17,6 +17,7 @@
 import * as React from 'react';
 
 import { VideoInfo } from '../../lib/types';
+import { listenAuto } from '../../lib/event-listen';
 import { useDispatch } from '../store';
 import { appendVideo, removeVideo } from '../features/video/videoSlice';
 import { appendScreenshot } from '../features/screenshot/screenshotSlice';
@@ -54,7 +55,7 @@ export function useWatchStorageChange(): void {
                 }
             }
         };
-        chrome.storage.onChanged.addListener(callback);
+        listenAuto(chrome.storage.onChanged, callback);
         return () => chrome.storage.onChanged.removeListener(callback);
     }, [dispatch]);
 }

@@ -17,6 +17,7 @@
 import { ImageDataUrl } from './lib/types';
 import { convertScreenshotToFile } from './lib/data-url';
 import * as twitterMessage from './lib/twitter-message';
+import { listenOnce } from './lib/event-listen';
 
 
 // twitterのファイルドロップ先の生成待機設定
@@ -24,7 +25,7 @@ const DROP_FILES_TRIAL = 20;
 const DROP_FILES_INTERVAL = 500;
 
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+listenOnce(chrome.runtime.onMessage, (message, sender, sendResponse) => {
     // backgroundからのスクリーンショット受信
     switch (message.event) {
         case 'share-screenshot': {

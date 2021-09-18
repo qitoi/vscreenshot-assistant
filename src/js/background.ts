@@ -23,6 +23,7 @@ import * as storage from './lib/storage';
 import * as prefs from './lib/prefs';
 import { downloadImage } from './lib/download';
 import { getLocalizedText } from './lib/localize';
+import { listenAuto } from './lib/event-listen';
 import * as popup from './lib/background/popup-window';
 import * as videoSort from './lib/background/video-sort';
 import * as screenshotSort from './lib/background/screenshot-sort';
@@ -34,11 +35,10 @@ import { shareScreenshot } from './lib/background/share-twitter';
 prefs.watch();
 popup.watch();
 
-
 // アルバムウィンドウの作成・表示
 
 const albumWindow = popup.PopupWindow.create('album', 'album.html', true);
-chrome.browserAction.onClicked.addListener(async tab => {
+listenAuto(chrome.browserAction.onClicked, async tab => {
     const p = await prefs.loadPreferences();
     switch (p.general.clickIconAction) {
         case prefs.ClickIconActions.OpenAlbum: {
@@ -83,7 +83,7 @@ chrome.contextMenus.create(
 const manifest = chrome.runtime.getManifest();
 const urls = manifest.content_scripts?.filter(c => !c.js?.includes('js/contents-twitter.js'))?.map(c => c.matches ?? []).flat() ?? [];
 const patterns = patternToRegex(...urls);
-chrome.webNavigation.onCommitted.addListener(details => {
+listenAuto(chrome.webNavigation.onCommitted, details => {
     if (details.frameId !== 0) {
         return;
     }
@@ -120,7 +120,7 @@ chrome.webNavigation.onCommitted.addListener(details => {
 
 // スクリーンショットキャプチャやスクリーンショット削除メッセージ対応
 
-chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
+listenAuto(chrome.runtime.onMessage, (param, sender, sendResponse) => {
     const message = param as messages.MessageRequest;
     switch (message.type) {
         case 'capture': {
@@ -156,6 +156,7 @@ chrome.runtime.onMessage.addListener((param, sender, sendResponse) => {
         }
         case 'share-screenshot': {
             shareScreenshot(message.video, message.screenshots, message.hashtags);
+            sendResponse();
             break;
         }
     }

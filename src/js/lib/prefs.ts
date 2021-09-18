@@ -17,6 +17,7 @@
 import * as storage from './storage';
 import * as hotkeys from './hotkeys';
 import { Event, EventHandler } from './event';
+import { listenAuto } from './event-listen';
 
 
 const PREFERENCES_KEY = 'preferences';
@@ -189,7 +190,7 @@ export function watch(): PreferencesEventHandler {
         currentPreferences = completePreferences(prefs);
     });
 
-    chrome.storage.onChanged.addListener((changes, area) => {
+    listenAuto(chrome.storage.onChanged, (changes, area) => {
         if (area !== 'local') {
             return;
         }
