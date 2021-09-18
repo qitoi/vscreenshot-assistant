@@ -65,7 +65,7 @@ const PreferenceForm: React.FC = () => {
             <Box>
                 <chakra.form onSubmit={handleSubmit(onSubmit)}>
                     <Box w="100%" minH="calc(100vh - 8em)" py="2em">
-                        <VStack w="60em" mx="auto">
+                        <VStack w="56em" mx="auto">
                             <GeneralPreferences />
                             <ScreenshotPreferences />
                             <AnimationPreferences />

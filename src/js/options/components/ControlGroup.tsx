@@ -35,7 +35,7 @@ const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, indent, conditio
     const context = useFormControlContext();
     const isNested = (context !== undefined);
     const hover = (isEnabledHover === true) ? { transition: 'background ease-out 200ms', _hover: { background: 'blackAlpha.50' } } : {};
-    const padding = ((!isNested && indent === undefined) || indent === 'both') ? { px: '2em' } : (indent === 'left') ? { paddingLeft: '2em' } : (indent === 'right') ? { paddingRight: '2em' } : {};
+    const padding = ((!isNested && indent === undefined) || indent === 'both') ? { paddingLeft: '3em', paddingRight: '1em' } : (indent === 'left') ? { paddingLeft: '3em' } : (indent === 'right') ? { paddingRight: '1em' } : {};
 
     let disabled = (context?.isDisabled === true) || (isDisabled === true);
     if (conditionKey !== undefined) {
@@ -49,7 +49,9 @@ const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, indent, conditio
             {label
                 ? (
                     <VStack spacing={0}>
-                        <FormLabel w="100%" m={0} paddingTop="1em" paddingBottom="0.5em"><LocalizedText messageId={label} /></FormLabel>
+                        <FormLabel w="100%" m={0} paddingTop="1em" paddingBottom="0.5em">
+                            <LocalizedText messageId={label} />
+                        </FormLabel>
                         <Box w="100%">
                             {children}
                         </Box>

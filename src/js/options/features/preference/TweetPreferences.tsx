@@ -32,7 +32,7 @@ const TweetPreferences: React.FC = () => {
                         <SwitchControl<Preferences> name="tweet.enabled" />
                     </LabeledControl>
                 </ControlGroup>
-                <ControlGroup<Preferences> indent="left" conditionKey="tweet.enabled" conditionValue={true} hideIfDisabled>
+                <ControlGroup<Preferences> indent="left" conditionKey="tweet.enabled" conditionValue={true}>
                     <ControlGroup indent="both">
                         <LabeledControl messageId="prefs_tweet_url">
                             <SwitchControl<Preferences> name="tweet.tweetUrl" />

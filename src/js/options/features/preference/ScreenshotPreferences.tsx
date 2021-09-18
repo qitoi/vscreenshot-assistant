@@ -41,7 +41,7 @@ const ScreenshotPreferences: React.FC = () => {
                         <SwitchControl<Preferences> name="screenshot.enabledContinuousCapture" />
                     </LabeledControl>
                 </ControlGroup>
-                <ControlGroup<Preferences> conditionKey="screenshot.enabledContinuousCapture" conditionValue={true} hideIfDisabled>
+                <ControlGroup<Preferences> conditionKey="screenshot.enabledContinuousCapture" conditionValue={true}>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_screenshot_continuous_capture_hotkey">
                             <HotkeyInputControl<Preferences> name="screenshot.continuousCaptureHotkey" w="12em" />

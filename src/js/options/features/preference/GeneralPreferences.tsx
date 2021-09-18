@@ -54,7 +54,7 @@ const GeneralPreferences: React.FC = () => {
                         <SwitchControl<Preferences> name="general.notifyToast" />
                     </LabeledControl>
                 </ControlGroup>
-                <ControlGroup<Preferences> conditionKey="general.notifyToast" conditionValue={true} hideIfDisabled>
+                <ControlGroup<Preferences> conditionKey="general.notifyToast" conditionValue={true}>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_general_notify_duration">
                             <NumberInputControl<Preferences>
