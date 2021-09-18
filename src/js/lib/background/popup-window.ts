@@ -95,6 +95,27 @@ export class PopupWindow {
                     onCloseById[windowId] = () => {
                         this.onClose(windowId);
                     };
+
+                    // firefoxはwindow.onBoundsChangedがないため、定期的にウィンドウサイズを取得し保存する
+                    if (process.env.BROWSER === 'firefox') {
+                        const id = setInterval(() => {
+                            chrome.windows.get(windowId, window => {
+                                storage.transaction(async () => {
+                                    const size = await loadWindowSizeSet();
+                                    if (window.width !== undefined && window.height !== undefined) {
+                                        size[this.name] = { width: window.width, height: window.height };
+                                    }
+                                    return saveWindowSizeSet(size);
+                                });
+                            });
+                        }, 2000);
+                        const onClose = onCloseById[windowId];
+                        onCloseById[windowId] = () => {
+                            clearInterval(id);
+                            onClose();
+                        };
+                    }
+
                     resolve();
                 }
                 else {
