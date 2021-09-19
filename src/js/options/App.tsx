@@ -75,7 +75,7 @@ const App: React.FC = () => {
         <ChakraProvider theme={theme}>
             <Box h="100vh" minH="fit-content" overflow="clip" fontSize="sm">
                 <Tabs colorScheme="gray" align="start" orientation="vertical" h="100%">
-                    <TabList bgColor="gray.500" color="white" w="20em">
+                    <TabList bgColor="gray.500" color="white" w="16em" flexShrink={0}>
                         <Box py="1em" fontSize="lg" textAlign="center">VScreenshot Assistant</Box>
                         <Tab><LocalizedText messageId="prefs_tab_preferences" /></Tab>
                         <Tab><LocalizedText messageId="prefs_tab_license" /></Tab>

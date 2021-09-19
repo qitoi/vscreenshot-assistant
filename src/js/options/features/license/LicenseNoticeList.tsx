@@ -39,7 +39,7 @@ const LicenseNoticeList: React.FC = () => {
     }, [dispatch]);
 
     return (
-        <Box maxW="100em" p="2em" mx="auto">
+        <Box maxW="50em" py="2em" mx="auto">
             <Box fontSize="md" p="1em">
                 THE FOLLOWING SETS FORTH ATTRIBUTION NOTICES FOR THIRD PARTY SOFTWARE THAT MAY BE CONTAINED IN THIS APPLICATION.
             </Box>
