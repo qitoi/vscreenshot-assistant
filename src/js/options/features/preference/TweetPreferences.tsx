@@ -35,22 +35,22 @@ const TweetPreferences: React.FC = () => {
                 <ControlGroup<Preferences> indent="left" conditionKey="tweet.enabled" conditionValue={true}>
                     <ControlGroup indent="both">
                         <LabeledControl messageId="prefs_tweet_url">
-                            <SwitchControl<Preferences> name="tweet.tweetUrl" />
+                            <SwitchControl<Preferences> name="tweet.url" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="both">
                         <LabeledControl messageId="prefs_tweet_title">
-                            <SwitchControl<Preferences> name="tweet.tweetTitle" />
+                            <SwitchControl<Preferences> name="tweet.title" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="both">
                         <LabeledControl messageId="prefs_tweet_author">
-                            <SwitchControl<Preferences> name="tweet.tweetAuthor" />
+                            <SwitchControl<Preferences> name="tweet.author" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="both">
                         <LabeledControl messageId="prefs_tweet_hashtag">
-                            <SwitchControl<Preferences> name="tweet.tweetHashtag" />
+                            <SwitchControl<Preferences> name="tweet.hashtag" />
                         </LabeledControl>
                     </ControlGroup>
                 </ControlGroup>

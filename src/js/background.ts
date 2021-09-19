@@ -40,7 +40,7 @@ popup.watch();
 const albumWindow = popup.PopupWindow.create('album', 'album.html', true);
 listenAuto(chrome.browserAction.onClicked, async tab => {
     const p = await prefs.loadPreferences();
-    switch (p.general.clickIconAction) {
+    switch (p.general.iconAction) {
         case prefs.ClickIconActions.OpenAlbum: {
             albumWindow.show();
             break;

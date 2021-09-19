@@ -32,24 +32,24 @@ const ScreenshotPreferences: React.FC = () => {
         <PreferenceBlock name="Screenshot">
             <ControlGroup>
                 <LabeledControl messageId="prefs_screenshot_hotkey">
-                    <HotkeyInputControl<Preferences> name="screenshot.captureHotkey" w="12em" />
+                    <HotkeyInputControl<Preferences> name="screenshot.hotkey" w="12em" />
                 </LabeledControl>
             </ControlGroup>
             <Box w="100%">
                 <ControlGroup isEnabledHover>
                     <LabeledControl messageId="prefs_screenshot_enabled_continuous_capture">
-                        <SwitchControl<Preferences> name="screenshot.enabledContinuousCapture" />
+                        <SwitchControl<Preferences> name="screenshot.enabledContinuous" />
                     </LabeledControl>
                 </ControlGroup>
-                <ControlGroup<Preferences> conditionKey="screenshot.enabledContinuousCapture" conditionValue={true}>
+                <ControlGroup<Preferences> conditionKey="screenshot.enabledContinuous" conditionValue={true}>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_screenshot_continuous_capture_hotkey">
-                            <HotkeyInputControl<Preferences> name="screenshot.continuousCaptureHotkey" w="12em" />
+                            <HotkeyInputControl<Preferences> name="screenshot.continuousHotkey" w="12em" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_screenshot_continuous_capture_interval">
-                            <NumberInputControl<Preferences> name="screenshot.continuousCaptureInterval"
+                            <NumberInputControl<Preferences> name="screenshot.continuousInterval"
                                                              w="10em"
                                                              min={10}
                                                              max={9999}

@@ -37,7 +37,7 @@ const AnimationPreferences: React.FC = () => {
                 <ControlGroup<Preferences> conditionKey="animation.enabled" conditionValue={true}>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_animation_hotkey">
-                            <HotkeyInputControl<Preferences> name="animation.captureHotkey" w="12em" />
+                            <HotkeyInputControl<Preferences> name="animation.hotkey" w="12em" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="left">

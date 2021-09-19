@@ -43,20 +43,20 @@ export async function shareScreenshot(video: VideoInfo, screenshots: ScreenshotI
 
     const tweetPrefs = (await prefs.loadPreferences()).tweet;
 
-    if (tweetPrefs.tweetTitle) {
+    if (tweetPrefs.title) {
         text.push(video.title);
     }
-    if (tweetPrefs.tweetAuthor) {
+    if (tweetPrefs.author) {
         text.push(video.author);
     }
 
-    if (tweetPrefs.tweetUrl) {
+    if (tweetPrefs.url) {
         options.url = platforms.getVideoUrl(video.platform, video.videoId);
     }
     if (text.length > 0) {
         options.text = text.join(' / ');
     }
-    if (tweetPrefs.tweetHashtag && hashtags.length > 0) {
+    if (tweetPrefs.hashtag && hashtags.length > 0) {
         options.hashtags = hashtags.join(',');
     }
 

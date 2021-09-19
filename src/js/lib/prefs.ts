@@ -49,16 +49,16 @@ const isToastPosition = (type: any): type is ToastPosition => Object.values(Toas
 
 export type Preferences = {
     general: {
-        clickIconAction: ClickIconAction,
-        notifyToast: boolean,
+        iconAction: ClickIconAction,
+        notify: boolean,
         notifyPosition: ToastPosition,
         notifyDuration: number,
     },
     screenshot: {
-        captureHotkey: hotkeys.KeyConfig,
-        enabledContinuousCapture: boolean,
-        continuousCaptureHotkey: hotkeys.KeyConfig,
-        continuousCaptureInterval: number,
+        hotkey: hotkeys.KeyConfig,
+        enabledContinuous: boolean,
+        continuousHotkey: hotkeys.KeyConfig,
+        continuousInterval: number,
         fileType: FileType,
         quality: number,
     },
@@ -68,14 +68,14 @@ export type Preferences = {
     },
     tweet: {
         enabled: boolean,
-        tweetHashtag: boolean,
-        tweetUrl: boolean,
-        tweetTitle: boolean,
-        tweetAuthor: boolean,
+        hashtag: boolean,
+        url: boolean,
+        title: boolean,
+        author: boolean,
     },
     animation: {
         enabled: boolean,
-        captureHotkey: hotkeys.KeyConfig,
+        hotkey: hotkeys.KeyConfig,
         width: number,
         height: number,
         interval: number,
@@ -84,22 +84,22 @@ export type Preferences = {
 
 export const DefaultPreferences: Preferences = {
     general: {
-        clickIconAction: ClickIconActions.OpenAlbum,
-        notifyToast: true,
+        iconAction: ClickIconActions.OpenAlbum,
+        notify: true,
         notifyPosition: ToastPositions.LeftBottom,
         notifyDuration: 1000,
     },
     screenshot: {
-        captureHotkey: hotkeys.getKeyConfig('S', { shift: true }),
-        enabledContinuousCapture: false,
-        continuousCaptureHotkey: hotkeys.getKeyConfig('D', { shift: true }),
-        continuousCaptureInterval: 500,
+        hotkey: hotkeys.getKeyConfig('S', { shift: true }),
+        enabledContinuous: false,
+        continuousHotkey: hotkeys.getKeyConfig('D', { shift: true }),
+        continuousInterval: 500,
         fileType: 'image/jpeg',
         quality: 94,
     },
     animation: {
         enabled: true,
-        captureHotkey: hotkeys.getKeyConfig('V', { shift: true }),
+        hotkey: hotkeys.getKeyConfig('V', { shift: true }),
         width: 640,
         height: 640,
         interval: 50,
@@ -110,30 +110,30 @@ export const DefaultPreferences: Preferences = {
     },
     tweet: {
         enabled: true,
-        tweetUrl: true,
-        tweetTitle: true,
-        tweetAuthor: false,
-        tweetHashtag: true,
+        url: true,
+        title: true,
+        author: false,
+        hashtag: true,
     },
 };
 
 function completePreferences(prefs: Preferences): Preferences {
-    const completeClickIconAction = (value?: any): ClickIconAction => isClickIconAction(value) ? value : DefaultPreferences.general.clickIconAction;
+    const completeClickIconAction = (value?: any): ClickIconAction => isClickIconAction(value) ? value : DefaultPreferences.general.iconAction;
     const completeFileType = (value?: any): FileType => isFileType(value) ? value : DefaultPreferences.screenshot.fileType;
     const completeToastPosition = (value?: any): ToastPosition => isToastPosition(value) ? value : DefaultPreferences.general.notifyPosition;
     const completeKeyConfig = (value: any, defaultValue: hotkeys.KeyConfig) => hotkeys.isKeyConfig(value) ? value : defaultValue;
     return {
         general: {
-            clickIconAction: completeClickIconAction(prefs?.general?.clickIconAction),
-            notifyToast: Boolean(prefs?.general?.notifyToast ?? DefaultPreferences.general.notifyToast),
+            iconAction: completeClickIconAction(prefs?.general?.iconAction),
+            notify: Boolean(prefs?.general?.notify ?? DefaultPreferences.general.notify),
             notifyPosition: completeToastPosition(prefs?.general?.notifyPosition),
             notifyDuration: Math.min(Math.max(Math.round(+(prefs?.general?.notifyDuration ?? DefaultPreferences.general.notifyDuration)), 100), 60000),
         },
         screenshot: {
-            captureHotkey: completeKeyConfig(prefs?.screenshot?.captureHotkey, DefaultPreferences.screenshot.captureHotkey),
-            enabledContinuousCapture: Boolean(prefs?.screenshot?.enabledContinuousCapture ?? DefaultPreferences.screenshot.enabledContinuousCapture),
-            continuousCaptureHotkey: completeKeyConfig(prefs?.screenshot?.continuousCaptureHotkey, DefaultPreferences.screenshot.continuousCaptureHotkey),
-            continuousCaptureInterval: Math.min(Math.max(Math.round(+(prefs?.screenshot?.continuousCaptureInterval ?? DefaultPreferences.screenshot.continuousCaptureInterval)), 1), 9999),
+            hotkey: completeKeyConfig(prefs?.screenshot?.hotkey, DefaultPreferences.screenshot.hotkey),
+            enabledContinuous: Boolean(prefs?.screenshot?.enabledContinuous ?? DefaultPreferences.screenshot.enabledContinuous),
+            continuousHotkey: completeKeyConfig(prefs?.screenshot?.continuousHotkey, DefaultPreferences.screenshot.continuousHotkey),
+            continuousInterval: Math.min(Math.max(Math.round(+(prefs?.screenshot?.continuousInterval ?? DefaultPreferences.screenshot.continuousInterval)), 1), 9999),
             fileType: completeFileType(prefs?.screenshot?.fileType),
             quality: Math.min(Math.max(Math.round(+(prefs?.screenshot?.quality ?? DefaultPreferences.screenshot.quality)), 0), 100),
         },
@@ -143,14 +143,14 @@ function completePreferences(prefs: Preferences): Preferences {
         },
         tweet: {
             enabled: Boolean(prefs?.tweet?.enabled ?? DefaultPreferences.tweet.enabled),
-            tweetUrl: Boolean(prefs?.tweet?.tweetUrl ?? DefaultPreferences.tweet.tweetUrl),
-            tweetTitle: Boolean(prefs?.tweet?.tweetTitle ?? DefaultPreferences.tweet.tweetTitle),
-            tweetAuthor: Boolean(prefs?.tweet?.tweetAuthor ?? DefaultPreferences.tweet.tweetAuthor),
-            tweetHashtag: Boolean(prefs?.tweet?.tweetHashtag ?? DefaultPreferences.tweet.tweetHashtag),
+            url: Boolean(prefs?.tweet?.url ?? DefaultPreferences.tweet.url),
+            title: Boolean(prefs?.tweet?.title ?? DefaultPreferences.tweet.title),
+            author: Boolean(prefs?.tweet?.author ?? DefaultPreferences.tweet.author),
+            hashtag: Boolean(prefs?.tweet?.hashtag ?? DefaultPreferences.tweet.hashtag),
         },
         animation: {
             enabled: Boolean(prefs?.animation?.enabled ?? DefaultPreferences.animation.enabled),
-            captureHotkey: completeKeyConfig(prefs?.animation?.captureHotkey, DefaultPreferences.animation.captureHotkey),
+            hotkey: completeKeyConfig(prefs?.animation?.hotkey, DefaultPreferences.animation.hotkey),
             width: Math.min(Math.max(Math.round(+(prefs?.animation?.width ?? DefaultPreferences.animation.width)), 1), 9999),
             height: Math.min(Math.max(Math.round(+(prefs?.animation?.height ?? DefaultPreferences.animation.height)), 1), 9999),
             interval: Math.min(Math.max(Math.round(+(prefs?.animation?.interval ?? DefaultPreferences.animation.interval)), 1), 9999),

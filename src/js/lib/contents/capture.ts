@@ -54,7 +54,7 @@ function setupCaptureHotkey(platform: Platform, prefs: prefs.Preferences) {
     unbinder.splice(0);
 
     unbinder.push(
-        hotkeys.bindHotkey(window, prefs.screenshot.captureHotkey, () => {
+        hotkeys.bindHotkey(window, prefs.screenshot.hotkey, () => {
             if (platform.checkVideoPage()) {
                 const complete = screenshot.capture(platform, prefs);
                 captureComplete(complete, prefs);
@@ -62,15 +62,15 @@ function setupCaptureHotkey(platform: Platform, prefs: prefs.Preferences) {
         })
     );
 
-    if (prefs.screenshot.enabledContinuousCapture) {
+    if (prefs.screenshot.enabledContinuous) {
         unbinder.push(
-            hotkeys.bindHotkey(window, prefs.screenshot.continuousCaptureHotkey, onKeyUp => {
+            hotkeys.bindHotkey(window, prefs.screenshot.continuousHotkey, onKeyUp => {
                 const capture = () => {
                     const complete = screenshot.capture(platform, prefs);
                     captureComplete(complete, prefs);
                 };
                 capture();
-                const id = setInterval(capture, prefs.screenshot.continuousCaptureInterval);
+                const id = setInterval(capture, prefs.screenshot.continuousInterval);
                 const stop = wrapStopOnBlur(onKeyUp);
                 stop.then(() => {
                     clearInterval(id);
@@ -81,7 +81,7 @@ function setupCaptureHotkey(platform: Platform, prefs: prefs.Preferences) {
 
     if (prefs.animation.enabled) {
         unbinder.push(
-            hotkeys.bindHotkey(window, prefs.animation.captureHotkey, onKeyUp => {
+            hotkeys.bindHotkey(window, prefs.animation.hotkey, onKeyUp => {
                 if (platform.checkVideoPage()) {
                     const stop = wrapStopOnBlur(onKeyUp);
                     const complete = animation.capture(platform, stop, prefs);
@@ -111,7 +111,7 @@ function wrapStopOnBlur(onKeyUp: Promise<void>): Promise<void> {
 function captureComplete(capture: Promise<ImageDataUrl>, prefs: prefs.Preferences) {
     capture
         .then(image => {
-            if (prefs.general.notifyToast) {
+            if (prefs.general.notify) {
                 showScreenshotToast(image, prefs);
             }
         })

@@ -38,7 +38,7 @@ const GeneralPreferences: React.FC = () => {
         <PreferenceBlock name="General">
             <ControlGroup w="100%">
                 <LabeledControl isVertical messageId="prefs_general_click_icon_action">
-                    <RadioGroupControl<Preferences> name="general.clickIconAction">
+                    <RadioGroupControl<Preferences> name="general.iconAction">
                         <RadioItem<ClickIconAction>
                             value={ClickIconActions.OpenAlbum}
                             messageId="prefs_general_click_icon_action_open_album" />
@@ -51,10 +51,10 @@ const GeneralPreferences: React.FC = () => {
             <Box w="100%">
                 <ControlGroup isEnabledHover>
                     <LabeledControl messageId="prefs_general_notify_toast">
-                        <SwitchControl<Preferences> name="general.notifyToast" />
+                        <SwitchControl<Preferences> name="general.notify" />
                     </LabeledControl>
                 </ControlGroup>
-                <ControlGroup<Preferences> conditionKey="general.notifyToast" conditionValue={true}>
+                <ControlGroup<Preferences> conditionKey="general.notify" conditionValue={true}>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_general_notify_duration">
                             <NumberInputControl<Preferences>
