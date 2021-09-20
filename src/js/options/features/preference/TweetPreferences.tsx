@@ -25,7 +25,7 @@ import PreferenceBlock from './PreferenceBlock';
 
 const TweetPreferences: React.FC = () => {
     return (
-        <PreferenceBlock name="Tweet">
+        <PreferenceBlock messageId="prefs_tweet">
             <Box w="100%">
                 <ControlGroup isEnabledHover>
                     <LabeledControl messageId="prefs_tweet_enabled">

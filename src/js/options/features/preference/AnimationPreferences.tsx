@@ -27,7 +27,7 @@ import PreferenceBlock from './PreferenceBlock';
 
 const AnimationPreferences: React.FC = () => {
     return (
-        <PreferenceBlock name="Animation">
+        <PreferenceBlock messageId="prefs_animation">
             <Box w="100%">
                 <ControlGroup isEnabledHover>
                     <LabeledControl messageId="prefs_animation_enabled">

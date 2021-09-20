@@ -29,7 +29,7 @@ import PreferenceBlock from './PreferenceBlock';
 
 const ScreenshotPreferences: React.FC = () => {
     return (
-        <PreferenceBlock name="Screenshot">
+        <PreferenceBlock messageId="prefs_screenshot">
             <ControlGroup>
                 <LabeledControl messageId="prefs_screenshot_hotkey">
                     <HotkeyInputControl<Preferences> name="screenshot.hotkey" w="12em" />

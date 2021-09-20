@@ -35,7 +35,7 @@ const GeneralPreferences: React.FC = () => {
         [ToastPositions.RightTop]: 'prefs_general_notify_position_top_right',
     };
     return (
-        <PreferenceBlock name="General">
+        <PreferenceBlock messageId="prefs_general">
             <ControlGroup w="100%">
                 <LabeledControl isVertical messageId="prefs_general_click_icon_action">
                     <RadioGroupControl<Preferences> name="general.iconAction">

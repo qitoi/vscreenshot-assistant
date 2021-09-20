@@ -52,7 +52,7 @@ const ResetPreferences: React.FC = () => {
 
     return (
         <>
-            <PreferenceBlock name="Reset">
+            <PreferenceBlock messageId="prefs_reset">
                 <ControlGroup>
                     <LabeledControl messageId="prefs_reset_preferences">
                         <Button _focus={{ boxShadow: 'none' }} onClick={handleOpenResetPrefs}>

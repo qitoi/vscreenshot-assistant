@@ -14,6 +14,24 @@
   "prefs_tab_license": {
     "message": "ライセンス"
   },
+  "prefs_general": {
+    "message": "General"
+  },
+  "prefs_screenshot": {
+    "message": "Screenshot"
+  },
+  "prefs_animation": {
+    "message": "Animation"
+  },
+  "prefs_thumbnail": {
+    "message": "Thumbnail"
+  },
+  "prefs_tweet": {
+    "message": "Tweet"
+  },
+  "prefs_reset": {
+    "message": "Reset"
+  },
   "prefs_general_click_icon_action": {
     "message": "アイコンをクリックしたときの動作"
   },

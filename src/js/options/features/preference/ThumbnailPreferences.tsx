@@ -24,7 +24,7 @@ import PreferenceBlock from './PreferenceBlock';
 
 const ThumbnailPreferences: React.FC = () => {
     return (
-        <PreferenceBlock name="Thumbnail">
+        <PreferenceBlock messageId="prefs_thumbnail">
             <ControlGroup label="prefs_thumbnail_size">
                 <ControlGroup indent="left">
                     <LabeledControl messageId="prefs_thumbnail_width">
