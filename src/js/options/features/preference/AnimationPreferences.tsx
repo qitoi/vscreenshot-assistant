@@ -42,35 +42,20 @@ const AnimationPreferences: React.FC = () => {
                     </ControlGroup>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_animation_width">
-                            <NumberInputControl<Preferences> name="animation.width"
-                                                             w="10em"
-                                                             min={1}
-                                                             max={9999}
-                                                             step={1}
-                                                             precision={0}
-                                                             unit="px" />
+                            <NumberInputControl<Preferences>
+                                name="animation.width" w="10em" min={1} max={9999} step={1} precision={0} unit="px" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_animation_height">
-                            <NumberInputControl<Preferences> name="animation.height"
-                                                             w="10em"
-                                                             min={1}
-                                                             max={9999}
-                                                             step={1}
-                                                             precision={0}
-                                                             unit="px" />
+                            <NumberInputControl<Preferences>
+                                name="animation.height" w="10em" min={1} max={9999} step={1} precision={0} unit="px" />
                         </LabeledControl>
                     </ControlGroup>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_animation_interval">
-                            <NumberInputControl<Preferences> name="animation.interval"
-                                                             w="10em"
-                                                             min={10}
-                                                             max={9999}
-                                                             step={10}
-                                                             precision={0}
-                                                             unit="ms" />
+                            <NumberInputControl<Preferences>
+                                name="animation.interval" w="10em" min={10} max={10000} step={10} precision={0} unit="ms" />
                         </LabeledControl>
                     </ControlGroup>
                 </ControlGroup>

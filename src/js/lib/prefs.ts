@@ -118,42 +118,45 @@ export const DefaultPreferences: Preferences = {
 };
 
 function completePreferences(prefs: Preferences): Preferences {
-    const completeClickIconAction = (value?: any): ClickIconAction => isClickIconAction(value) ? value : DefaultPreferences.general.iconAction;
-    const completeFileType = (value?: any): FileType => isFileType(value) ? value : DefaultPreferences.screenshot.fileType;
-    const completeToastPosition = (value?: any): ToastPosition => isToastPosition(value) ? value : DefaultPreferences.general.notifyPosition;
+    const completeBool = (value: any, defaultValue: boolean): boolean => Boolean(value ?? defaultValue);
+    const completeMinMax = (value: any, defaultValue: number, min: number, max: number): number =>
+        Math.min(Math.max(Math.round(Number.isSafeInteger(value) ? value : defaultValue), min), max);
+    const completeClickIconAction = (value: any, defaultValue: ClickIconAction): ClickIconAction => isClickIconAction(value) ? value : defaultValue;
+    const completeFileType = (value: any, defaultValue: FileType): FileType => isFileType(value) ? value : defaultValue;
+    const completeToastPosition = (value: any, defaultValue: ToastPosition): ToastPosition => isToastPosition(value) ? value : defaultValue;
     const completeKeyConfig = (value: any, defaultValue: hotkeys.KeyConfig) => hotkeys.isKeyConfig(value) ? value : defaultValue;
     return {
         general: {
-            iconAction: completeClickIconAction(prefs?.general?.iconAction),
-            notify: Boolean(prefs?.general?.notify ?? DefaultPreferences.general.notify),
-            notifyPosition: completeToastPosition(prefs?.general?.notifyPosition),
-            notifyDuration: Math.min(Math.max(Math.round(+(prefs?.general?.notifyDuration ?? DefaultPreferences.general.notifyDuration)), 100), 60000),
+            iconAction: completeClickIconAction(prefs?.general?.iconAction, DefaultPreferences.general.iconAction),
+            notify: completeBool(prefs?.general?.notify, DefaultPreferences.general.notify),
+            notifyPosition: completeToastPosition(prefs?.general?.notifyPosition, DefaultPreferences.general.notifyPosition),
+            notifyDuration: completeMinMax(prefs?.general?.notifyDuration, DefaultPreferences.general.notifyDuration, 100, 60000),
         },
         screenshot: {
             hotkey: completeKeyConfig(prefs?.screenshot?.hotkey, DefaultPreferences.screenshot.hotkey),
-            enabledContinuous: Boolean(prefs?.screenshot?.enabledContinuous ?? DefaultPreferences.screenshot.enabledContinuous),
+            enabledContinuous: completeBool(prefs?.screenshot?.enabledContinuous, DefaultPreferences.screenshot.enabledContinuous),
             continuousHotkey: completeKeyConfig(prefs?.screenshot?.continuousHotkey, DefaultPreferences.screenshot.continuousHotkey),
-            continuousInterval: Math.min(Math.max(Math.round(+(prefs?.screenshot?.continuousInterval ?? DefaultPreferences.screenshot.continuousInterval)), 1), 9999),
-            fileType: completeFileType(prefs?.screenshot?.fileType),
-            quality: Math.min(Math.max(Math.round(+(prefs?.screenshot?.quality ?? DefaultPreferences.screenshot.quality)), 0), 100),
+            continuousInterval: completeMinMax(prefs?.screenshot?.continuousInterval, DefaultPreferences.screenshot.continuousInterval, 1, 10000),
+            fileType: completeFileType(prefs?.screenshot?.fileType, DefaultPreferences.screenshot.fileType),
+            quality: completeMinMax(prefs?.screenshot?.quality, DefaultPreferences.screenshot.quality, 0, 100),
         },
         thumbnail: {
-            width: Math.min(Math.max(Math.round(+(prefs?.thumbnail?.width ?? DefaultPreferences.thumbnail.width)), 1), 9999),
-            height: Math.min(Math.max(Math.round(+(prefs?.thumbnail?.height ?? DefaultPreferences.thumbnail.height)), 1), 9999),
+            width: completeMinMax(prefs?.thumbnail?.width, DefaultPreferences.thumbnail.width, 1, 9999),
+            height: completeMinMax(prefs?.thumbnail?.height, DefaultPreferences.thumbnail.height, 1, 9999),
         },
         tweet: {
-            enabled: Boolean(prefs?.tweet?.enabled ?? DefaultPreferences.tweet.enabled),
-            url: Boolean(prefs?.tweet?.url ?? DefaultPreferences.tweet.url),
-            title: Boolean(prefs?.tweet?.title ?? DefaultPreferences.tweet.title),
-            author: Boolean(prefs?.tweet?.author ?? DefaultPreferences.tweet.author),
-            hashtag: Boolean(prefs?.tweet?.hashtag ?? DefaultPreferences.tweet.hashtag),
+            enabled: completeBool(prefs?.tweet?.enabled, DefaultPreferences.tweet.enabled),
+            url: completeBool(prefs?.tweet?.url, DefaultPreferences.tweet.url),
+            title: completeBool(prefs?.tweet?.title, DefaultPreferences.tweet.title),
+            author: completeBool(prefs?.tweet?.author, DefaultPreferences.tweet.author),
+            hashtag: completeBool(prefs?.tweet?.hashtag, DefaultPreferences.tweet.hashtag),
         },
         animation: {
-            enabled: Boolean(prefs?.animation?.enabled ?? DefaultPreferences.animation.enabled),
+            enabled: completeBool(prefs?.animation?.enabled, DefaultPreferences.animation.enabled),
             hotkey: completeKeyConfig(prefs?.animation?.hotkey, DefaultPreferences.animation.hotkey),
-            width: Math.min(Math.max(Math.round(+(prefs?.animation?.width ?? DefaultPreferences.animation.width)), 1), 9999),
-            height: Math.min(Math.max(Math.round(+(prefs?.animation?.height ?? DefaultPreferences.animation.height)), 1), 9999),
-            interval: Math.min(Math.max(Math.round(+(prefs?.animation?.interval ?? DefaultPreferences.animation.interval)), 1), 9999),
+            width: completeMinMax(prefs?.animation?.width, DefaultPreferences.animation.width, 1, 9999),
+            height: completeMinMax(prefs?.animation?.height, DefaultPreferences.animation.height, 1, 9999),
+            interval: completeMinMax(prefs?.animation?.interval, DefaultPreferences.animation.interval, 1, 10000),
         },
     };
 }

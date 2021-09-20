@@ -28,12 +28,14 @@ const ThumbnailPreferences: React.FC = () => {
             <ControlGroup label="prefs_thumbnail_size">
                 <ControlGroup indent="left">
                     <LabeledControl messageId="prefs_thumbnail_width">
-                        <NumberInputControl<Preferences> name="thumbnail.width" w="10em" min={1} step={1} precision={0} unit="px" />
+                        <NumberInputControl<Preferences>
+                            name="thumbnail.width" w="10em" min={1} max={9999} step={1} precision={0} unit="px" />
                     </LabeledControl>
                 </ControlGroup>
                 <ControlGroup indent="left">
                     <LabeledControl messageId="prefs_thumbnail_height">
-                        <NumberInputControl<Preferences> name="thumbnail.height" w="10em" min={1} step={1} precision={0} unit="px" />
+                        <NumberInputControl<Preferences>
+                            name="thumbnail.height" w="10em" min={1} max={9999} step={1} precision={0} unit="px" />
                     </LabeledControl>
                 </ControlGroup>
             </ControlGroup>

@@ -49,13 +49,8 @@ const ScreenshotPreferences: React.FC = () => {
                     </ControlGroup>
                     <ControlGroup indent="left">
                         <LabeledControl messageId="prefs_screenshot_continuous_capture_interval">
-                            <NumberInputControl<Preferences> name="screenshot.continuousInterval"
-                                                             w="10em"
-                                                             min={10}
-                                                             max={9999}
-                                                             step={10}
-                                                             precision={0}
-                                                             unit="ms" />
+                            <NumberInputControl<Preferences>
+                                name="screenshot.continuousInterval" w="10em" min={10} max={10000} step={10} precision={0} unit="ms" />
                         </LabeledControl>
                     </ControlGroup>
                 </ControlGroup>
@@ -67,12 +62,7 @@ const ScreenshotPreferences: React.FC = () => {
                             <ControlGroup<Preferences> conditionKey="screenshot.fileType" conditionValue="image/jpeg">
                                 <LabeledControl messageId="prefs_screenshot_format_jpeg_quality">
                                     <NumberInputControl<Preferences>
-                                        name="screenshot.quality"
-                                        w="12em"
-                                        min={0}
-                                        max={100}
-                                        step={1}
-                                        precision={0} />
+                                        name="screenshot.quality" w="12em" min={0} max={100} step={1} precision={0} />
                                 </LabeledControl>
                             </ControlGroup>
                         </RadioItem>
