@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Box, chakra, HStack, IconButton, Spacer, Text } from '@chakra-ui/react';
+import { chakra, HStack, IconButton, Spacer, Text } from '@chakra-ui/react';
 import { MdFileDownload } from 'react-icons/md';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
