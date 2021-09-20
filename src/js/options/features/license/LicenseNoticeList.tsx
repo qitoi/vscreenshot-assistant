@@ -25,18 +25,41 @@ import {
     chakra,
     Code,
 } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
 
-import { useDispatch } from '../../store';
-import { fetchLicenses, selectLicenses } from './licenseSlice';
+
+type LicenseNotice = {
+    name: string,
+    license: string,
+};
+
+function parseLicenseNotices(text: string): LicenseNotice[] {
+    const split = text.split('\n------------------------------\n');
+    split.shift();
+    const notices: LicenseNotice[] = [];
+    while (split.length > 0) {
+        const name = split.shift()?.trim();
+        let license = split.shift();
+        license = license?.substring(1, license?.length - 1);
+        if (name === undefined || license === undefined) {
+            break;
+        }
+        notices.push({ name, license });
+    }
+    return notices;
+}
+
 
 const LicenseNoticeList: React.FC = () => {
-    const dispatch = useDispatch();
-    const licenses = useSelector(selectLicenses);
+    const [notices, setNotices] = React.useState<LicenseNotice[]>([]);
 
     React.useEffect(() => {
-        dispatch(fetchLicenses());
-    }, [dispatch]);
+        fetch(chrome.runtime.getURL('THIRD-PARTY-NOTICES'))
+            .then(async res => {
+                const text = await res.text();
+                const notices = parseLicenseNotices(text);
+                setNotices(notices);
+            });
+    }, []);
 
     return (
         <Box maxW="50em" py="2em" mx="auto">
@@ -44,17 +67,17 @@ const LicenseNoticeList: React.FC = () => {
                 THE FOLLOWING SETS FORTH ATTRIBUTION NOTICES FOR THIRD PARTY SOFTWARE THAT MAY BE CONTAINED IN THIS APPLICATION.
             </Box>
             <Accordion allowMultiple>
-                {licenses.map(l => (
-                    <AccordionItem key={l.name}>
+                {notices.map(notice => (
+                    <AccordionItem key={notice.name}>
                         <h2>
                             <AccordionButton>
-                                <Box flex={1} textAlign="left">{l.name}</Box>
+                                <Box flex={1} textAlign="left">{notice.name}</Box>
                                 <AccordionIcon />
                             </AccordionButton>
                         </h2>
                         <AccordionPanel>
                             <Code w="100%">
-                                <chakra.pre p="1em" whiteSpace="pre-wrap">{l.license}</chakra.pre>
+                                <chakra.pre p="1em" whiteSpace="pre-wrap">{notice.license}</chakra.pre>
                             </Code>
                         </AccordionPanel>
                     </AccordionItem>
