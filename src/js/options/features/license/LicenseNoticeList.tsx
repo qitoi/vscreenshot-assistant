@@ -26,6 +26,8 @@ import {
     Code,
 } from '@chakra-ui/react';
 
+import { LocalizedText } from '../../../lib/components/LocalizedText';
+
 
 type LicenseNotice = {
     name: string,
@@ -64,7 +66,7 @@ const LicenseNoticeList: React.FC = () => {
     return (
         <Box maxW="50em" py="2em" mx="auto">
             <Box fontSize="md" p="1em">
-                THE FOLLOWING SETS FORTH ATTRIBUTION NOTICES FOR THIRD PARTY SOFTWARE THAT MAY BE CONTAINED IN THIS APPLICATION.
+                <LocalizedText messageId="license_third_party_notices" />
             </Box>
             <Accordion allowMultiple>
                 {notices.map(notice => (

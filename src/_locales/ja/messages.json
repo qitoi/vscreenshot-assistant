@@ -143,6 +143,9 @@
   "prefs_save": {
     "message": "保存"
   },
+  "license_third_party_notices": {
+    "message": "The following sets forth attribution notices for third party software that may be contained in portions of this application."
+  },
   "album_menu_download": {
     "message": "まとめて保存"
   },
