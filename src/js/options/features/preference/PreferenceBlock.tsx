@@ -26,7 +26,7 @@ type PreferenceBlockProps = StackProps & {
 
 const PreferenceBlock: React.FC<PreferenceBlockProps> = ({ messageId, children, ...rest }: PreferenceBlockProps) => {
     return (
-        <Box w="100%" py="2em">
+        <Box w="100%">
             <Box borderLeft="6px solid" borderColor="gray.300" paddingLeft="2em" py="0.5em">
                 <Heading as="h2" fontSize="2xl" py="0.5em"><LocalizedText messageId={messageId} /></Heading>
                 <VStack w="100%" rounded="md" {...rest}>

@@ -62,28 +62,26 @@ const PreferenceForm: React.FC = () => {
 
     return (
         <FormProvider {...methods}>
-            <Box>
-                <chakra.form onSubmit={handleSubmit(onSubmit)}>
-                    <Box w="100%" minH="calc(100vh - 8em)" py="2em">
-                        <VStack maxW="50em" mx="auto">
-                            <GeneralPreferences />
-                            <ScreenshotPreferences />
-                            <AnimationPreferences />
-                            <ThumbnailPreferences />
-                            <TweetPreferences />
-                            <ResetPreferences />
-                        </VStack>
-                    </Box>
-                    <Box w="100%" h="8em" position="sticky" bottom={0} bgColor="white" borderTopColor="gray.500" borderTopWidth="1px">
-                        <HStack w="60em" h="100%" px="2em" mx="auto">
-                            <Spacer />
-                            <Button colorScheme="blue" isLoading={isSubmitting} isDisabled={!isDirty} type="submit">
-                                <LocalizedText messageId="prefs_save" />
-                            </Button>
-                        </HStack>
-                    </Box>
-                </chakra.form>
-            </Box>
+            <chakra.form onSubmit={handleSubmit(onSubmit)}>
+                <Box w="100%" minH="calc(100vh - 8em)" py="4em">
+                    <VStack maxW="50em" mx="auto" spacing="4em">
+                        <GeneralPreferences />
+                        <ScreenshotPreferences />
+                        <AnimationPreferences />
+                        <ThumbnailPreferences />
+                        <TweetPreferences />
+                        <ResetPreferences />
+                    </VStack>
+                </Box>
+                <Box w="100%" h="8em" position="sticky" bottom={0} bgColor="white" borderTopColor="gray.500" borderTopWidth="1px">
+                    <HStack w="60em" h="100%" px="2em" mx="auto">
+                        <Spacer />
+                        <Button colorScheme="blue" isLoading={isSubmitting} isDisabled={!isDirty} type="submit">
+                            <LocalizedText messageId="prefs_save" />
+                        </Button>
+                    </HStack>
+                </Box>
+            </chakra.form>
         </FormProvider>
     );
 };

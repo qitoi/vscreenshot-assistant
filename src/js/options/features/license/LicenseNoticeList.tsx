@@ -64,8 +64,8 @@ const LicenseNoticeList: React.FC = () => {
     }, []);
 
     return (
-        <Box maxW="50em" py="2em" mx="auto">
-            <Box fontSize="md" p="1em">
+        <Box maxW="50em" py="4em" mx="auto">
+            <Box fontSize="md" px="1em" paddingBottom="1em">
                 <LocalizedText messageId="license_third_party_notices" />
             </Box>
             <Accordion allowMultiple>
