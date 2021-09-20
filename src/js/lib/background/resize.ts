@@ -22,18 +22,18 @@ const resizer = pica({
     features: ['js', 'wasm', 'ww'],
 });
 
-export function resizeImage(image: ImageDataUrl, width: number, height: number): Promise<ImageDataUrl> {
+export function resizeImage(image: ImageDataUrl, width: number, height: number, fileType: string, quality?: number): Promise<ImageDataUrl> {
     return new Promise<string>((resolve) => {
         const img = document.createElement('img');
         img.onload = () => {
-            resize(img, width, height)
+            resize(img, width, height, fileType, quality)
                 .then(thumb => resolve(thumb));
         };
         img.src = image;
     });
 }
 
-async function resize(image: HTMLCanvasElement | HTMLImageElement, width: number, height: number): Promise<ImageDataUrl> {
+async function resize(image: HTMLCanvasElement | HTMLImageElement, width: number, height: number, fileType: string, quality?: number): Promise<ImageDataUrl> {
     const canvas = document.createElement('canvas');
     [canvas.width, canvas.height] = calcSize(image.width, image.height, width, height);
     const resized = await resizer.resize(image, canvas, {
@@ -41,7 +41,7 @@ async function resize(image: HTMLCanvasElement | HTMLImageElement, width: number
         unsharpRadius: 0.6,
         unsharpThreshold: 1,
     });
-    return resized.toDataURL('image/jpeg', 0.96);
+    return resized.toDataURL(fileType, quality);
 }
 
 // 元画像のアスペクト比を保ったまま、指定のサイズに内接するようにリサイズするためのサイズを計算する

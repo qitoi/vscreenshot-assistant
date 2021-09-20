@@ -210,7 +210,7 @@ port.listenPort().addListener(port => {
                     animeCapture.thumbnail = Promise.resolve(message.image);
                 }
 
-                const resize = resizeImage(message.image, animeCapture.width, animeCapture.height)
+                const resize = resizeImage(message.image, animeCapture.width, animeCapture.height, 'image/png')
                     .then((resize): AnimeFrame => ({
                         no: message.no,
                         image: resize,
@@ -253,6 +253,7 @@ port.listenPort().addListener(port => {
 
 
 async function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, image: Promise<ImageDataUrl>, imageForThumbnail: Promise<ImageDataUrl>): Promise<void> {
+    const thumbnailQuality = 94;
     const p = await prefs.loadPreferences();
     const videoInfo: VideoInfo = {
         ...param.videoInfo,
@@ -262,7 +263,7 @@ async function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boole
     };
 
     // スクリーンショットのサムネイル作成
-    const thumbnail: Promise<ImageDataUrl> = imageForThumbnail.then(image => resizeImage(image, p.thumbnail.width, p.thumbnail.height));
+    const thumbnail: Promise<ImageDataUrl> = imageForThumbnail.then(image => resizeImage(image, p.thumbnail.width, p.thumbnail.height, 'image/jpeg', thumbnailQuality));
 
     // 動画サムネイルが保存されていない場合はダウンロードする
     type VideoThumbnail = { image: ImageDataUrl, resized: ImageDataUrl };
@@ -274,7 +275,7 @@ async function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boole
             download
                 .then(async image => ({
                     image,
-                    resized: await resizeImage(image, p.thumbnail.width, p.thumbnail.height),
+                    resized: await resizeImage(image, p.thumbnail.width, p.thumbnail.height, 'image/jpeg', thumbnailQuality),
                 }))
                 // サムネイルのURLが取得できない場合やサムネイルのダウンロードに失敗した場合、キャプチャ画像用のサムネイル画像で代用
                 .catch(async () => ({
