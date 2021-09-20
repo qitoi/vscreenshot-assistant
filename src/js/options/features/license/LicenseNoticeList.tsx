@@ -41,10 +41,10 @@ function parseLicenseNotices(text: string): LicenseNotice[] {
     while (split.length > 0) {
         const name = split.shift()?.trim();
         let license = split.shift();
-        license = license?.substring(1, license?.length - 1);
         if (name === undefined || license === undefined) {
             break;
         }
+        license = license.substring(1, license.length - 1);
         notices.push({ name, license });
     }
     return notices;
