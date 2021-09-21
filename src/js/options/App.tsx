@@ -86,14 +86,14 @@ const App: React.FC = () => {
     const tabs = React.useMemo<TabConfig[]>(() => [
         {
             hash: '',
-            messageId: 'prefs_tab_preferences',
+            messageId: 'options_tab_preferences',
             panel: (
                 <PreferenceForm />
             ),
         },
         {
             hash: '#license',
-            messageId: 'prefs_tab_license',
+            messageId: 'options_tab_license',
             panel: (
                 <LicenseNoticeList />
             ),
@@ -124,7 +124,7 @@ const App: React.FC = () => {
             <Box h="100vh" minH="fit-content" overflow="clip" fontSize="sm">
                 <Tabs index={index} onChange={handleChange} colorScheme="gray" align="start" orientation="vertical" h="100%">
                     <TabList bgColor="gray.500" color="white" w="16em" flexShrink={0}>
-                        <Box py="1em" fontSize="lg" textAlign="center">VScreenshot Assistant</Box>
+                        <Box py="1em" fontSize="lg" textAlign="center"><LocalizedText messageId="extension_name" /></Box>
                         {tabs.map(tab => (
                             <Tab key={tab.hash}><LocalizedText messageId={tab.messageId} /></Tab>
                         ))}

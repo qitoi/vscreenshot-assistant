@@ -16,14 +16,21 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-
-import App from './options/App';
 import { BrowserRouter } from 'react-router-dom';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
+import { getLocalizedText } from './lib/localize';
+import App from './options/App';
 
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
-            <App />
+            <HelmetProvider>
+                <Helmet titleTemplate={`${getLocalizedText('extension_name')} - %s`}>
+                    <title>{getLocalizedText('options')}</title>
+                </Helmet>
+                <App />
+            </HelmetProvider>
         </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')

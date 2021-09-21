@@ -17,14 +17,21 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
+import { getLocalizedText } from './lib/localize';
 import App from './album/App';
 import { store } from './album/store';
 
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <App />
+            <HelmetProvider>
+                <Helmet titleTemplate={`${getLocalizedText('extension_name')} - %s`}>
+                    <title>{getLocalizedText('album')}</title>
+                </Helmet>
+                <App />
+            </HelmetProvider>
         </Provider>
     </React.StrictMode>,
     document.getElementById('root')

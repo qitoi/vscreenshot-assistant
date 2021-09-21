@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "VScreenshot Assistant",
+  "name": "__MSG_extension_name__",
   "version": "1.0.0",
   "default_locale": "ja",
   "description": "__MSG_extension_description__",
@@ -25,7 +25,7 @@
     "persistent": true
   },
   "browser_action": {
-    "default_title": "VScreenshot Assistant",
+    "default_title": "__MSG_extension_name__",
     "default_icon": {
       "16": "img/icon-16-disabled.png",
       "24": "img/icon-24-disabled.png",

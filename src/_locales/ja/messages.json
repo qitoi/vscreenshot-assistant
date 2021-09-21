@@ -1,4 +1,7 @@
 {
+  "extension_name": {
+    "message": "VScreenshot Assistant"
+  },
   "extension_description": {
     "message": "YouTubeの動画再生中にスクリーンショット撮影。撮影したスクリーンショットはTwitter投稿やまとめて保存ができます。"
   },
@@ -8,10 +11,13 @@
   "context_menu_open_option": {
     "message": "設定"
   },
-  "prefs_tab_preferences": {
+  "options": {
+    "message": "オプション"
+  },
+  "options_tab_preferences": {
     "message": "設定"
   },
-  "prefs_tab_license": {
+  "options_tab_license": {
     "message": "ライセンス"
   },
   "prefs_general": {
@@ -163,6 +169,9 @@
   },
   "license_third_party_notices": {
     "message": "The following sets forth attribution notices for third party software that may be contained in portions of this application."
+  },
+  "album": {
+    "message": "アルバム"
   },
   "album_menu_download": {
     "message": "まとめて保存"
