@@ -58,13 +58,14 @@ const VideoHeaderInformation: React.FC = () => {
                 <Box whiteSpace="nowrap">
                     {date}
                 </Box>
-                {hashtagEnabled && video && video.hashtags && video.hashtags.length > 0 && (
+                {video && video.hashtags && video.hashtags.length > 0 && (
                     <CheckboxGroup key={videoKey} value={selectedHashtags} onChange={handleSelectedHashtagsChange}>
                         <HStack>
                             {video.hashtags.map(hashtag => (
                                 <HashtagCheckbox
                                     key={hashtag}
                                     value={hashtag}
+                                    isDisabled={!hashtagEnabled}
                                     checkedColor="rgba(255, 255, 255, 1)"
                                     uncheckedColor="rgba(200, 200, 200, 0.8)">
                                     #{hashtag}

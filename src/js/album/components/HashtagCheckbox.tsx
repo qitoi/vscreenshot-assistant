@@ -91,18 +91,18 @@ export const HashtagCheckbox = forwardRef<CheckboxProps, 'input'>((props, ref) =
     };
 
     return (
-        <Label>
+        <Label cursor={isDisabled ? 'default' : 'pointer'}>
             <chakra.input display="none" {...getInputProps({}, ref)} />
             {children && (
                 <MotionTag
-                    bgColor={isChecked ? checkedColor : uncheckedColor}
+                    bgColor={(isChecked && !isDisabled) ? checkedColor : uncheckedColor}
                     rounded="1em"
                     borderColor="gray.400"
                     borderWidth="1px"
                     whiteSpace="nowrap"
                     whileHover={{ filter: 'brightness(90%)' }}
                     variants={variants}
-                    animate={state.isChecked ? 'select' : 'unselect'}
+                    animate={(state.isChecked && !isDisabled) ? 'select' : 'unselect'}
                     transition={{ ease: 'easeOut', duration: 0.1 }}>
                     {children}
                 </MotionTag>
