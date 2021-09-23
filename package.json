@@ -14,7 +14,8 @@
     "compile:edge": "rimraf build/edge && cross-env NODE_ENV=production BROWSER=edge webpack --config webpack.config.js",
     "package:chrome": "mkdirp dist && cd build && cd chrome && bestzip ../../dist/vscreenshot-assistant-chrome.zip *",
     "package:firefox": "mkdirp dist && cd build && cd firefox && bestzip ../../dist/vscreenshot-assistant-firefox.zip *",
-    "package:edge": "mkdirp dist && cd build && cd edge && bestzip ../../dist/vscreenshot-assistant-edge.zip *"
+    "package:edge": "mkdirp dist && cd build && cd edge && bestzip ../../dist/vscreenshot-assistant-edge.zip *",
+    "archive": "mkdirp dist && git archive HEAD --format zip -o dist/archive.zip"
   },
   "author": "qitoi",
   "license": "Apache-2.0",
