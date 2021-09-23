@@ -22,6 +22,7 @@ import { MessageId } from '../lib/localize';
 import { LocalizedText } from '../lib/components/LocalizedText';
 import LicenseNoticeList from './features/license/LicenseNoticeList';
 import PreferenceForm from './features/preference/PreferenceForm';
+import Help from './features/help/Help';
 
 const theme = extendTheme({
     boxShadow: 'none',
@@ -69,7 +70,7 @@ const theme = extendTheme({
                 },
             },
         },
-    }
+    },
 });
 
 type TabConfig = {
@@ -89,6 +90,13 @@ const App: React.FC = () => {
             messageId: 'options_tab_preferences',
             panel: (
                 <PreferenceForm />
+            ),
+        },
+        {
+            hash: '#help',
+            messageId: 'options_tab_help',
+            panel: (
+                <Help />
             ),
         },
         {

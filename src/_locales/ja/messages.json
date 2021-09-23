@@ -17,6 +17,9 @@
   "options_tab_preferences": {
     "message": "設定"
   },
+  "options_tab_help": {
+    "message": "ヘルプ"
+  },
   "options_tab_license": {
     "message": "ライセンス"
   },
@@ -166,6 +169,66 @@
   },
   "prefs_save": {
     "message": "保存"
+  },
+  "help_app_description": {
+    "message": "VScreenshot Assistant は YouTube 他いくつかの動画配信プラットフォームに対応した、動画のスクリーンショット撮影を支援するブラウザ拡張です。"
+  },
+  "help_usage": {
+    "message": "使い方"
+  },
+  "help_usage_capture": {
+    "message": "キャプチャ"
+  },
+  "help_usage_capture_text": {
+    "message": "対応プラットフォームの動画再生中にキーを押すことでスクリーンショットの撮影ができます。"
+  },
+  "help_usage_capture_feature": {
+    "message": "機能"
+  },
+  "help_usage_capture_feature_key_binding": {
+    "message": "キー設定"
+  },
+  "help_usage_capture_feature_text": {
+    "message": "説明"
+  },
+  "help_usage_capture_screenshot": {
+    "message": "スクリーンショット"
+  },
+  "help_usage_capture_continuous_screenshot": {
+    "message": "連続スクリーンショット"
+  },
+  "help_usage_capture_animation": {
+    "message": "アニメーションGIF撮影"
+  },
+  "help_usage_capture_screenshot_text": {
+    "message": "キーを押下するとスクリーンショットを撮影します。"
+  },
+  "help_usage_capture_continuous_screenshot_text": {
+    "message": "キーの押下中、連続してスクリーンショットを撮影します。"
+  },
+  "help_usage_capture_animation_text": {
+    "message": "キーの押下中、連続してスクリーンショットを撮影し、\nアニメーションGIFを作成します。"
+  },
+  "help_usage_album": {
+    "message": "アルバム"
+  },
+  "help_usage_album_text": {
+    "message": "VScreenshot Assistant のアイコンをクリック、あるいはアイコンのコンテキストメニューの 「アルバムを表示」をクリックすることで、アルバムウィンドウを開きます。\nアルバムウィンドウでは撮影したスクリーンショットの閲覧や管理ができます。"
+  },
+  "help_usage_save": {
+    "message": "まとめて保存"
+  },
+  "help_usage_save_text": {
+    "message": "選択した動画のスクリーンショットをZIPファイルにまとめて保存することができます。"
+  },
+  "help_usage_tweet": {
+    "message": "Twitter投稿"
+  },
+  "help_usage_tweet_text": {
+    "message": "アルバムウィンドウでスクリーンショットを選択し Tweet ボタンをクリックすると Twitter の投稿画面が開きます。\nこのとき、自動的にタイトルやURLなどの動画情報が入力され、スクリーンショットが添付された状態になります。\n\nこの機能を使用する場合は twitter.com にログインしておく必要があります。"
+  },
+  "help_supported_platforms": {
+    "message": "対応プラットフォーム"
   },
   "license_third_party_notices": {
     "message": "The following sets forth attribution notices for third party software that may be contained in portions of this application."
