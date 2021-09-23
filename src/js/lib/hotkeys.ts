@@ -97,6 +97,24 @@ export function bindHotkey(element: HTMLElement | Window, config: KeyConfig, onK
             return;
         }
 
+        // バインドしたelementとイベントが発火したelementが異なる場合は、発火した要素が入力を取るものかどうかをチェックする
+        if (element !== e.target && e.target instanceof HTMLElement) {
+            // 編集可能なinput/textareaにフォーカスがある場合は処理しない
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+                if (!e.target.readOnly) {
+                    return;
+                }
+            }
+            // selectにフォーカスがある場合は処理しない
+            else if (e.target instanceof HTMLSelectElement) {
+                return;
+            }
+            // 編集可能な要素にフォーカスがある場合は処理しない
+            else if (e.target.isContentEditable) {
+                return;
+            }
+        }
+
         if (onKeyUp !== null) {
             onKeyUp();
         }
