@@ -91,7 +91,7 @@ export const DefaultPreferences: Preferences = {
     },
     screenshot: {
         hotkey: hotkeys.getKeyConfig('S', { shift: true }),
-        enabledContinuous: false,
+        enabledContinuous: true,
         continuousHotkey: hotkeys.getKeyConfig('D', { shift: true }),
         continuousInterval: 500,
         fileType: 'image/jpeg',
