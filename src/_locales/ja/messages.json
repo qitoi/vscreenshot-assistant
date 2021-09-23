@@ -3,7 +3,7 @@
     "message": "VScreenshot Assistant"
   },
   "extension_description": {
-    "message": "YouTubeの動画再生中にスクリーンショット撮影。撮影したスクリーンショットはTwitter投稿やまとめて保存ができます。"
+    "message": "YouTube他いくつかの動画配信プラットフォームでのスクリーンショット撮影を支援します。"
   },
   "context_menu_open_album": {
     "message": "アルバムを表示"
