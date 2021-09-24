@@ -85,7 +85,6 @@ const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadS
                 bgColor="white">
                 <Image
                     ref={refs}
-                    src=""
                     style={{ objectFit: 'contain' }}
                     draggable={false}
                     onLoad={onLoad} />
