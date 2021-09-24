@@ -105,8 +105,8 @@ export const DefaultPreferences: Preferences = {
         interval: 50,
     },
     thumbnail: {
-        width: 320,
-        height: 180,
+        width: 256,
+        height: 144,
     },
     tweet: {
         enabled: true,
