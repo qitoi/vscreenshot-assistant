@@ -2,6 +2,12 @@
 
 VScreenshot Assistant は YouTube 他いくつかの動画配信プラットフォームに対応した、動画のスクリーンショット撮影を支援するブラウザ拡張です。
 
+## インストール
+
+* [Chrome](https://chrome.google.com/webstore/detail/vscreenshot-assistant/hbhdiggpckgjgbclombabhdgnbpjgiln)
+* [Firefox](https://addons.mozilla.org/ja/firefox/addon/vscreenshot-assistant/)
+* [Edge](https://microsoftedge.microsoft.com/addons/detail/jgkckgfccojgadomgpkhmbnjgfakgpoc)
+
 ## ビルド方法
 
 ```shell
