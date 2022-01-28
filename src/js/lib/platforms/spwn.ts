@@ -38,7 +38,18 @@ const SPWN: Platform = {
     },
 
     getVideoElement(): HTMLVideoElement | null {
-        return document.querySelector('div#video video') as HTMLVideoElement | null;
+        // 再生中のプレーヤーがあればそれを採用
+        const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('div#video video[src]')).filter(v => !v.paused);
+        if (videos.length > 0) {
+            return videos[0];
+        }
+        // 再生中のものがなく、低遅延プレーヤーが表示されていればそれを採用
+        const video = document.querySelector<HTMLVideoElement>('div#video video#aws-video-player[src]');
+        if (video !== null && getComputedStyle(video).display !== 'none') {
+            return video;
+        }
+        // それでも見付からなければ最初のプレーヤーを採用
+        return document.querySelector<HTMLVideoElement>('div#video video[src]');
     },
 
     getVideoPos(video: HTMLVideoElement): number {
