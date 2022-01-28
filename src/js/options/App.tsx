@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { Box, ChakraProvider, extendTheme, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { MessageId } from '../lib/localize';
 import { LocalizedText } from '../lib/components/LocalizedText';
@@ -82,7 +82,7 @@ type TabConfig = {
 const App: React.FC = () => {
     const location = useLocation();
     const { pathname, hash } = location;
-    const history = useHistory();
+    const navigate = useNavigate();
     const [index, setIndex] = React.useState<number>(0);
     const tabs = React.useMemo<TabConfig[]>(() => [
         {
@@ -117,14 +117,14 @@ const App: React.FC = () => {
         // なければデフォルトとして0に切り替え、履歴も置き換える
         else {
             setIndex(0);
-            history.replace(pathname);
+            navigate(pathname, { replace: true });
         }
-    }, [pathname, hash, history, tabs]);
+    }, [pathname, hash, navigate, tabs]);
 
     const handleChange = (index: number) => {
         // タブが変更されたとき、表示内容を切り替え、履歴も置き換える
         setIndex(index);
-        history.replace(location.pathname + tabs[index].hash);
+        navigate(location.pathname + tabs[index].hash, { replace: true });
     };
 
     return (

@@ -20,13 +20,15 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { TypedFieldPath } from './TypedFieldPath';
 
-type RadioGroupControlProps<T> = Omit<RadioGroupProps, 'ref' | 'name' | 'value' | 'onChange' | 'onBlur'> & {
-    name: TypedFieldPath<T, string | number>,
+type ValueType = string | number;
+
+type RadioGroupControlProps<T> = Omit<RadioGroupProps, 'name'> & {
+    name: TypedFieldPath<T, ValueType>,
 };
 
 const RadioGroupControl = <T, >({ name, children, ...rest }: RadioGroupControlProps<T>): React.ReactElement => {
     const { control, getValues } = useFormContext<T>();
-    const { field: { onChange, ...fieldRest } } = useController({ name, control });
+    const { field: { value, onChange, ...fieldRest } } = useController<T, typeof name>({ name, control });
     const type = typeof getValues(name);
     const handleChange = React.useCallback((nextValue: string) => {
         if (type === 'number') {
@@ -37,7 +39,7 @@ const RadioGroupControl = <T, >({ name, children, ...rest }: RadioGroupControlPr
         }
     }, [onChange, type]);
     return (
-        <RadioGroup paddingLeft="2em" {...rest} {...fieldRest} onChange={handleChange}>
+        <RadioGroup paddingLeft="2em" {...rest} {...fieldRest} value={value as ValueType} onChange={handleChange}>
             {children}
         </RadioGroup>
     );

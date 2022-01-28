@@ -21,8 +21,10 @@ import { useController, useFormContext } from 'react-hook-form';
 import * as hotkeys from '../../lib/hotkeys';
 import { TypedFieldPath } from './TypedFieldPath';
 
-type HotkeyInputControlProps<T> = Omit<InputProps, 'ref' | 'name'> & {
-    name: TypedFieldPath<T, hotkeys.KeyConfig>,
+type ValueType = hotkeys.KeyConfig;
+
+type HotkeyInputControlProps<T> = Omit<InputProps, 'name'> & {
+    name: TypedFieldPath<T, ValueType>,
 };
 
 const HotkeyInputControl = <T, >({ name, ...rest }: HotkeyInputControlProps<T>): React.ReactElement => {
@@ -42,7 +44,7 @@ const HotkeyInputControl = <T, >({ name, ...rest }: HotkeyInputControlProps<T>):
     }, [name, setValue]);
 
     return (
-        <Input ref={ref} {...rest} value={hotkeys.getHotkeyString(value)} readOnly />
+        <Input ref={ref} {...rest} value={hotkeys.getHotkeyString(value as ValueType)} readOnly />
     );
 };
 

@@ -24,19 +24,21 @@ import {
     NumberInput,
     NumberInputField,
     NumberInputProps,
-    NumberInputStepper
+    NumberInputStepper,
 } from '@chakra-ui/react';
 
 import { TypedFieldPath } from './TypedFieldPath';
 
-type NumberInputControlProps<T> = Omit<NumberInputProps, 'ref' | 'name' | 'value' | 'onChange' | 'onBlur'> & {
-    name: TypedFieldPath<T, number>,
+type ValueType = number;
+
+type NumberInputControlProps<T> = Omit<NumberInputProps, 'name'> & {
+    name: TypedFieldPath<T, ValueType>,
     unit?: string,
 };
 
 const NumberInputControl = <T, >({ unit, ...rest }: NumberInputControlProps<T>): React.ReactElement => {
     const { control } = useFormContext<T>();
-    const { field: { onChange, ...fieldRest } } = useController({ name: rest.name, control });
+    const { field: { value, onChange, ...fieldRest } } = useController({ name: rest.name, control });
     const handleChange = React.useCallback((valueAsString: string, valueAsNumber: number) => {
         if (!Number.isInteger(valueAsNumber)) {
             valueAsNumber = 0;
@@ -45,7 +47,7 @@ const NumberInputControl = <T, >({ unit, ...rest }: NumberInputControlProps<T>):
     }, [onChange]);
     return (
         <HStack w={rest.w} width={rest.width}>
-            <NumberInput {...rest} {...fieldRest} onChange={handleChange} flexShrink={1}>
+            <NumberInput {...rest} {...fieldRest} value={value as ValueType} onChange={handleChange} flexShrink={1}>
                 <NumberInputField />
                 <NumberInputStepper>
                     <NumberIncrementStepper />
