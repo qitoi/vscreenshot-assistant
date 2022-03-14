@@ -71,7 +71,7 @@ const SPWN: Platform = {
             author: striptags(info.basic_data.artists ?? '-'),
             date: datetime,
             thumbnailUrl: `https://public.spwn.jp/event-pages/${videoId}${info.basic_data.banner_img_path}`,
-            hashtags: ((info.basic_data.twitterHashTag ?? []) as string[]).filter(t => t !== ''),
+            hashtags: ((info.basic_data.twitterHashTag ?? []) as string[]).filter(t => t !== '').map(t => t.replace(/^#+/, '')),
             private: false,
         };
     },
