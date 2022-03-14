@@ -84,7 +84,7 @@ const NicoVideo: Platform = {
                 title: info?.video?.title ?? '-',
                 author: info?.channel?.name ?? info?.owner?.nickname ?? '-',
                 date: (new Date(info?.video?.registeredAt ?? 0)).getTime(),
-                thumbnailUrl: thumbnail?.ogp ?? thumbnail?.player ?? thumbnail?.largeUrl ?? thumbnail?.middleUrl ?? thumbnail?.url ?? '',
+                thumbnailUrl: thumbnail?.ogp ?? thumbnail?.player ?? thumbnail?.largeUrl ?? thumbnail?.middleUrl ?? thumbnail?.url ?? null,
                 hashtags: [],
                 private: false,
             };
