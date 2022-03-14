@@ -17,7 +17,9 @@
     "webNavigation",
     "https://i.ytimg.com/*",
     "https://public.spwn.jp/*",
-    "https://img.cdn.nimg.jp/*"
+    "https://img.cdn.nimg.jp/*",
+    "https://nfc-api.hololive-fc.com/*",
+    "https://nfc-api.tokinosora-fc.com/*"
   ],
   "background": {
     "scripts": [
@@ -68,6 +70,16 @@
       "js": [
         "js/vendor-contents.js",
         "js/contents-twitch.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://*.hololive-fc.com/*",
+        "https://*.tokinosora-fc.com/*"
+      ],
+      "js": [
+        "js/vendor-contents.js",
+        "js/contents-hololive-fc.js"
       ]
     },
     {
