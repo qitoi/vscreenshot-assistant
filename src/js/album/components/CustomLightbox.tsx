@@ -19,7 +19,7 @@ import { chakra, HStack, IconButton, Spacer, Text } from '@chakra-ui/react';
 import { MdFileDownload } from 'react-icons/md';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import * as prettyBytes from 'pretty-bytes';
+import prettyBytes from 'pretty-bytes';
 
 import { ImageDataUrl } from '../../lib/types';
 import { decodeDataURL, getFileExt } from '../../lib/data-url';
