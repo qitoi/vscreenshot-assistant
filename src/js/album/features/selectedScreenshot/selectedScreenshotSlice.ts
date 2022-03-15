@@ -19,6 +19,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { compareScreenshotInfo, compareVideoInfo, ImageDataUrl, ScreenshotInfo, VideoInfoKey } from '../../../lib/types';
 import { RootState } from '../../store';
 import { setActiveVideo } from '../activeVideo/activeVideoSlice';
+import { removeVideo } from '../video/videoSlice';
 
 
 const SELECTED_SCREENSHOT_MAX_COUNT = 4;
@@ -70,14 +71,19 @@ const slice = createSlice({
         },
     },
     extraReducers: builder => {
-        builder
-            .addCase(setActiveVideo.fulfilled, (state, action): void => {
-                const video = action.payload.video;
-                if (state.videoInfoKey === null || video === null || !compareVideoInfo(state.videoInfoKey, video)) {
-                    state.videoInfoKey = (video === null) ? null : { platform: video.platform, videoId: video.videoId };
-                    state.selected = [];
-                }
-            });
+        builder.addCase(setActiveVideo.fulfilled, (state, action): void => {
+            const video = action.payload.video;
+            if (state.videoInfoKey === null || video === null || !compareVideoInfo(state.videoInfoKey, video)) {
+                state.videoInfoKey = (video === null) ? null : { platform: video.platform, videoId: video.videoId };
+                state.selected = [];
+            }
+        });
+        builder.addCase(removeVideo.fulfilled, (state, action): void => {
+            if (state.videoInfoKey !== null && compareVideoInfo(state.videoInfoKey, action.payload)) {
+                state.videoInfoKey = null;
+                state.selected = [];
+            }
+        });
     },
 });
 

@@ -21,6 +21,7 @@ import * as storage from '../../../lib/storage';
 import * as screenshotSort from '../../../lib/background/screenshot-sort';
 import { RootState } from '../../store';
 import { setActiveVideo } from '../activeVideo/activeVideoSlice';
+import { removeVideo } from '../video/videoSlice';
 
 
 type ScreenshotState = {
@@ -149,6 +150,13 @@ const slice = createSlice<ScreenshotState, SliceCaseReducers<ScreenshotState>>({
         builder.addCase(setScreenshotSortOrder.fulfilled, (state, action) => {
             state.screenshots = screenshotSort.sortScreenshot(state.screenshots, action.payload.order);
             state.order = action.payload.order;
+        });
+        builder.addCase(removeVideo.fulfilled, (state, action): void => {
+            if (state.videoInfoKey !== null && compareVideoInfo(state.videoInfoKey, action.payload)) {
+                state.screenshots = [];
+                state.screenshotMap = {};
+                state.thumbnails = {};
+            }
         });
     },
 });
