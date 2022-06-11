@@ -67,7 +67,7 @@ const ScreenshotList: React.FC = () => {
         dispatch(removeSelectedScreenshot({ info }));
     }, [dispatch]);
 
-    const handleSelectedResize = React.useCallback((width, height) => {
+    const handleSelectedResize = React.useCallback((width: number, height: number) => {
         setSelectedHeight(height);
     }, []);
 

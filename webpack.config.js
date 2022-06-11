@@ -18,9 +18,9 @@ const entries = (files) => files.reduce((acc, file) => {
     return acc;
 }, {});
 
-const reactAppScripts = glob.sync(path.resolve(__dirname, 'src', 'js', '*.tsx'));
-const contentsScripts = glob.sync(path.resolve(__dirname, 'src', 'js', 'contents-!(twitter)*.ts'));
-const otherScripts = glob.sync(path.resolve(__dirname, 'src', 'js', '*.ts')).filter(file => !contentsScripts.includes(file));
+const reactAppScripts = glob.sync('./src/js/*.tsx');
+const contentsScripts = glob.sync('./src/js/contents-!(twitter)*.ts');
+const otherScripts = glob.sync('./src/js/*.ts').filter(file => !contentsScripts.includes(file));
 
 const outputPath = path.resolve(__dirname, 'build', BROWSER);
 

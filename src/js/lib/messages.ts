@@ -18,6 +18,7 @@ import { ImageDataUrl, ScreenshotInfo, VideoInfo } from './types';
 
 
 export function sendMessage<T extends MessageRequest>(message: T, callback?: (message: ResponseType<T>) => void): void {
+    callback ??= () => undefined;
     chrome.runtime.sendMessage(message, callback);
 }
 
