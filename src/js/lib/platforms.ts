@@ -20,6 +20,7 @@ import SPWN from './platforms/spwn';
 import NicoVideo from './platforms/nicovideo';
 import Twitch from './platforms/twitch';
 import HololiveFC from './platforms/hololive-fc';
+import StreamingPlus from './platforms/streaming-plus';
 
 const platforms: { [key: string]: Platform } = {
     [Youtube.PLATFORM_ID]: Youtube,
@@ -27,6 +28,7 @@ const platforms: { [key: string]: Platform } = {
     [NicoVideo.PLATFORM_ID]: NicoVideo,
     [Twitch.PLATFORM_ID]: Twitch,
     [HololiveFC.PLATFORM_ID]: HololiveFC,
+    [StreamingPlus.PLATFORM_ID]: StreamingPlus,
 };
 
 export function getVideoUrl(platform: string, videoId: string): string {

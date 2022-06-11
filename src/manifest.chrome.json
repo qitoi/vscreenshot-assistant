@@ -84,6 +84,15 @@
     },
     {
       "matches": [
+        "https://*.live.eplus.jp/*"
+      ],
+      "js": [
+        "js/vendor-contents.js",
+        "js/contents-streaming-plus.js"
+      ]
+    },
+    {
+      "matches": [
         "https://twitter.com/intent/tweet*"
       ],
       "js": [
