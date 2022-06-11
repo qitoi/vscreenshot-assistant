@@ -187,6 +187,8 @@ const Help: React.FC = () => {
                         <ListItem>Twitch</ListItem>
                         <ListItem>ニコニコ動画</ListItem>
                         <ListItem>SPWN</ListItem>
+                        <ListItem>Streaming+ (イープラス)</ListItem>
+                        <ListItem>ホロライブ公式ファンクラブ/ときのそらオフィシャルファンクラブ</ListItem>
                     </UnorderedList>
                 </Description>
             </Block>
