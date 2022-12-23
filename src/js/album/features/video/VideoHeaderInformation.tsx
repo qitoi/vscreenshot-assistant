@@ -15,14 +15,14 @@
  */
 
 import * as React from 'react';
-import { Box, CheckboxGroup, HStack, Link } from '@chakra-ui/react';
+import { Box, HStack, Link } from '@chakra-ui/react';
 import { LockIcon } from '@chakra-ui/icons';
 
 import * as platforms from '../../../lib/platforms';
 import { getVideoKey } from '../../../lib/types';
 import * as datetime from '../../../lib/datetime';
 import { useDispatch, useSelector } from '../../store';
-import { HashtagCheckbox } from '../../components/HashtagCheckbox';
+import { HashtagCheckbox, HashtagCheckboxGroup } from '../../components/HashtagCheckbox';
 import { selectActiveVideo, selectHashtags, setHashtags } from '../activeVideo/activeVideoSlice';
 import { selectHashtagEnabled } from '../preferences/preferencesSlice';
 
@@ -59,20 +59,18 @@ const VideoHeaderInformation: React.FC = () => {
                     {date}
                 </Box>
                 {video && video.hashtags && video.hashtags.length > 0 && (
-                    <CheckboxGroup key={videoKey} value={selectedHashtags} onChange={handleSelectedHashtagsChange}>
-                        <HStack>
-                            {video.hashtags.map(hashtag => (
-                                <HashtagCheckbox
-                                    key={hashtag}
-                                    value={hashtag}
-                                    isDisabled={!hashtagEnabled}
-                                    checkedColor="rgba(255, 255, 255, 1)"
-                                    uncheckedColor="rgba(200, 200, 200, 0.8)">
-                                    #{hashtag}
-                                </HashtagCheckbox>
-                            ))}
-                        </HStack>
-                    </CheckboxGroup>
+                    <HashtagCheckboxGroup key={videoKey} value={selectedHashtags} onChange={handleSelectedHashtagsChange}>
+                        {video.hashtags.map(hashtag => (
+                            <HashtagCheckbox
+                                key={hashtag}
+                                value={hashtag}
+                                isDisabled={!hashtagEnabled}
+                                checkedColor="rgba(255, 255, 255, 1)"
+                                uncheckedColor="rgba(200, 200, 200, 0.8)">
+                                #{hashtag}
+                            </HashtagCheckbox>
+                        ))}
+                    </HashtagCheckboxGroup>
                 )}
             </HStack>
         </Box>

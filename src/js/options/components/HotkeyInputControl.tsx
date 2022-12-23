@@ -16,18 +16,18 @@
 
 import * as React from 'react';
 import { Input, InputProps } from '@chakra-ui/react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, FieldValues } from 'react-hook-form';
 
 import * as hotkeys from '../../lib/hotkeys';
 import { TypedFieldPath } from './TypedFieldPath';
 
 type ValueType = hotkeys.KeyConfig;
 
-type HotkeyInputControlProps<T> = Omit<InputProps, 'name'> & {
+type HotkeyInputControlProps<T extends FieldValues> = Omit<InputProps, 'name'> & {
     name: TypedFieldPath<T, ValueType>,
 };
 
-const HotkeyInputControl = <T, >({ name, ...rest }: HotkeyInputControlProps<T>): React.ReactElement => {
+const HotkeyInputControl = <T extends FieldValues, >({ name, ...rest }: HotkeyInputControlProps<T>): React.ReactElement => {
     const { control, setValue } = useFormContext<T>();
     const { field: { value } } = useController({ name, control });
 

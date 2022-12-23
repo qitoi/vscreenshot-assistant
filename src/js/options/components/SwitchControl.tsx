@@ -16,15 +16,15 @@
 
 import * as React from 'react';
 import { Switch, useFormControlProps } from '@chakra-ui/react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, FieldValues } from 'react-hook-form';
 
 import { TypedFieldPath } from './TypedFieldPath';
 
-type SwitchControlProps<T> = {
+type SwitchControlProps<T extends FieldValues> = {
     name: TypedFieldPath<T, boolean>,
 };
 
-const SwitchControl = <T, >({ name }: SwitchControlProps<T>): React.ReactElement => {
+const SwitchControl = <T extends FieldValues, >({ name }: SwitchControlProps<T>): React.ReactElement => {
     const { control } = useFormContext<T>();
     const { field } = useController<T>({ name, control });
     const input = useFormControlProps<HTMLInputElement>(field);

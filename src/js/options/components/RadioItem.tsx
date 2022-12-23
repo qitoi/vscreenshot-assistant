@@ -20,15 +20,15 @@ import { Box, BoxProps, HStack, Radio } from '@chakra-ui/react';
 import { MessageId } from '../../lib/localize';
 import { LocalizedText } from '../../lib/components/LocalizedText';
 
-type RadioItemProps<T> = BoxProps & {
+type RadioItemProps<T extends string | number> = BoxProps & {
     value: T,
     messageId: MessageId,
 };
 
-const RadioItem = <T extends string | number>({ value, messageId, children }: RadioItemProps<T>): React.ReactElement => {
+const RadioItem = <T extends string | number, >({ value, messageId, children }: RadioItemProps<T>): React.ReactElement => {
     return (
         <HStack w="100%">
-            <Radio value={value} py="1em" w="100%"><LocalizedText messageId={messageId} /></Radio>
+            <Radio value={"" + value} py="1em" w="100%"><LocalizedText messageId={messageId} /></Radio>
             <Box flexShrink={0}>
                 {children}
             </Box>

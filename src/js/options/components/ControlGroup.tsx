@@ -16,21 +16,21 @@
 
 import * as React from 'react';
 import { Box, Collapse, FormControl, FormControlProps, FormLabel, useFormControlContext, VStack } from '@chakra-ui/react';
-import { FieldPath, FieldPathValue, UnpackNestedValue, useFormContext } from 'react-hook-form';
+import { FieldPath, FieldPathValue, FieldValues, useFormContext } from 'react-hook-form';
 
 import { MessageId } from '../../lib/localize';
 import { LocalizedText } from '../../lib/components/LocalizedText';
 
-type ControlGroupProps<T> = Omit<FormControlProps, 'label'> & {
+type ControlGroupProps<T extends FieldValues> = Omit<FormControlProps, 'label'> & {
     label?: MessageId,
     isEnabledHover?: boolean,
     indent?: 'none' | 'left' | 'right' | 'both',
     conditionKey?: FieldPath<T>,
-    conditionValue?: UnpackNestedValue<FieldPathValue<T, FieldPath<T>>>,
+    conditionValue?: FieldPathValue<T, FieldPath<T>>,
     hideIfDisabled?: boolean;
 };
 
-const ControlGroup = <T, >({ label, isEnabledHover, isDisabled, indent, conditionKey, conditionValue, hideIfDisabled, children, ...rest }: ControlGroupProps<T>): React.ReactElement => {
+const ControlGroup = <T extends FieldValues, >({ label, isEnabledHover, isDisabled, indent, conditionKey, conditionValue, hideIfDisabled, children, ...rest }: ControlGroupProps<T>): React.ReactElement => {
     const { watch, getValues } = useFormContext<T>();
     const context = useFormControlContext();
     const isNested = (context !== undefined);
