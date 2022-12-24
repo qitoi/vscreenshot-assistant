@@ -39,15 +39,30 @@ const Youtube: Platform = {
     },
 
     getVideoElement(): HTMLVideoElement | null {
-        return document.querySelector('video.video-stream') as HTMLVideoElement | null;
+        return document.querySelector<HTMLVideoElement>('video.video-stream[src]');
     },
 
     getVideoPos(video: HTMLVideoElement): number {
         return video.currentTime;
     },
 
-    async getVideoInfo(): Promise<PlatformVideoInfo> {
-        const info: any = JSON.parse((document.querySelector('script#scriptTag') as HTMLElement)?.innerText);
+    async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
+        let info: any = JSON.parse(document.querySelector<HTMLElement>('script#scriptTag')?.innerText ?? 'null');
+
+        // トップから動画ページに遷移した場合、動画のメタデータが取得できないため、動画ページを直接 fetch してメタデータを取り出す
+        const getProperty = (elem: HTMLElement | Document, tag: string, item: string) => elem.querySelector(`${tag}[itemprop="${item}"]`)?.getAttribute('content');
+        if (info === null) {
+            info = await fetch(`https://www.youtube.com/watch?v=${videoId}`)
+                .then(res => res.text())
+                .then(text => new DOMParser().parseFromString(text, 'text/html'))
+                .then(document => ({
+                    name: getProperty(document, 'meta', 'name'),
+                    author: getProperty(document, 'link', 'name'),
+                    publication: [
+                        { startDate: getProperty(document, 'meta', 'startDate') }
+                    ],
+                }));
+        }
 
         // 動画の公開日時
         let dateStr = null;
@@ -55,18 +70,18 @@ const Youtube: Platform = {
             // live streaming / live streaming archive / premiere video
             dateStr = (info.publication || [])[0]?.startDate;
         }
-        else {
+        if (!dateStr) {
             // uploaded video
-            dateStr = (document.querySelector('div#date>yt-formatted-string') as HTMLElement)?.innerText;
+            dateStr = (document.querySelector<HTMLElement>('div#date>yt-formatted-string'))?.innerText;
             // member only
             if (dateStr === undefined) {
-                dateStr = (document.querySelector('div#info-strings>yt-formatted-string') as HTMLElement)?.innerText;
+                dateStr = (document.querySelector<HTMLElement>('div#info-strings>yt-formatted-string'))?.innerText;
             }
         }
         const date = (new Date(dateStr)).getTime();
 
         // anchorタグからハッシュタグを抽出
-        const anchors = Array.from(document.querySelectorAll('a[href*="/hashtag/"]')) as HTMLAnchorElement[];
+        const anchors = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href*="/hashtag/"]'));
         const hashtags: Record<string, boolean> = {};
         for (const anchor of anchors) {
             const tags = extractHashtags(anchor.textContent ?? '');
@@ -84,7 +99,7 @@ const Youtube: Platform = {
             title: info?.name ?? '-',
             author: info?.author ?? '-',
             date: date,
-            thumbnailUrl: (info?.thumbnailUrl ?? [])[0] ?? null,
+            thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
             hashtags: Object.keys(hashtags),
             private: isPrivate,
         };
