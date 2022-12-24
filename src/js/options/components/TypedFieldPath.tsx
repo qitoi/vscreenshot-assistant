@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { FieldPath, FieldPathValue, UnpackNestedValue } from 'react-hook-form';
+import { FieldPath, FieldPathValue, FieldValues } from 'react-hook-form';
 
-export type TypedFieldPath<TFieldValues, T, K extends FieldPath<TFieldValues> = FieldPath<TFieldValues>> =
-    K extends FieldPath<TFieldValues> ? UnpackNestedValue<FieldPathValue<TFieldValues, K>> extends T ? K : never : never;
+export type TypedFieldPath<TFieldValues extends FieldValues, T, K extends FieldPath<TFieldValues> = FieldPath<TFieldValues>> =
+    K extends FieldPath<TFieldValues> ? FieldPathValue<TFieldValues, K> extends T ? K : never : never;

@@ -15,23 +15,25 @@
  */
 
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { getLocalizedText } from './lib/localize';
 import App from './options/App';
 
-ReactDOM.render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <HelmetProvider>
-                <Helmet titleTemplate={`${getLocalizedText('extension_name')} - %s`}>
-                    <title>{getLocalizedText('options')}</title>
-                </Helmet>
-                <App />
-            </HelmetProvider>
-        </BrowserRouter>
-    </React.StrictMode>,
-    document.getElementById('root')
-);
+const container = document.getElementById('root');
+if (container) {
+    createRoot(container).render(
+        <React.StrictMode>
+            <BrowserRouter>
+                <HelmetProvider>
+                    <Helmet titleTemplate={`${getLocalizedText('extension_name')} - %s`}>
+                        <title>{getLocalizedText('options')}</title>
+                    </Helmet>
+                    <App />
+                </HelmetProvider>
+            </BrowserRouter>
+        </React.StrictMode>,
+    );
+}

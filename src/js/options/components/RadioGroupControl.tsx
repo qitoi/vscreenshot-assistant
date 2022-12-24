@@ -16,17 +16,17 @@
 
 import * as React from 'react';
 import { RadioGroup, RadioGroupProps } from '@chakra-ui/react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, FieldValues } from 'react-hook-form';
 
 import { TypedFieldPath } from './TypedFieldPath';
 
 type ValueType = string | number;
 
-type RadioGroupControlProps<T> = Omit<RadioGroupProps, 'name'> & {
+type RadioGroupControlProps<T extends FieldValues> = Omit<RadioGroupProps, 'name'> & {
     name: TypedFieldPath<T, ValueType>,
 };
 
-const RadioGroupControl = <T, >({ name, children, ...rest }: RadioGroupControlProps<T>): React.ReactElement => {
+const RadioGroupControl = <T extends FieldValues, >({ name, children, ...rest }: RadioGroupControlProps<T>): React.ReactElement => {
     const { control, getValues } = useFormContext<T>();
     const { field: { value, onChange, ...fieldRest } } = useController<T, typeof name>({ name, control });
     const type = typeof getValues(name);
@@ -39,7 +39,7 @@ const RadioGroupControl = <T, >({ name, children, ...rest }: RadioGroupControlPr
         }
     }, [onChange, type]);
     return (
-        <RadioGroup paddingLeft="2em" {...rest} {...fieldRest} value={value as ValueType} onChange={handleChange}>
+        <RadioGroup paddingLeft="2em" {...rest} {...fieldRest} value={"" + (value as ValueType)} onChange={handleChange}>
             {children}
         </RadioGroup>
     );

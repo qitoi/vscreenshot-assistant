@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, FieldValues } from 'react-hook-form';
 import {
     Box,
     HStack,
@@ -31,12 +31,12 @@ import { TypedFieldPath } from './TypedFieldPath';
 
 type ValueType = number;
 
-type NumberInputControlProps<T> = Omit<NumberInputProps, 'name'> & {
+type NumberInputControlProps<T extends FieldValues> = Omit<NumberInputProps, 'name'> & {
     name: TypedFieldPath<T, ValueType>,
     unit?: string,
 };
 
-const NumberInputControl = <T, >({ unit, ...rest }: NumberInputControlProps<T>): React.ReactElement => {
+const NumberInputControl = <T extends FieldValues, >({ unit, ...rest }: NumberInputControlProps<T>): React.ReactElement => {
     const { control } = useFormContext<T>();
     const { field: { value, onChange, ...fieldRest } } = useController({ name: rest.name, control });
     const handleChange = React.useCallback((valueAsString: string, valueAsNumber: number) => {

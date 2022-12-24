@@ -334,6 +334,11 @@ const CustomLightbox = <T, >({ list, initial, loop, getKey, loadImage, getInfoNo
             onMovePrevRequest={movePrev}
             onCloseRequest={handleClose}
             animationOnKeyInput={true}
+            // WORKAROUND: React18 の dev mode で Lightbox を開いたとき、インジケータが表示されたまま画像が表示されない
+            // https://github.com/frontend-collective/react-image-lightbox/issues/589
+            onImageLoad={() => {
+                window.dispatchEvent(new Event('resize'));
+            }}
         />
     );
 };

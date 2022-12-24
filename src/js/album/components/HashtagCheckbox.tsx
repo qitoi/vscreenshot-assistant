@@ -15,75 +15,22 @@
  */
 
 import * as React from 'react';
-import { chakra, forwardRef, HTMLChakraProps, PropsOf, ThemingProps } from '@chakra-ui/system';
-import { callAll, Omit } from '@chakra-ui/utils';
-import { Tag, useCheckboxGroupContext, useCheckbox, UseCheckboxProps, TagProps } from '@chakra-ui/react';
+import { chakra } from '@chakra-ui/system';
+import { Omit } from '@chakra-ui/utils';
+import { Tag, useCheckbox, UseCheckboxProps, TagProps, useCheckboxGroup, UseCheckboxGroupProps, HStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
 
 const MotionTag = motion<Omit<TagProps, 'transition'>>(Tag);
 
-
-const Label = chakra('label', {
-    baseStyle: {
-        cursor: 'pointer',
-        display: 'inline-flex',
-        alignItems: 'center',
-        verticalAlign: 'top',
-        position: 'relative',
-        _disabled: {
-            cursor: 'not-allowed',
-        },
-    },
-});
-
-type CheckboxControlProps = Omit<HTMLChakraProps<'div'>, keyof UseCheckboxProps>
-
-type BaseInputProps = Pick<PropsOf<'input'>, 'checked' | 'defaultChecked'>
-
-export interface CheckboxProps
-    extends CheckboxControlProps,
-        BaseInputProps,
-        ThemingProps<'Tag'>,
-        UseCheckboxProps {
+export interface CheckboxProps extends React.PropsWithChildren<UseCheckboxProps> {
     checkedColor: string,
     uncheckedColor: string,
 }
 
-
-export const HashtagCheckbox = forwardRef<CheckboxProps, 'input'>((props, ref) => {
-    const group = useCheckboxGroupContext();
-    const mergedProps = { ...group, ...props } as CheckboxProps;
-
-    const {
-        children,
-        isChecked: isCheckedProp,
-        isDisabled = group?.isDisabled,
-        onChange: onChangeProp,
-        checkedColor,
-        uncheckedColor,
-        ...rest
-    } = mergedProps;
-
-    let isChecked = isCheckedProp;
-    if (group?.value && mergedProps.value) {
-        isChecked = group.value.includes(mergedProps.value);
-    }
-
-    let onChange = onChangeProp;
-    if (group?.onChange && mergedProps.value) {
-        onChange = callAll(group.onChange, onChangeProp);
-    }
-
-    const {
-        state,
-        getInputProps,
-    } = useCheckbox({
-        ...rest,
-        isDisabled,
-        isChecked,
-        onChange,
-    });
+export const HashtagCheckbox = (props: CheckboxProps) => {
+    const { checkedColor, uncheckedColor, children, ...rest } = props;
+    const { state, getInputProps, htmlProps } = useCheckbox(rest);
 
     const variants = {
         select: { backgroundColor: checkedColor },
@@ -91,22 +38,33 @@ export const HashtagCheckbox = forwardRef<CheckboxProps, 'input'>((props, ref) =
     };
 
     return (
-        <Label cursor={isDisabled ? 'default' : 'pointer'}>
-            <chakra.input display="none" {...getInputProps({}, ref)} />
-            {children && (
-                <MotionTag
-                    bgColor={(isChecked && !isDisabled) ? checkedColor : uncheckedColor}
-                    rounded="1em"
-                    borderColor="gray.400"
-                    borderWidth="1px"
-                    whiteSpace="nowrap"
-                    whileHover={{ filter: 'brightness(90%)' }}
-                    variants={variants}
-                    animate={(state.isChecked && !isDisabled) ? 'select' : 'unselect'}
-                    transition={{ ease: 'easeOut', duration: 0.1 }}>
-                    {children}
-                </MotionTag>
-            )}
-        </Label>
+        <chakra.label {...htmlProps} cursor={state.isDisabled ? 'default' : 'pointer'}>
+            <chakra.input type="checkbox" {...getInputProps()} />
+            <MotionTag
+                bgColor={(state.isChecked && !state.isDisabled) ? checkedColor : uncheckedColor}
+                rounded="1em"
+                borderColor="gray.400"
+                borderWidth="1px"
+                whiteSpace="nowrap"
+                whileHover={{ filter: 'brightness(90%)' }}
+                variants={variants}
+                animate={(state.isChecked && !state.isDisabled) ? 'select' : 'unselect'}
+                transition={{ ease: 'easeOut', duration: 0.1 }}>
+                {children}
+            </MotionTag>
+        </chakra.label>
     );
-});
+};
+
+export type HashtagCheckboxGroupProps = UseCheckboxGroupProps & { children: React.ReactElement[] };
+
+export const HashtagCheckboxGroup = (props: HashtagCheckboxGroupProps) => {
+    const { children, ...rest } = props;
+    const { getCheckboxProps } = useCheckboxGroup(rest);
+
+    return (
+        <HStack>
+            {React.Children.map(children, (child: React.ReactElement) => React.cloneElement(child, { ...getCheckboxProps(child.props) }))}
+        </HStack>
+    );
+};

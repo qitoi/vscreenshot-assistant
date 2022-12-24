@@ -11,7 +11,7 @@ VScreenshot Assistant は YouTube 他いくつかの動画配信プラットフ�
 ## ビルド方法
 
 ```shell
-npm install
+npm install --force
 npm run build
 ```
 
