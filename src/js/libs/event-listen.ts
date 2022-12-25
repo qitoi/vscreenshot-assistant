@@ -16,7 +16,7 @@
 
 const removers: (() => void)[] = [];
 
-window.addEventListener('beforeunload', () => {
+self.addEventListener('beforeunload', () => {
     for (const remover of removers) {
         remover();
     }

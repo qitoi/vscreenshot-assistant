@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_extension_name__",
   "version": "1.2.0",
   "default_locale": "ja",
@@ -14,7 +14,9 @@
     "storage",
     "unlimitedStorage",
     "contextMenus",
-    "webNavigation",
+    "webNavigation"
+  ],
+  "host_permissions": [
     "https://i.ytimg.com/*",
     "https://public.spwn.jp/*",
     "https://img.cdn.nimg.jp/*",
@@ -22,12 +24,10 @@
     "https://nfc-api.tokinosora-fc.com/*"
   ],
   "background": {
-    "scripts": [
-      "js/background.js"
-    ],
-    "persistent": true
+    "service_worker": "js/background.js",
+    "type": "module"
   },
-  "browser_action": {
+  "action": {
     "default_title": "__MSG_extension_name__",
     "default_icon": {
       "16": "img/icon-16-disabled.png",
@@ -105,7 +105,13 @@
     "open_in_tab": true
   },
   "web_accessible_resources": [
-    "js/inject-twitter.js"
-  ],
-  "content_security_policy": "script-src 'self'; object-src 'self'; worker-src 'self' blob: data:"
+    {
+      "resources": [
+        "js/inject-twitter.js"
+      ],
+      "matches": [
+        "*://*.twitter.com/*"
+      ]
+    }
+  ]
 }
