@@ -19,7 +19,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
-import { getLocalizedText } from './lib/localize';
+import { getLocalizedText } from './libs/localize';
 import App from './album/App';
 import { store } from './album/store';
 

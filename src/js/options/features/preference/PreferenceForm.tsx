@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { chakra, Button, VStack, Spacer, HStack, Box } from '@chakra-ui/react';
 
-import * as prefs from '../../../lib/prefs';
-import { LocalizedText } from '../../../lib/components/LocalizedText';
+import * as prefs from '../../../libs/prefs';
+import { LocalizedText } from '../../../components/LocalizedText';
 import { FormProvider, useForm } from 'react-hook-form';
 import ScreenshotPreferences from './ScreenshotPreferences';
 import ThumbnailPreferences from './ThumbnailPreferences';

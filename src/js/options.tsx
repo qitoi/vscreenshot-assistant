@@ -19,7 +19,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
-import { getLocalizedText } from './lib/localize';
+import { getLocalizedText } from './libs/localize';
 import App from './options/App';
 
 const container = document.getElementById('root');

@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-import { ImageDataUrl } from '../types';
-import * as messages from '../messages';
-import { Port } from '../port';
-import * as prefs from '../prefs';
+import { ImageDataUrl } from '../libs/types';
+import * as messages from '../libs/messages';
+import { Port } from '../libs/port';
+import * as prefs from '../libs/prefs';
 import { Platform } from '../platforms/platform';
-import { getLocalizedText } from '../localize';
+import { getLocalizedText } from '../libs/localize';
 import { captureVideo, convertToDataURL, getVideoInfo, saveScreenshot } from './util';
 import { showToast, Toast } from './toast';
 

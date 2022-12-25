@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import Youtube from './lib/platforms/youtube';
-import * as capture from './lib/contents/capture';
+import Youtube from './platforms/youtube';
+import * as capture from './contents/capture';
 
 capture.Setup(Youtube);

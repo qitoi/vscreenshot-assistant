@@ -15,10 +15,10 @@
  */
 
 
-import { ImageDataUrl } from '../types';
-import * as prefs from '../prefs';
-import * as hotkeys from '../hotkeys';
-import { listenAuto } from '../event-listen';
+import { ImageDataUrl } from '../libs/types';
+import * as prefs from '../libs/prefs';
+import * as hotkeys from '../libs/hotkeys';
+import { listenAuto } from '../libs/event-listen';
 import { Platform } from '../platforms/platform';
 import * as screenshot from './screenshot';
 import * as animation from './animation';

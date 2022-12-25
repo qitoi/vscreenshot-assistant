@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import * as storage from '../storage';
-import { listenAuto } from '../event-listen';
+import * as storage from '../libs/storage';
+import { listenAuto } from '../libs/event-listen';
 
 
 const WINDOW_SIZE_KEY = 'window-size';

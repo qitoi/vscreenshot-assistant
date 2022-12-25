@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { Select } from '@chakra-ui/react';
 
-import { getLocalizedText } from '../../../lib/localize';
-import { ScreenshotSortOrder, ScreenshotSortOrders } from '../../../lib/background/screenshot-sort';
+import { getLocalizedText } from '../../../libs/localize';
+import { ScreenshotSortOrder, ScreenshotSortOrders } from '../../../background/screenshot-sort';
 import { useDispatch, useSelector } from '../../store';
 import { fetchScreenshotSortOrder, selectScreenshotSortOrder, setScreenshotSortOrder } from './screenshotSlice';
 

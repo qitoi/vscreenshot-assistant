@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import StreamingPlus from './lib/platforms/streaming-plus';
-import * as capture from './lib/contents/capture';
+import StreamingPlus from './platforms/streaming-plus';
+import * as capture from './contents/capture';
 
 capture.Setup(StreamingPlus);

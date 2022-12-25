@@ -18,7 +18,7 @@ import * as React from 'react';
 import { AspectRatio, Image, useMergeRefs } from '@chakra-ui/react';
 import { useInView } from 'react-intersection-observer';
 
-import * as storage from '../../../lib/storage';
+import * as storage from '../../../libs/storage';
 import { useDispatch, useSelector } from '../../store';
 import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';

@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Box, chakra } from '@chakra-ui/react';
 import { MdCheckBox, MdCheckBoxOutlineBlank, MdFullscreen } from 'react-icons/md';
 
-import { ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
+import { ImageDataUrl, ScreenshotInfo } from '../../../libs/types';
 import { AnimationMark } from '../../components/AnimationMark';
 import { FadeBox } from '../../components/FadeBox';
 import LazyLoadScreenshotThumbnail from './LazyLoadScreenshotThumbnail';

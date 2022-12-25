@@ -29,9 +29,9 @@ import {
     VStack,
 } from '@chakra-ui/react';
 
-import { LocalizedText } from '../../../lib/components/LocalizedText';
-import * as prefs from '../../../lib/prefs';
-import * as hotkeys from '../../../lib/hotkeys';
+import { LocalizedText } from '../../../components/LocalizedText';
+import * as prefs from '../../../libs/prefs';
+import * as hotkeys from '../../../libs/hotkeys';
 
 
 const Block = chakra('div', {

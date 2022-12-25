@@ -18,7 +18,7 @@ import * as React from 'react';
 import { AspectRatio, Box, Image, useBoolean } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 
-import { ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
+import { ImageDataUrl, ScreenshotInfo } from '../../../libs/types';
 import { AnimationMark } from '../../components/AnimationMark';
 import { FadeBox } from '../../components/FadeBox';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';

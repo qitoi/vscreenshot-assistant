@@ -18,9 +18,9 @@ import * as React from 'react';
 import { Box, HStack, Link } from '@chakra-ui/react';
 import { LockIcon } from '@chakra-ui/icons';
 
-import * as platforms from '../../../lib/platforms';
-import { getVideoKey } from '../../../lib/types';
-import * as datetime from '../../../lib/datetime';
+import * as platforms from '../../../platforms';
+import { getVideoKey } from '../../../libs/types';
+import * as datetime from '../../../libs/datetime';
 import { useDispatch, useSelector } from '../../store';
 import { HashtagCheckbox, HashtagCheckboxGroup } from '../../components/HashtagCheckbox';
 import { selectActiveVideo, selectHashtags, setHashtags } from '../activeVideo/activeVideoSlice';

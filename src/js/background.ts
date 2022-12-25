@@ -16,20 +16,20 @@
 
 import { patternToRegex } from 'webext-patterns';
 
-import { ImageDataUrl, VideoInfo } from './lib/types';
-import * as messages from './lib/messages';
-import * as port from './lib/port';
-import * as storage from './lib/storage';
-import * as prefs from './lib/prefs';
-import { downloadImage } from './lib/download';
-import { getLocalizedText } from './lib/localize';
-import { listenAuto } from './lib/event-listen';
-import * as popup from './lib/background/popup-window';
-import * as videoSort from './lib/background/video-sort';
-import * as screenshotSort from './lib/background/screenshot-sort';
-import { resizeImage } from './lib/background/resize';
-import { makeAnimation } from './lib/background/animation';
-import { shareScreenshot } from './lib/background/share-twitter';
+import { ImageDataUrl, VideoInfo } from './libs/types';
+import * as messages from './libs/messages';
+import * as port from './libs/port';
+import * as storage from './libs/storage';
+import * as prefs from './libs/prefs';
+import { downloadImage } from './libs/download';
+import { getLocalizedText } from './libs/localize';
+import { listenAuto } from './libs/event-listen';
+import * as popup from './background/popup-window';
+import * as videoSort from './background/video-sort';
+import * as screenshotSort from './background/screenshot-sort';
+import { resizeImage } from './background/resize';
+import { makeAnimation } from './background/animation';
+import { shareScreenshot } from './background/share-twitter';
 
 
 prefs.watch();

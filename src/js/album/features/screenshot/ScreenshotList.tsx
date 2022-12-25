@@ -18,11 +18,11 @@ import * as React from 'react';
 import { Box, Grid, HStack, Link, Text } from '@chakra-ui/react';
 import { Global } from '@emotion/react';
 
-import { getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../lib/types';
-import * as storage from '../../../lib/storage';
-import * as datetime from '../../../lib/datetime';
-import * as platforms from '../../../lib/platforms';
-import { LocalizedText } from '../../../lib/components/LocalizedText';
+import { getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../libs/types';
+import * as storage from '../../../libs/storage';
+import * as datetime from '../../../libs/datetime';
+import * as platforms from '../../../platforms';
+import { LocalizedText } from '../../../components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import SelectedScreenshotList from '../selectedScreenshot/SelectedScreenshotList';

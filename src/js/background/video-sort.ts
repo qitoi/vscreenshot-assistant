@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { VideoInfo } from '../types';
-import * as storage from '../storage';
+import { VideoInfo } from '../libs/types';
+import * as storage from '../libs/storage';
 
 export const VideoSortOrders = {
     LastUpdateDesc: 0,

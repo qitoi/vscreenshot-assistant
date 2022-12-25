@@ -17,9 +17,9 @@
 import * as React from 'react';
 import PCancelable from 'p-cancelable';
 
-import { ScreenshotInfo, VideoInfo } from '../../lib/types';
-import * as storage from '../../lib/storage';
-import * as archive from '../../lib/background/archive';
+import { ScreenshotInfo, VideoInfo } from '../../libs/types';
+import * as storage from '../../libs/storage';
+import * as archive from '../../background/archive';
 
 export type ArchiveFunc = (video: VideoInfo) => Promise<Blob>;
 export type CancelFunc = () => void;

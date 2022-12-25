@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Box, Center, VStack } from '@chakra-ui/react';
 
-import { getVideoKey, VideoInfo } from '../../../lib/types';
+import { getVideoKey, VideoInfo } from '../../../libs/types';
 import { useDispatch, useSelector } from '../../store';
 import { setActiveVideo } from '../activeVideo/activeVideoSlice';
 import { selectVideoList, fetchVideoList } from './videoSlice';

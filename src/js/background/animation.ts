@@ -17,7 +17,7 @@
 import * as gif from 'gif.js';
 import worker from '!raw-loader!gif.js/dist/gif.worker.js';
 
-import { ImageDataUrl } from '../types';
+import { ImageDataUrl } from '../libs/types';
 
 
 export async function makeAnimation(images: ImageDataUrl[], interval: number, onProgress?: (progress: number) => void): Promise<ImageDataUrl> {

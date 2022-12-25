@@ -26,7 +26,7 @@ import {
     Code,
 } from '@chakra-ui/react';
 
-import { LocalizedText } from '../../../lib/components/LocalizedText';
+import { LocalizedText } from '../../../components/LocalizedText';
 
 
 type LicenseNotice = {

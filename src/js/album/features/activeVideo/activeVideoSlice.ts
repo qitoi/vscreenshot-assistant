@@ -16,8 +16,8 @@
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { compareVideoInfo, VideoInfo } from '../../../lib/types';
-import * as storage from '../../../lib/storage';
+import { compareVideoInfo, VideoInfo } from '../../../libs/types';
+import * as storage from '../../../libs/storage';
 import { RootState } from '../../store';
 import { removeVideo } from '../video/videoSlice';
 

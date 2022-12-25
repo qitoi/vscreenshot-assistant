@@ -16,10 +16,10 @@
 
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { getVideoKey, VideoInfo } from '../../../lib/types';
-import * as storage from '../../../lib/storage';
-import * as messages from '../../../lib/messages';
-import * as videoSort from '../../../lib/background/video-sort';
+import { getVideoKey, VideoInfo } from '../../../libs/types';
+import * as storage from '../../../libs/storage';
+import * as messages from '../../../libs/messages';
+import * as videoSort from '../../../background/video-sort';
 import { RootState } from '../../store';
 
 

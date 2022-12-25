@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import * as twitterMessage from './lib/twitter-message';
+import * as twitterMessage from './libs/twitter-message';
 
 (function () {
     // コンテンツスクリプトからのファイル受信

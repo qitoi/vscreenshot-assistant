@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { Box, Heading, StackProps, VStack } from '@chakra-ui/react';
 
-import { MessageId } from '../../../lib/localize';
-import { LocalizedText } from '../../../lib/components/LocalizedText';
+import { MessageId } from '../../../libs/localize';
+import { LocalizedText } from '../../../components/LocalizedText';
 
 type PreferenceBlockProps = StackProps & {
     messageId: MessageId,

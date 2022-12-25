@@ -17,10 +17,10 @@
 import * as React from 'react';
 import { Box, Button, Center, Progress, Text } from '@chakra-ui/react';
 
-import * as messages from '../../../lib/messages';
-import * as prefs from '../../../lib/prefs';
-import { LocalizedText } from '../../../lib/components/LocalizedText';
-import Dialog from '../../../lib/components/Dialog';
+import * as messages from '../../../libs/messages';
+import * as prefs from '../../../libs/prefs';
+import { LocalizedText } from '../../../components/LocalizedText';
+import Dialog from '../../../components/Dialog';
 import ControlGroup from '../../components/ControlGroup';
 import LabeledControl from '../../components/LabeledControl';
 import PreferenceBlock from './PreferenceBlock';
