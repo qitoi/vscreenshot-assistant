@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import * as capture from './lib/contents/capture';
-import Twitch from './lib/platforms/twitch';
+import * as capture from './contents/capture';
+import Twitch from './platforms/twitch';
 
 capture.Setup(Twitch);

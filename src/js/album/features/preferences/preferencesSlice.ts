@@ -16,7 +16,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { DefaultPreferences, Preferences } from '../../../lib/prefs';
+import { DefaultPreferences, Preferences } from '../../../libs/prefs';
 import { RootState } from '../../store';
 
 type PreferencesState = {

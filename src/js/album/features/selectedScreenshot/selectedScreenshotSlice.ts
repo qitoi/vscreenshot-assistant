@@ -16,7 +16,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { compareScreenshotInfo, compareVideoInfo, ImageDataUrl, ScreenshotInfo, VideoInfoKey } from '../../../lib/types';
+import { compareScreenshotInfo, compareVideoInfo, ImageDataUrl, ScreenshotInfo, VideoInfoKey } from '../../../libs/types';
 import { RootState } from '../../store';
 import { setActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from '../video/videoSlice';

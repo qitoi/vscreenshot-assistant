@@ -17,7 +17,7 @@
 import * as Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 
-import * as prefs from '../prefs';
+import * as prefs from '../libs/prefs';
 
 
 type ToastOption = Toastify.Options & {

@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import { ScreenshotInfo, VideoInfo } from '../types';
+import { ScreenshotInfo, VideoInfo } from '../libs/types';
 import * as platforms from '../platforms';
-import * as storage from '../storage';
-import * as prefs from '../prefs';
+import * as storage from '../libs/storage';
+import * as prefs from '../libs/prefs';
 import * as popup from './popup-window';
 
 

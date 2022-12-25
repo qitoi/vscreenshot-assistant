@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import * as capture from './lib/contents/capture';
-import SPWN from './lib/platforms/spwn';
+import * as capture from './contents/capture';
+import SPWN from './platforms/spwn';
 
 capture.Setup(SPWN);

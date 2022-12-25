@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Box } from '@chakra-ui/react';
 
-import { FileType, Preferences } from '../../../lib/prefs';
+import { FileType, Preferences } from '../../../libs/prefs';
 import ControlGroup from '../../components/ControlGroup';
 import RadioItem from '../../components/RadioItem';
 import NumberInputControl from '../../components/NumberInputControl';

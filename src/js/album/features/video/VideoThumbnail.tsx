@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Box, useBoolean } from '@chakra-ui/react';
 
-import { VideoInfo } from '../../../lib/types';
+import { VideoInfo } from '../../../libs/types';
 import { FadeBox } from '../../components/FadeBox';
 import LazyLoadVideoThumbnail from './LazyLoadVideoThumbnail';
 

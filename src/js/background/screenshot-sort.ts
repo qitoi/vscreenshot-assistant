@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { ScreenshotInfo } from '../types';
-import * as storage from '../storage';
+import { ScreenshotInfo } from '../libs/types';
+import * as storage from '../libs/storage';
 
 export const ScreenshotSortOrders = {
     CaptureDateDesc: 0,

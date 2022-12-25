@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { Box, BoxProps, HStack, Radio } from '@chakra-ui/react';
 
-import { MessageId } from '../../lib/localize';
-import { LocalizedText } from '../../lib/components/LocalizedText';
+import { MessageId } from '../../libs/localize';
+import { LocalizedText } from '../../components/LocalizedText';
 
 type RadioItemProps<T extends string | number> = BoxProps & {
     value: T,

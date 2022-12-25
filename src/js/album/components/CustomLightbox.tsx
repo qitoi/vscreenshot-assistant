@@ -21,8 +21,8 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import prettyBytes from 'pretty-bytes';
 
-import { ImageDataUrl } from '../../lib/types';
-import { decodeDataURL, getFileExt } from '../../lib/data-url';
+import { ImageDataUrl } from '../../libs/types';
+import { decodeDataURL, getFileExt } from '../../libs/data-url';
 import './CustomLightbox.css';
 
 

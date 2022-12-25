@@ -18,8 +18,8 @@ import * as React from 'react';
 import { Box, ChakraProvider, extendTheme, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { MessageId } from '../lib/localize';
-import { LocalizedText } from '../lib/components/LocalizedText';
+import { MessageId } from '../libs/localize';
+import { LocalizedText } from '../components/LocalizedText';
 import LicenseNoticeList from './features/license/LicenseNoticeList';
 import PreferenceForm from './features/preference/PreferenceForm';
 import Help from './features/help/Help';

@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Input, InputProps } from '@chakra-ui/react';
 import { useController, useFormContext, FieldValues } from 'react-hook-form';
 
-import * as hotkeys from '../../lib/hotkeys';
+import * as hotkeys from '../../libs/hotkeys';
 import { TypedFieldPath } from './TypedFieldPath';
 
 type ValueType = hotkeys.KeyConfig;

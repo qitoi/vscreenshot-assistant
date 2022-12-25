@@ -16,9 +16,9 @@
 
 import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit';
 
-import { compareVideoInfo, ImageDataUrl, ScreenshotInfo, VideoInfoKey } from '../../../lib/types';
-import * as storage from '../../../lib/storage';
-import * as screenshotSort from '../../../lib/background/screenshot-sort';
+import { compareVideoInfo, ImageDataUrl, ScreenshotInfo, VideoInfoKey } from '../../../libs/types';
+import * as storage from '../../../libs/storage';
+import * as screenshotSort from '../../../background/screenshot-sort';
 import { RootState } from '../../store';
 import { setActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from '../video/videoSlice';

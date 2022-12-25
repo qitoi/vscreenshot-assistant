@@ -20,12 +20,12 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { FcEmptyTrash, FcDownload, FcSettings, FcPicture } from 'react-icons/fc';
 import { CancelError } from 'p-cancelable';
 
-import { getVideoKey, VideoInfo } from '../../../lib/types';
-import * as storage from '../../../lib/storage';
-import { LocalizedText } from '../../../lib/components/LocalizedText';
+import { getVideoKey, VideoInfo } from '../../../libs/types';
+import * as storage from '../../../libs/storage';
+import { LocalizedText } from '../../../components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import useArchive from '../../hooks/useArchive';
-import Dialog from '../../../lib/components/Dialog';
+import Dialog from '../../../components/Dialog';
 import DownloadDialog from '../../components/DownloadDialog';
 import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from './videoSlice';

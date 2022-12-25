@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import { ImageDataUrl } from './lib/types';
-import { convertScreenshotToFile } from './lib/data-url';
-import * as twitterMessage from './lib/twitter-message';
-import { listenOnce } from './lib/event-listen';
+import { ImageDataUrl } from './libs/types';
+import { convertScreenshotToFile } from './libs/data-url';
+import * as twitterMessage from './libs/twitter-message';
+import { listenOnce } from './libs/event-listen';
 
 
 // twitterのファイルドロップ先の生成待機設定

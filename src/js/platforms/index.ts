@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import { Platform } from './platforms/platform';
-import Youtube from './platforms/youtube';
-import SPWN from './platforms/spwn';
-import NicoVideo from './platforms/nicovideo';
-import Twitch from './platforms/twitch';
-import HololiveFC from './platforms/hololive-fc';
-import StreamingPlus from './platforms/streaming-plus';
+import { Platform } from './platform';
+import Youtube from './youtube';
+import SPWN from './spwn';
+import NicoVideo from './nicovideo';
+import Twitch from './twitch';
+import HololiveFC from './hololive-fc';
+import StreamingPlus from './streaming-plus';
 
 const platforms: { [key: string]: Platform } = {
     [Youtube.PLATFORM_ID]: Youtube,

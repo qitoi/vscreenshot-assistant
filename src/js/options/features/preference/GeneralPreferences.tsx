@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { Box, HStack } from '@chakra-ui/react';
 
-import { ClickIconAction, ClickIconActions, Preferences, ToastPosition, ToastPositions } from '../../../lib/prefs';
-import { MessageId } from '../../../lib/localize';
+import { ClickIconAction, ClickIconActions, Preferences, ToastPosition, ToastPositions } from '../../../libs/prefs';
+import { MessageId } from '../../../libs/localize';
 import SwitchControl from '../../components/SwitchControl';
 import ControlGroup from '../../components/ControlGroup';
 import LabeledControl from '../../components/LabeledControl';

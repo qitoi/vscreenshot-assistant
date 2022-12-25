@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import * as capture from './lib/contents/capture';
-import NicoVideo from './lib/platforms/nicovideo';
+import * as capture from './contents/capture';
+import NicoVideo from './platforms/nicovideo';
 
 capture.Setup(NicoVideo);

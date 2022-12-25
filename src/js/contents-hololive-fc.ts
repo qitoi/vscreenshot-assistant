@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import HololiveFC from './lib/platforms/hololive-fc';
-import * as capture from './lib/contents/capture';
+import HololiveFC from './platforms/hololive-fc';
+import * as capture from './contents/capture';
 
 capture.Setup(HololiveFC);

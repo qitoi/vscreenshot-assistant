@@ -16,8 +16,8 @@
 
 import * as React from 'react';
 
-import { VideoInfo } from '../../lib/types';
-import { listenAuto } from '../../lib/event-listen';
+import { VideoInfo } from '../../libs/types';
+import { listenAuto } from '../../libs/event-listen';
 import { useDispatch } from '../store';
 import { appendVideo, removeVideo } from '../features/video/videoSlice';
 import { appendScreenshot } from '../features/screenshot/screenshotSlice';
