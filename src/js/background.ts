@@ -238,14 +238,17 @@ port.listenPort().addListener(port => {
                 }
 
                 const image = Promise.all(animeCapture.frames).then(frames =>
-                    makeAnimation(frames.sort((a, b) => a.no - b.no).map(f => f.image), message.interval, progress => {
-                        if (!port.disconnected) {
-                            port.sendMessage({
-                                type: 'anime-encode-progress',
-                                progress,
-                            });
-                        }
-                    })
+                    makeAnimation(
+                        frames.sort((a, b) => a.no - b.no).map(f => f.image),
+                        message.interval,
+                        progress => {
+                            if (!port.disconnected) {
+                                port.sendMessage({
+                                    type: 'anime-encode-progress',
+                                    progress,
+                                });
+                            }
+                        })
                 );
 
                 saveScreenshot(message, true, image, thumbnail)
