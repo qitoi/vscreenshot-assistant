@@ -47,63 +47,111 @@ const Youtube: Platform = {
     },
 
     async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
-        let info: any = JSON.parse(document.querySelector<HTMLElement>('script#scriptTag')?.innerText ?? 'null');
+        const videoUrl = this.getVideoUrl(videoId);
+        const defaultThumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
 
-        // トップから動画ページに遷移した場合、動画のメタデータが取得できないため、動画ページを直接 fetch してメタデータを取り出す
-        const getProperty = (elem: HTMLElement | Document, tag: string, item: string) => elem.querySelector(`${tag}[itemprop="${item}"]`)?.getAttribute('content');
-        if (info === null) {
-            info = await fetch(`https://www.youtube.com/watch?v=${videoId}`)
-                .then(res => res.text())
-                .then(text => new DOMParser().parseFromString(text, 'text/html'))
-                .then(document => ({
-                    name: getProperty(document, 'meta', 'name'),
-                    author: getProperty(document, 'link', 'name'),
-                    publication: [
-                        { startDate: getProperty(document, 'meta', 'startDate') }
-                    ],
-                }));
-        }
+        // トップページから動画ページに遷移した場合などでDOMが不安定になるため、直接動画ページをfetchして情報を取り出す
+        const getProperty = (elem: HTMLElement | Document, tag: string, item: string): string | null => elem.querySelector(`${tag}[itemprop="${item}"]`)?.getAttribute('content') ?? null;
+        const document = await fetch(videoUrl)
+            .then(res => res.text())
+            .then(text => new DOMParser().parseFromString(text, 'text/html'));
 
-        // 動画の公開日時
-        let dateStr = null;
-        if ('publication' in info) {
-            // live streaming / live streaming archive / premiere video
-            dateStr = (info.publication || [])[0]?.startDate;
-        }
-        if (!dateStr) {
-            // uploaded video
-            dateStr = (document.querySelector<HTMLElement>('div#date>yt-formatted-string'))?.innerText;
-            // member only
-            if (dateStr === undefined) {
-                dateStr = (document.querySelector<HTMLElement>('div#info-strings>yt-formatted-string'))?.innerText;
-            }
-        }
-        const date = (new Date(dateStr)).getTime();
+        const title = getProperty(document, 'meta', 'name');
+        const author = getProperty(document, 'link', 'name');
+        const thumbnail = getProperty(document, 'link', 'thumbnailUrl');
+        const isUnlisted = getProperty(document, 'meta', 'unlisted')?.toLowerCase() === 'true';
+        const startDate = getProperty(document, 'meta', 'startDate');
 
-        // anchorタグからハッシュタグを抽出
-        const anchors = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href*="/hashtag/"]'));
-        const hashtags: Record<string, boolean> = {};
-        for (const anchor of anchors) {
-            const tags = extractHashtags(anchor.textContent ?? '');
-            for (const tag of tags) {
-                if (tag !== undefined && tag !== '') {
-                    hashtags[tag] = true;
+        let isPrivate = isUnlisted;
+        let date: Date | null = convertDate(startDate);
+        let hashtags: string[] = [];
+
+        const ytInitialData = extractInitialData(document);
+        if (ytInitialData) {
+            // 初期データのナビゲーション情報からハッシュタグを探す
+            hashtags = searchHashtagsFromInitialData(ytInitialData);
+            // 公開日時がメタデータから取得できていない場合は初期データから探す
+            if (!date) {
+                const candidates = searchObjectContainsKey(ytInitialData, 'publishDate');
+                for (const c of candidates) {
+                    date = convertDate(c.publishDate?.simpleText ?? null);
+                    if (date) {
+                        break;
+                    }
                 }
             }
+            // 初期データからバッジ情報を取り出して限定公開、メンバー限定かをチェック
+            isPrivate ||= searchObjectContainsKey(ytInitialData, 'metadataBadgeRenderer')
+                .map(b => b?.metadataBadgeRenderer?.icon?.iconType)
+                .some(type => ['PRIVACY_UNLISTED', 'SPONSORSHIP_STAR'].includes(type));
         }
 
-        // メンバー限定や限定公開かどうか
-        const isPrivate = document.querySelector('ytd-video-primary-info-renderer .ytd-badge-supported-renderer > span') !== null;
-
         return {
-            title: info?.name ?? '-',
-            author: info?.author ?? '-',
-            date: date,
-            thumbnailUrl: `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
-            hashtags: Object.keys(hashtags),
+            title: title ?? '-',
+            author: author ?? '-',
+            date: date?.getTime() ?? 0,
+            thumbnailUrl: thumbnail ?? defaultThumbnailUrl,
+            hashtags: hashtags,
             private: isPrivate,
         };
     },
 };
+
+function convertDate(value: string | null): Date | null {
+    if (!value) {
+        return null;
+    }
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) {
+        return null;
+    }
+    return d;
+}
+
+function extractInitialData(document: Document): object | null {
+    const initialScript = Array.from(document.querySelectorAll<HTMLScriptElement>('script')).filter(e => e.text.match(/ytInitialData *=/));
+    if (initialScript.length > 0) {
+        const initialObject = initialScript[0].text.match(/\{.+}/) || [];
+        if (initialObject[0]) {
+            return JSON.parse(initialObject[0]);
+        }
+    }
+    return null;
+}
+
+function searchObjectContainsKey(obj: any, key: string): any[] {
+    const searchObject = (obj: any | any[]) => {
+        let result: any[] = [];
+        if (Array.isArray(obj)) {
+            for (const elem of obj) {
+                result = result.concat(searchObject(elem));
+            }
+        }
+        else if (obj instanceof Object) {
+            if (key in obj) {
+                result.push(obj);
+            }
+            else {
+                for (const value of Object.values(obj)) {
+                    if (value instanceof Object) {
+                        result = result.concat(searchObject(value));
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    return searchObject(obj);
+}
+
+function searchHashtagsFromInitialData(ytInitialData: { contents?: object }): string[] {
+    const hashtags = searchObjectContainsKey(ytInitialData?.contents ?? {}, 'navigationEndpoint')
+        .filter(o => typeof o.text === 'string')
+        .map(o => extractHashtags(o.text))
+        .flat()
+        .reduce((acc, current) => acc.set(current, null), new Map<string, null>())
+        .keys();
+    return Array.from(hashtags);
+}
 
 export default Youtube;
