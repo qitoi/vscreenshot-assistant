@@ -64,30 +64,29 @@ export async function shareScreenshot(video: VideoInfo, screenshots: ScreenshotI
     url.search = new URLSearchParams(options).toString();
 
     const popupWindow = popup.PopupWindow.create('twitter', url.toString(), false);
-    await popupWindow.show();
-
-    const window = popupWindow.getWindow();
+    const window = await popupWindow.show();
     if (window !== null) {
         // twitterのタブの読み込み完了を待ち、完了後にメッセージを送信
         const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
-            if (window.tabs !== undefined && window.tabs.length > 0) {
-                if (tabId === window.tabs[0].id && changeInfo.status === 'complete') {
-                    chrome.tabs.onUpdated.removeListener(handler);
-
-                    let trial = 0;
-                    const trySend = () => {
-                        chrome.tabs.sendMessage(tabId, { event: 'share-screenshot', images }, () => {
-                            // firefoxでは他部の読み込みが完了したあともしばらくはコネクションが確立できずエラーになるため、成功するまでしばらく送信を繰り返す
-                            if (chrome.runtime.lastError) {
-                                if (trial < SHARE_SCREENSHOT_MAX_TRIAL) {
-                                    setTimeout(trySend, SHARE_SCREENSHOT_INTERVAL);
+            if (changeInfo.status === 'complete') {
+                chrome.tabs.get(tabId, tab => {
+                    if (tab.windowId === window.id) {
+                        chrome.tabs.onUpdated.removeListener(handler);
+                        let trial = 0;
+                        const trySend = () => {
+                            chrome.tabs.sendMessage(tabId, { event: 'share-screenshot', images }, () => {
+                                // firefoxでは他部の読み込みが完了したあともしばらくはコネクションが確立できずエラーになるため、成功するまでしばらく送信を繰り返す
+                                if (chrome.runtime.lastError) {
+                                    if (trial < SHARE_SCREENSHOT_MAX_TRIAL) {
+                                        setTimeout(trySend, SHARE_SCREENSHOT_INTERVAL);
+                                    }
                                 }
-                            }
-                            trial += 1;
-                        });
-                    };
-                    trySend();
-                }
+                                trial += 1;
+                            });
+                        };
+                        trySend();
+                    }
+                });
             }
         };
         chrome.tabs.onUpdated.addListener(handler);
