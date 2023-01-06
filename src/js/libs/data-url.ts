@@ -34,6 +34,16 @@ export function convertScreenshotToFile(screenshot: ImageDataUrl): File {
     });
 }
 
+export function encodeDataURL(blob: Blob): Promise<string> {
+    return new Promise<ImageDataUrl>(resolve => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => {
+            resolve(reader.result as string);
+        });
+        reader.readAsDataURL(blob);
+    });
+}
+
 export function decodeDataURL(url: string): Blob {
     const [mime, encoded] = parseDataURL(url);
     const buf = decodeBase64(encoded);

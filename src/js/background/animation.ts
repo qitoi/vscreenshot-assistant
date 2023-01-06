@@ -14,49 +14,106 @@
  *  limitations under the License.
  */
 
-import * as gif from 'gif.js';
-import worker from '!raw-loader!gif.js/dist/gif.worker.js';
+import * as iq from 'image-q';
+import * as omggif from 'omggif';
 
 import { ImageDataUrl } from '../libs/types';
+import { decodeDataURL, encodeDataURL } from "../libs/data-url";
+
+
+type PointContainer = iq.utils.PointContainer;
 
 
 export async function makeAnimation(images: ImageDataUrl[], interval: number, onProgress?: (progress: number) => void): Promise<ImageDataUrl> {
-    const workerScript = URL.createObjectURL(new Blob([worker], { type: 'text/javascript' }));
-    const encoder = new gif({
-        repeat: 0,
-        quality: 1,
-        workerScript,
-    });
-
-    const elems = await Promise.all(images.map(image =>
-        new Promise<HTMLImageElement>(resolve => {
-            const img = document.createElement('img') as HTMLImageElement;
-            img.src = image;
-            img.onload = () => {
-                img.onload = null;
-                resolve(img);
-            };
-        }))
-    );
-
-    for (const img of elems) {
-        encoder.addFrame(img, { delay: interval });
+    if (images.length == 0) {
+        return Promise.reject<ImageDataUrl>();
     }
 
-    return new Promise(resolve => {
-        encoder.on('progress', percent => {
-            onProgress && onProgress(percent);
-        });
-        encoder.once('finished', (blob: Blob) => {
-            encoder.removeAllListeners();
-            URL.revokeObjectURL(workerScript);
-            const reader = new FileReader();
-            reader.onload = e => {
-                reader.onload = null;
-                resolve(e.target?.result as string);
-            };
-            reader.readAsDataURL(blob);
-        });
-        encoder.render();
-    });
+    const frameCount = images.length;
+    const paletteAdditionalCount = 2;
+    const prevCount = Math.floor(paletteAdditionalCount / 2);
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    let current: PointContainer | null = await loadImage(images.shift()!);
+    let prev: PointContainer[] = [];
+    const next: PointContainer[] = [];
+
+    for (let i = 0; i < paletteAdditionalCount - prevCount; i++) {
+        const img = images.shift();
+        if (img) {
+            const loaded = await loadImage(img);
+            next.push(loaded);
+        }
+        else {
+            break;
+        }
+    }
+
+    const width = current.getWidth();
+    const height = current.getHeight();
+
+    const buffer = new Uint8Array(width * height * frameCount * 5);
+    const writer = new omggif.GifWriter(buffer, width, height, { loop: 0 });
+
+    let processed = 0;
+    while (current) {
+        // ちらつきを防止するため、前後のフレームも含めてカラーパレットを作成する
+        const palette = await iq.buildPalette(
+            [...prev, current, ...next],
+            {
+                paletteQuantization: "rgbquant",
+            }
+        );
+        const reduced = await iq.applyPalette(current, palette);
+        const buf = reduced.toUint32Array();
+
+        // Image: 32bit color -> index
+        const plt = palette.getPointContainer().toUint32Array();
+        const indexed = new Uint8Array(buf.length);
+        for (let i = 0; i < buf.length; i++) {
+            indexed[i] = plt.indexOf(buf[i]);
+        }
+
+        // Color Palette: ABGR -> RGB
+        for (let i = 0; i < plt.length; i++) {
+            const p = plt[i];
+            plt[i] = ((p & 0x0000ff) << 16) | (p & 0x00ff00) | ((p & 0xff0000) >> 16);
+        }
+
+        // @ts-ignore
+        writer.addFrame(0, 0, width, height, indexed, {
+            delay: Math.round(interval / 10),
+            palette: plt,
+        })
+
+        processed += 1;
+        onProgress && onProgress(processed / frameCount);
+
+        prev = [...prev, current].slice(-prevCount);
+        current = next.shift() ?? null;
+        const nextImage = images.shift();
+        if (nextImage) {
+            const loaded = await loadImage(nextImage);
+            next.push(loaded);
+        }
+    }
+
+    const gif = buffer.subarray(0, writer.end());
+    const blob = new Blob([gif], { type: 'image/gif' });
+    return encodeDataURL(blob);
+}
+
+async function loadImage(image: ImageDataUrl): Promise<PointContainer> {
+    const blob = decodeDataURL(image);
+    const bitmap = await createImageBitmap(blob)
+    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+        return Promise.reject<PointContainer>();
+    }
+
+    ctx.drawImage(bitmap, 0, 0);
+    const img = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+    bitmap.close();
+    return iq.utils.PointContainer.fromImageData(img);
 }

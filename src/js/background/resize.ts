@@ -15,33 +15,38 @@
  */
 
 import { ImageDataUrl } from '../libs/types';
+import { decodeDataURL, encodeDataURL } from "../libs/data-url";
 
 import * as pica from 'pica';
 
 const resizer = pica({
-    features: ['js', 'wasm', 'ww'],
+    features: ['js', 'wasm'],
+    createCanvas(width: number, height: number): HTMLCanvasElement {
+        // @ts-ignore
+        return new OffscreenCanvas(width, height);
+    }
 });
 
-export function resizeImage(image: ImageDataUrl, width: number, height: number, fileType: string, quality?: number): Promise<ImageDataUrl> {
-    return new Promise<string>((resolve) => {
-        const img = document.createElement('img');
-        img.onload = () => {
-            resize(img, width, height, fileType, quality)
-                .then(thumb => resolve(thumb));
-        };
-        img.src = image;
-    });
+export async function resizeImage(image: ImageDataUrl, width: number, height: number, fileType: string, quality?: number): Promise<ImageDataUrl> {
+    const blob = decodeDataURL(image);
+    const bitmap = await createImageBitmap(blob);
+    return resize(bitmap, width, height, fileType, quality)
 }
 
-async function resize(image: HTMLCanvasElement | HTMLImageElement, width: number, height: number, fileType: string, quality?: number): Promise<ImageDataUrl> {
-    const canvas = document.createElement('canvas');
-    [canvas.width, canvas.height] = calcSize(image.width, image.height, width, height);
-    const resized = await resizer.resize(image, canvas, {
+async function resize(image: ImageBitmap, width: number, height: number, fileType: string, quality?: number): Promise<ImageDataUrl> {
+    const [w, h] = calcSize(image.width, image.height, width, height);
+    const canvas = new OffscreenCanvas(w, h);
+    // @ts-ignore
+    const resized: OffscreenCanvas = await resizer.resize(image, canvas, {
         unsharpAmount: 160,
         unsharpRadius: 0.6,
         unsharpThreshold: 1,
     });
-    return resized.toDataURL(fileType, quality);
+    const blob = await resized.convertToBlob({
+        type: fileType,
+        quality: quality,
+    });
+    return encodeDataURL(blob);
 }
 
 // 元画像のアスペクト比を保ったまま、指定のサイズに内接するようにリサイズするためのサイズを計算する
