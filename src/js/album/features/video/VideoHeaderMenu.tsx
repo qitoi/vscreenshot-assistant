@@ -20,16 +20,17 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { FcEmptyTrash, FcDownload, FcSettings, FcPicture } from 'react-icons/fc';
 import { CancelError } from 'p-cancelable';
 
-import { getVideoKey, VideoInfo } from '../../../libs/types';
+import { VideoInfo } from '../../../libs/types';
 import * as storage from '../../../libs/storage';
+import { decodeDataURL } from "../../../libs/data-url";
 import { LocalizedText } from '../../../components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import useArchive from '../../hooks/useArchive';
 import Dialog from '../../../components/Dialog';
 import DownloadDialog from '../../components/DownloadDialog';
+import CustomLightbox, { CustomLightboxSource } from '../../components/Lightbox/CustomLightbox';
 import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from './videoSlice';
-import CustomLightbox from '../../components/CustomLightbox';
 
 const VideoHeaderMenu: React.FC = () => {
     const dispatch = useDispatch();
@@ -41,6 +42,12 @@ const VideoHeaderMenu: React.FC = () => {
     const [isDownloadOpen, setIsDownloadOpen] = React.useState<boolean>(false);
     const [isDeletingVideo, setIsDeletingVideo] = React.useState<boolean>(false);
     const [thumbnailVideo, setThumbnailVideo] = React.useState<VideoInfo[]>([]);
+    const lightboxSource = React.useMemo<CustomLightboxSource[]>(() => thumbnailVideo.map(v => ({
+        load: async () => {
+            const image = await storage.getVideoThumbnail(v.platform, v.videoId);
+            return image ? decodeDataURL(image) : null;
+        },
+    })), [thumbnailVideo]);
 
     const handleDeleteConfirm = () => {
         setIsDeleteOpen(true);
@@ -95,8 +102,6 @@ const VideoHeaderMenu: React.FC = () => {
         }
     }, [video]);
     const handleCloseThumbnail = React.useCallback(() => setThumbnailVideo([]), []);
-    const getKey = React.useCallback((v: VideoInfo) => getVideoKey(v), []);
-    const loadImage = React.useCallback((v: VideoInfo) => storage.getVideoThumbnail(v.platform, v.videoId), []);
 
     const handleOpenOptions = React.useCallback(() => {
         chrome.runtime.openOptionsPage();
@@ -150,11 +155,10 @@ const VideoHeaderMenu: React.FC = () => {
 
             {thumbnailVideo.length > 0 && video !== null && (
                 <CustomLightbox
-                    list={thumbnailVideo}
-                    initial={video}
+                    list={lightboxSource}
+                    index={0}
+                    open={true}
                     loop={false}
-                    getKey={getKey}
-                    loadImage={loadImage}
                     onClose={handleCloseThumbnail} />
             )}
         </>

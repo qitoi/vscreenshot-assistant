@@ -21,32 +21,55 @@ import { Global } from '@emotion/react';
 import { getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../libs/types';
 import * as storage from '../../../libs/storage';
 import * as datetime from '../../../libs/datetime';
+import { decodeDataURL } from "../../../libs/data-url";
 import * as platforms from '../../../platforms';
 import { LocalizedText } from '../../../components/LocalizedText';
+import CustomLightbox, { CustomLightboxSource } from '../../components/Lightbox/CustomLightbox';
 import { useDispatch, useSelector } from '../../store';
 import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import SelectedScreenshotList from '../selectedScreenshot/SelectedScreenshotList';
 import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
 import { fetchScreenshotList, selectScreenshotList } from './screenshotSlice';
-import {
-    isFulfilledSelectedScreenshot,
-    removeSelectedScreenshot,
-    selectSelectedScreenshot,
-    toggleSelectedScreenshot,
-} from '../selectedScreenshot/selectedScreenshotSlice';
+import { isFulfilledSelectedScreenshot, removeSelectedScreenshot, selectSelectedScreenshot, toggleSelectedScreenshot, } from '../selectedScreenshot/selectedScreenshotSlice';
 import { selectThumbnailPreferences, selectTweetEnabled } from '../preferences/preferencesSlice';
 import ScreenshotCard from './ScreenshotCard';
-import CustomLightbox from '../../components/CustomLightbox';
 
 
 const ScreenshotList: React.FC = () => {
     const dispatch = useDispatch();
     const video = useSelector(selectActiveVideo);
     const screenshots = useParameterizedSelector(selectScreenshotList, video?.platform ?? '', video?.videoId ?? '');
+    const lightboxSource = React.useMemo<CustomLightboxSource[]>(() => screenshots.map(s => ({
+        load: async () => {
+            const image = await storage.getScreenshot(s.platform, s.videoId, s.no);
+            return image ? decodeDataURL(image) : null;
+        },
+        renderFooter: () => {
+            const url = platforms.getVideoPosUrl(s.platform, s.videoId, s.pos);
+            const videoPos = (
+                <>
+                    <LocalizedText messageId="album_screenshot_video_pos" />: {s.pos.toFixed(2)}
+                    <LocalizedText messageId="album_screenshot_video_pos_unit" />
+                </>
+            );
+            return (
+                <HStack spacing={8}>
+                    <Box><LocalizedText messageId="album_screenshot_capture_date" />: {datetime.format(s.datetime)}</Box>
+                    <Box>
+                        {url ? (
+                            <Link href={url} isExternal={true}>{videoPos}</Link>
+                        ) : (
+                            <Text>{videoPos}</Text>
+                        )}
+                    </Box>
+                </HStack>
+            );
+        },
+    })), [screenshots]);
     const selected = useSelector(selectSelectedScreenshot);
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
     const thumbnailPreferences = useSelector(selectThumbnailPreferences);
-    const [lightboxScreenshot, setLightboxScreenshot] = React.useState<ScreenshotInfo | null>(null);
+    const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
     const tweetEnabled = useSelector(selectTweetEnabled);
 
     React.useEffect(() => {
@@ -60,8 +83,8 @@ const ScreenshotList: React.FC = () => {
     }, [dispatch]);
 
     const handleExpandScreenshot = React.useCallback((info: ScreenshotInfo) => {
-        setLightboxScreenshot(info);
-    }, [setLightboxScreenshot]);
+        setSelectedIndex(screenshots.indexOf(info));
+    }, [screenshots]);
 
     const handleRemoveSelected = React.useCallback((info: ScreenshotInfo) => {
         dispatch(removeSelectedScreenshot({ info }));
@@ -71,9 +94,7 @@ const ScreenshotList: React.FC = () => {
         setSelectedHeight(height);
     }, []);
 
-    const getKey = React.useCallback((s: ScreenshotInfo) => getScreenshotKey(s), []);
-    const loadImage = React.useCallback((s: ScreenshotInfo) => storage.getScreenshot(s.platform, s.videoId, s.no), []);
-    const handleLightboxClose = React.useCallback(() => setLightboxScreenshot(null), []);
+    const handleLightboxClose = React.useCallback(() => setSelectedIndex(null), []);
 
     const fulfilled = isFulfilledSelectedScreenshot(selected);
     const tweetDisabled = video?.private || !tweetEnabled;
@@ -136,36 +157,12 @@ const ScreenshotList: React.FC = () => {
                     onResize={handleSelectedResize}
                     onClick={handleRemoveSelected} />
             )}
-            {video !== null && lightboxScreenshot !== null && (
-                <CustomLightbox
-                    list={screenshots}
-                    initial={lightboxScreenshot}
-                    loop={true}
-                    getKey={getKey}
-                    loadImage={loadImage}
-                    getInfoNode={s => {
-                        const url = platforms.getVideoPosUrl(s.platform, s.videoId, s.pos);
-                        const videoPos = (
-                            <>
-                                <LocalizedText messageId="album_screenshot_video_pos" />: {s.pos.toFixed(2)}
-                                <LocalizedText messageId="album_screenshot_video_pos_unit" />
-                            </>
-                        );
-                        return (
-                            <HStack spacing={8}>
-                                <Box><LocalizedText messageId="album_screenshot_capture_date" />: {datetime.format(s.datetime)}</Box>
-                                <Box>
-                                    {url ? (
-                                        <Link href={url} isExternal={true}>{videoPos}</Link>
-                                    ) : (
-                                        <Text>{videoPos}</Text>
-                                    )}
-                                </Box>
-                            </HStack>
-                        );
-                    }}
-                    onClose={handleLightboxClose} />
-            )}
+            <CustomLightbox
+                list={lightboxSource}
+                index={selectedIndex ?? 0}
+                loop={true}
+                open={video !== null && selectedIndex !== null}
+                onClose={handleLightboxClose} />
         </Box>
     );
 };
