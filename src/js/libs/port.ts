@@ -32,11 +32,16 @@ type PortMessageParam<Req extends MessageRequest> = Req extends any ? Req & {
     sendResponse: (message: ResponseType<Req>) => void,
 } : never;
 
+// WORKAROUND: ServiceWorkerが300秒で終了してしまうため、250秒ごとにコネクションを張り直して終了しないようにする
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1152255
+const KEEP_ALIVE_INTERVAL = 250 * 1000;
 
 export class Port {
     private port: chrome.runtime.Port;
     private seqId = 0;
     private responseReceivers: Record<number, (message: unknown) => void> = {};
+    private keepAlive: chrome.runtime.Port | null = null;
+    private keepAliveTimer: number | null = null;
 
     public readonly name: string;
     private _disconnected: boolean;
@@ -53,6 +58,7 @@ export class Port {
     constructor(port: string | chrome.runtime.Port) {
         if (typeof port === 'string') {
             this.port = chrome.runtime.connect({ name: port });
+            this.startKeepAlive();
         }
         else {
             this.port = port;
@@ -91,6 +97,8 @@ export class Port {
 
             this.onDisconnectDispatcher.dispatch();
             this.onDisconnect.clear();
+
+            this.stopKeepAlive();
         });
 
         const evt = new Event<PortMessageParam<MessageRequest>>();
@@ -107,6 +115,7 @@ export class Port {
         this.onDisconnect.clear();
         this.onMessage.clear();
         this.port.disconnect();
+        this.stopKeepAlive();
     }
 
     sendMessage<T extends MessageRequest>(message: T, callback?: (response: ResponseType<T>) => void): void {
@@ -127,6 +136,27 @@ export class Port {
             value: message,
         };
         this.port.postMessage(param);
+    }
+
+    private startKeepAlive(): void {
+        const keepAlive = () => {
+            this.stopKeepAlive();
+            const id = Date.now();
+            this.keepAlive = chrome.runtime.connect({ name: `keep-alive:${id}` });
+            this.keepAliveTimer = self.setTimeout(keepAlive, KEEP_ALIVE_INTERVAL);
+        };
+        keepAlive();
+    }
+
+    private stopKeepAlive(): void {
+        if (this.keepAliveTimer !== null) {
+            clearTimeout(this.keepAliveTimer);
+            this.keepAliveTimer = null;
+        }
+        if (this.keepAlive !== null) {
+            this.keepAlive.disconnect();
+            this.keepAlive = null;
+        }
     }
 }
 

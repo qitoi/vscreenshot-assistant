@@ -189,8 +189,14 @@ type AnimeCapture = {
 };
 
 const ANIME_CAPTURE_ID_PREFIX = 'anime-capture:';
+const KEEP_ALIVE_PREFIX = 'keep-alive:';
 
 port.listenPort().addListener(port => {
+    // KeepAliveのための接続の場合は何もせず保持
+    if (port.name.startsWith(KEEP_ALIVE_PREFIX)) {
+        return;
+    }
+    // アニメキャプチャ以外の接続であれば切断
     if (!port.name.startsWith(ANIME_CAPTURE_ID_PREFIX)) {
         port.disconnect();
         return;
