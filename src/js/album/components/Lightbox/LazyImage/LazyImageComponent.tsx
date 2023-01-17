@@ -17,12 +17,15 @@
 import * as React from "react";
 import { Image, Spinner } from "@chakra-ui/react";
 
+import { LazyLoadFuncType } from "./LazyImageSource";
+
 type LazyImageProps = {
-    load: () => Promise<Blob | null>,
+    load: LazyLoadFuncType,
+    release?: () => void,
     onLoad?: (width: number, height: number, image: Blob) => void,
 };
 
-export function LazyImageComponent({ load, onLoad }: LazyImageProps) {
+export function LazyImageComponent({ load, release, onLoad }: LazyImageProps) {
     const ref = React.useRef<HTMLImageElement>(null);
     const [loaded, setLoaded] = React.useState<boolean>(false);
 
@@ -40,6 +43,7 @@ export function LazyImageComponent({ load, onLoad }: LazyImageProps) {
             }
         })();
         return () => {
+            release?.();
             if (src) {
                 URL.revokeObjectURL(src);
             }

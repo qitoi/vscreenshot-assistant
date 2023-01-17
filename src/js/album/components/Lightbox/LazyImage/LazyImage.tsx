@@ -26,7 +26,7 @@ export const LazyImage: Plugin = ({ augment }: PluginMethods) => {
             slide: slide => {
                 if (isLazyImageSlideType(slide)) {
                     return (
-                        <LazyImageComponent load={slide.src.load} onLoad={slide.onLoad} />
+                        <LazyImageComponent load={slide.load} release={slide.release} onLoad={slide.onLoad} />
                     );
                 }
                 return null;

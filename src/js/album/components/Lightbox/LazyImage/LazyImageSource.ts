@@ -17,8 +17,12 @@
 import { GenericSlide } from "yet-another-react-lightbox";
 import { CustomLightboxSource } from "../CustomLightbox";
 
+export type LazyLoadFuncType = () => Promise<Blob | null>;
+
 export interface LazyImageSlideType extends GenericSlide {
     src: CustomLightboxSource,
+    load: LazyLoadFuncType,
+    release?: () => void,
     width?: number,
     height?: number,
     size?: number,

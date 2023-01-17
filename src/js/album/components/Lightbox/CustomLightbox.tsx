@@ -24,13 +24,13 @@ import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 import "yet-another-react-lightbox/styles.css";
 
 import { getFileExt } from '../../../libs/data-url';
-import LazyImage, { isLazyImageSlideType, LazyImageSlideType } from "./LazyImage";
+import LazyImage, { isLazyImageSlideType, LazyImageSlideType, LazyLoadFuncType } from "./LazyImage";
 import Download from './Download';
 import Information from "./Information";
 
 
 export interface CustomLightboxSource {
-    load: () => Promise<Blob | null>,
+    load: LazyLoadFuncType,
 }
 
 type LightboxProps = {
@@ -64,13 +64,51 @@ function CustomLightboxSourceReducer(state: LazyImageSlideType[], action: Custom
     return state;
 }
 
+type ImageCacheValue = {
+    result: Promise<Blob | null>;
+    count: number,
+};
+
+function useImageCache(deps: React.DependencyList) {
+    const cache = React.useMemo(() => new WeakMap<LazyLoadFuncType, ImageCacheValue>(), deps);
+    const loadFunc = React.useCallback((load: LazyLoadFuncType) => {
+        const cached = cache.get(load);
+        if (cached) {
+            cached.count += 1;
+            return cached.result;
+        }
+        const result = load();
+        cache.set(load, {
+            result,
+            count: 1,
+        });
+        return result;
+    }, [cache]);
+    const releaseFunc = React.useCallback((load: LazyLoadFuncType) => {
+        const cached = cache.get(load);
+        if (cached) {
+            cached.count -= 1;
+            if (cached.count <= 0) {
+                cache.delete(load);
+            }
+        }
+    }, [cache]);
+    return {
+        load: loadFunc,
+        release: releaseFunc,
+    };
+}
+
 function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): React.ReactElement {
     const [slides, dispatch] = React.useReducer(CustomLightboxSourceReducer, []);
+    const { load, release } = useImageCache([list]);
     React.useEffect(() => {
         dispatch({
             type: 'init',
             slides: list.map((src, idx) => ({
                 src,
+                load: () => load(src.load),
+                release: () => release(src.load),
                 onLoad: (width: number, height: number, image: Blob) => {
                     dispatch({
                         type: 'load',
@@ -87,7 +125,7 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
                 },
             }))
         });
-    }, [list]);
+    }, [list, load, release]);
 
     const renderInformation = React.useCallback((slide: Slide) => {
         const index = slides.indexOf(slide as LazyImageSlideType);
