@@ -21,77 +21,86 @@ import { ScreenshotInfo, VideoInfo } from '../libs/types';
 import * as storage from '../libs/storage';
 import { decodeBase64, getFileExt, parseDataURL } from '../libs/data-url';
 
-type ProgressCallback = (current: number, max: number) => void;
+export type ArchiveCallback = (zip: Blob, index: number, max: number) => void;
+export type ProgressCallback = (current: number, max: number) => void;
 
-export function collectFiles(video: VideoInfo, screenshots: ScreenshotInfo[], progress?: ProgressCallback): PCancelable<fflate.AsyncZippable> {
-    return new PCancelable<fflate.AsyncZippable>(async (resolve, reject, onCancel) => {
-        let cancel = false;
-        onCancel(() => cancel = true);
-
-        const files: fflate.AsyncZippable = {};
-        const max = screenshots.length + 1;
-        let current = 0;
-
-        if (progress !== undefined) {
-            progress(current, max);
+function createZip(callback: (err: fflate.FlateError | null, zip: Blob | null) => void): fflate.Zip {
+    const chunks: Uint8Array[] = [];
+    return new fflate.Zip((err: fflate.FlateError | null, data: Uint8Array, final: boolean) => {
+        if (err) {
+            callback(err, null);
+            return;
         }
-
-        // サムネイルの取得
-        {
-            const img = await storage.getVideoThumbnail(video.platform, video.videoId);
-            if (img !== null) {
-                const [mime, data] = parseDataURL(img);
-                const ext = getFileExt(mime);
-                const filename = `thumbnail${ext}`;
-                files[filename] = [decodeBase64(data), { mtime: video.lastUpdated }];
-            }
-
-            current += 1;
-            if (progress !== undefined) {
-                progress(current, max);
-            }
+        chunks.push(data);
+        if (final) {
+            callback(null, new Blob(chunks, { type: 'application/zip' }));
         }
-
-        // スクリーンショットの取得
-        for (const s of screenshots) {
-            if (cancel) {
-                return;
-            }
-
-            const img = await storage.getScreenshot(s.platform, s.videoId, s.no);
-            if (img !== null) {
-                const [mime, data] = parseDataURL(img);
-                const ext = getFileExt(mime);
-                const no = ('' + s.no).padStart(4, '0');
-                const filename = `screenshot_${no}${ext}`;
-                files[filename] = [decodeBase64(data), { mtime: s.datetime }];
-            }
-
-            current += 1;
-            if (progress !== undefined) {
-                progress(current, max);
-            }
-        }
-
-        resolve(files);
     });
 }
 
-export function zip(files: fflate.AsyncZippable): PCancelable<Blob> {
-    return new PCancelable<Blob>((resolve, reject, onCancel) => {
-        let cancel: fflate.AsyncTerminable | null = null;
-        onCancel(() => {
-            if (cancel !== null) {
-                cancel();
+function appendZipFile(zip: fflate.Zip, image: string, basename: string, mtime: number) {
+    const [mime, encoded] = parseDataURL(image);
+    const buf = decodeBase64(encoded);
+    const ext = getFileExt(mime);
+    const file = new fflate.AsyncZipDeflate(`${basename}${ext}`, { level: 0 });
+    file.mtime = mtime;
+    zip.add(file);
+    file.push(buf, true);
+}
+
+export function archive(video: VideoInfo, screenshots: ScreenshotInfo[], filesPerArchive: number, callback: ArchiveCallback, progress?: ProgressCallback): PCancelable<void> {
+    const screenshotChunks = screenshots.reduce<ScreenshotInfo[][]>(
+        (acc, _, index) => (index % filesPerArchive === 0) ? [...acc, screenshots.slice(index, index + filesPerArchive)] : acc,
+        []
+    );
+    return new PCancelable<void>(async (resolve, reject, onCancel) => {
+        let canceled = false;
+        onCancel(() => canceled = true);
+
+        const max = screenshots.length + 1;
+        let archivedImages = 0;
+
+        for (let i = 0; i < screenshotChunks.length; i++) {
+            const zip: fflate.Zip | null = createZip((err, zip) => {
+                if (err) {
+                    reject(err);
+                }
+                else if (zip) {
+                    callback(zip, i, screenshotChunks.length);
+                }
+            });
+
+            // 最初のzipファイルのみサムネイルを含める
+            if (i === 0) {
+                const img = await storage.getVideoThumbnail(video.platform, video.videoId);
+                if (img !== null) {
+                    appendZipFile(zip, img, 'thumbnail', video.lastUpdated);
+                }
+                archivedImages += 1;
+                progress?.(archivedImages, max);
             }
-        });
-        cancel = fflate.zip(files, { level: 0, mem: 12, consume: true }, (err, data) => {
-            if (err) {
-                reject(err);
+
+            for (const s of screenshotChunks[i]) {
+                if (canceled) {
+                    zip.terminate();
+                    return;
+                }
+                const img = await storage.getScreenshot(s.platform, s.videoId, s.no);
+                if (canceled) {
+                    zip.terminate();
+                    return;
+                }
+                if (img !== null) {
+                    const no = ('' + s.no).padStart(4, '0');
+                    appendZipFile(zip, img, `screenshot_${no}`, s.datetime);
+                }
+                archivedImages += 1;
+                progress?.(archivedImages, max);
             }
-            else {
-                resolve(new Blob([data], { type: 'application/zip' }));
-            }
-        });
+
+            zip.end();
+        }
+
+        resolve();
     });
 }

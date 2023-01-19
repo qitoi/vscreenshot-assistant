@@ -53,6 +53,7 @@ export type Preferences = {
         notify: boolean,
         notifyPosition: ToastPosition,
         notifyDuration: number,
+        filesPerArchive: number,
     },
     screenshot: {
         hotkey: hotkeys.KeyConfig,
@@ -88,6 +89,7 @@ export const DefaultPreferences: Preferences = {
         notify: true,
         notifyPosition: ToastPositions.LeftBottom,
         notifyDuration: 1000,
+        filesPerArchive: 1000,
     },
     screenshot: {
         hotkey: hotkeys.getKeyConfig('S', { shift: true }),
@@ -131,6 +133,7 @@ function completePreferences(prefs: Preferences): Preferences {
             notify: completeBool(prefs?.general?.notify, DefaultPreferences.general.notify),
             notifyPosition: completeToastPosition(prefs?.general?.notifyPosition, DefaultPreferences.general.notifyPosition),
             notifyDuration: completeMinMax(prefs?.general?.notifyDuration, DefaultPreferences.general.notifyDuration, 100, 60000),
+            filesPerArchive: completeMinMax(prefs?.general?.filesPerArchive, DefaultPreferences.general.filesPerArchive, 100, 10000),
         },
         screenshot: {
             hotkey: completeKeyConfig(prefs?.screenshot?.hotkey, DefaultPreferences.screenshot.hotkey),

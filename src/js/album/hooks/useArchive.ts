@@ -19,9 +19,9 @@ import PCancelable from 'p-cancelable';
 
 import { ScreenshotInfo, VideoInfo } from '../../libs/types';
 import * as storage from '../../libs/storage';
-import * as archive from '../../background/archive';
+import { archive, ArchiveCallback } from '../../background/archive';
 
-export type ArchiveFunc = (video: VideoInfo) => Promise<Blob>;
+export type ArchiveFunc = (video: VideoInfo, filesPerArchive: number, callback: ArchiveCallback) => Promise<void>;
 export type CancelFunc = () => void;
 export type ProgressFunc = (progress: number) => void;
 export type SetProgressHandler = (progressFunc: ProgressFunc) => void;
@@ -41,7 +41,7 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
         }
     }, [cancelable, setProgressHandler]);
 
-    const archiveFunc = React.useCallback(async (video: VideoInfo): Promise<Blob> => {
+    const archiveFunc = React.useCallback(async (video: VideoInfo, filesPerArchive: number, callback: ArchiveCallback): Promise<void> => {
         // reset progress
         onProgressRef.current && onProgressRef.current(0);
 
@@ -51,26 +51,21 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
         });
         setCancelable(listCancelable);
         const screenshots = await listCancelable;
+        // スクリーンショット情報を撮影順にソート
+        screenshots.sort((a, b) => a.no - b.no);
 
-        // collect screenshot images
-        const collectCancelable = archive.collectFiles(video, screenshots, (current, max) => {
+        const archiveCancelable = archive(video, screenshots, filesPerArchive, callback, (current, max) => {
             onProgressRef.current && onProgressRef.current(100 * current / (max + 1));
         });
-        setCancelable(collectCancelable);
-        const files = await collectCancelable;
+        setCancelable(archiveCancelable);
+        await archiveCancelable;
 
         // complete progress
         onProgressRef.current && onProgressRef.current(100);
 
-        // archive images
-        const archiveCancelable = archive.zip(files);
-        setCancelable(archiveCancelable);
-        const zipBlob = await archiveCancelable;
-
         setCancelable(null);
         setProgressHandler(() => undefined);
 
-        return zipBlob;
     }, [setProgressHandler]);
 
     return [archiveFunc, cancelFunc, setProgressHandler];
