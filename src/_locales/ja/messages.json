@@ -71,6 +71,9 @@
   "prefs_general_notify_duration": {
     "message": "通知の表示時間"
   },
+  "prefs_general_files_per_archive": {
+    "message": "ZIPファイル毎のスクリーンショット数"
+  },
   "prefs_screenshot_hotkey": {
     "message": "スクリーンショット撮影のキー設定"
   },
@@ -285,7 +288,7 @@
     "message": "キャンセル"
   },
   "album_download_preparing_label": {
-    "message": "ZIPファイル準備中..."
+    "message": "ZIPファイル作成中..."
   },
   "album_tweet_screenshot_button": {
     "message": "Tweet"

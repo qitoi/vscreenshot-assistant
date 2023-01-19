@@ -82,6 +82,17 @@ const GeneralPreferences: React.FC = () => {
                         </LabeledControl>
                     </ControlGroup>
                 </ControlGroup>
+                <ControlGroup>
+                    <LabeledControl messageId="prefs_general_files_per_archive">
+                        <NumberInputControl<Preferences>
+                            name="general.filesPerArchive"
+                            w="10em"
+                            min={100}
+                            max={10000}
+                            step={100}
+                            precision={0} />
+                    </LabeledControl>
+                </ControlGroup>
             </Box>
         </PreferenceBlock>
     );

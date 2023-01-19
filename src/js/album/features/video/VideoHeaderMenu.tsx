@@ -22,6 +22,7 @@ import { CancelError } from 'p-cancelable';
 
 import { VideoInfo } from '../../../libs/types';
 import * as storage from '../../../libs/storage';
+import * as prefs from "../../../libs/prefs";
 import { decodeDataURL } from "../../../libs/data-url";
 import { LocalizedText } from '../../../components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
@@ -74,14 +75,17 @@ const VideoHeaderMenu: React.FC = () => {
         }
 
         try {
-            const zipBlob = await archive(video);
-            const a = document.createElement('a') as HTMLAnchorElement;
-            const zip = URL.createObjectURL(zipBlob);
-            const filename = video.title;
-            a.href = zip;
-            a.download = ((filename !== '') ? filename : 'images') + '.zip';
-            a.click();
-            URL.revokeObjectURL(zip);
+            const p = await prefs.loadPreferences();
+            await archive(video, p.general.filesPerArchive, (zip, index, max) => {
+                const a = document.createElement('a') as HTMLAnchorElement;
+                const url = URL.createObjectURL(zip);
+                const filename = (video.title !== '') ? video.title : 'images';
+                const suffix = (max === 1) ? '' : `_${index + 1}`;
+                a.href = url;
+                a.download = `${filename}${suffix}.zip`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
         }
         catch (e) {
             if (!(e instanceof CancelError)) {
