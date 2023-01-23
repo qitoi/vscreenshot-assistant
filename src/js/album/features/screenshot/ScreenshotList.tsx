@@ -40,6 +40,7 @@ const ScreenshotList: React.FC = () => {
     const video = useSelector(selectActiveVideo);
     const screenshots = useParameterizedSelector(selectScreenshotList, video?.platform ?? '', video?.videoId ?? '');
     const lightboxSource = React.useMemo<CustomLightboxSource[]>(() => screenshots.map(s => ({
+        key: getScreenshotKey(s),
         load: async () => {
             const image = await storage.getScreenshot(s.platform, s.videoId, s.no);
             return image ? decodeDataURL(image) : null;
@@ -66,10 +67,10 @@ const ScreenshotList: React.FC = () => {
             );
         },
     })), [screenshots]);
+    const [lightboxIndex, setLightboxIndex] = React.useState<number | null>(null);
     const selected = useSelector(selectSelectedScreenshot);
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
     const thumbnailPreferences = useSelector(selectThumbnailPreferences);
-    const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
     const tweetEnabled = useSelector(selectTweetEnabled);
 
     React.useEffect(() => {
@@ -83,7 +84,7 @@ const ScreenshotList: React.FC = () => {
     }, [dispatch]);
 
     const handleExpandScreenshot = React.useCallback((info: ScreenshotInfo) => {
-        setSelectedIndex(screenshots.indexOf(info));
+        setLightboxIndex(screenshots.indexOf(info));
     }, [screenshots]);
 
     const handleRemoveSelected = React.useCallback((info: ScreenshotInfo) => {
@@ -94,7 +95,7 @@ const ScreenshotList: React.FC = () => {
         setSelectedHeight(height);
     }, []);
 
-    const handleLightboxClose = React.useCallback(() => setSelectedIndex(null), []);
+    const handleLightboxClose = React.useCallback(() => setLightboxIndex(null), []);
 
     const fulfilled = isFulfilledSelectedScreenshot(selected);
     const tweetDisabled = video?.private || !tweetEnabled;
@@ -157,12 +158,12 @@ const ScreenshotList: React.FC = () => {
                     onResize={handleSelectedResize}
                     onClick={handleRemoveSelected} />
             )}
-            <CustomLightbox
+            {lightboxIndex !== null && (<CustomLightbox
                 list={lightboxSource}
-                index={selectedIndex ?? 0}
+                index={lightboxIndex ?? 0}
                 loop={true}
-                open={video !== null && selectedIndex !== null}
-                onClose={handleLightboxClose} />
+                open={true}
+                onClose={handleLightboxClose} />)}
         </Box>
     );
 };

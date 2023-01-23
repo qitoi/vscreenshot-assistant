@@ -19,17 +19,19 @@ import { chakra, Text } from '@chakra-ui/react';
 import prettyBytes from 'pretty-bytes';
 
 import Lightbox, { Slide } from 'yet-another-react-lightbox';
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
-import "yet-another-react-lightbox/styles.css";
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
+import 'yet-another-react-lightbox/styles.css';
 
 import { getFileExt } from '../../../libs/data-url';
-import LazyImage, { isLazyImageSlideType, LazyImageSlideType, LazyLoadFuncType } from "./LazyImage";
+import LazyImage, { isLazyImageSlideType, LazyImageSlideType, LazyLoadFuncType } from './LazyImage';
 import Download from './Download';
-import Information from "./Information";
+import Information from './Information';
+import RobustCarousel from './RobustCarousel';
 
 
 export interface CustomLightboxSource {
+    key: number | string,
     load: LazyLoadFuncType,
 }
 
@@ -104,11 +106,13 @@ function useImageCache(deps: React.DependencyList) {
 function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): React.ReactElement {
     const [slides, dispatch] = React.useReducer(CustomLightboxSourceReducer, []);
     const { load, release } = useImageCache([list]);
+
     React.useEffect(() => {
         dispatch({
             type: 'init',
-            slides: list.map((src, idx) => ({
+            slides: list.map<LazyImageSlideType>((src, idx) => ({
                 src,
+                key: src.key,
                 load: () => load(src.load),
                 release: () => {
                     if (release(src.load)) {
@@ -120,7 +124,7 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
                                 height: undefined,
                                 size: undefined,
                                 getImage: undefined,
-                            }
+                            },
                         });
                     }
                 },
@@ -194,6 +198,7 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
 
     return (
         <Lightbox
+            plugins={[LazyImage, Information, Zoom, Fullscreen, Download, RobustCarousel]}
             open={open}
             close={onClose}
             slides={slides}
@@ -216,7 +221,6 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
                     paddingBottom: "3rem"
                 }
             }}
-            plugins={[LazyImage, Information, Zoom, Fullscreen, Download]}
             information={{
                 render: renderInformation,
             }}
