@@ -198,6 +198,9 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
             close={onClose}
             slides={slides}
             index={index}
+            controller={{
+                closeOnBackdropClick: true,
+            }}
             carousel={{
                 finite: !loop,
                 preload: 1,

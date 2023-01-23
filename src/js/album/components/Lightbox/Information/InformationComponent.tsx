@@ -23,9 +23,7 @@ export const InformationComponent: Component = ({ slides, information }: React.P
     const { state: { currentIndex } } = useLightboxState();
     const slide = slides[currentIndex];
     return (
-        <chakra.div
-            position="absolute"
-            inset="0 0 0 0">
+        <chakra.div>
             {information?.render?.(slide)}
         </chakra.div>
     );
