@@ -88,10 +88,12 @@ function useImageCache(deps: React.DependencyList) {
         const cached = cache.get(load);
         if (cached) {
             cached.count -= 1;
-            if (cached.count <= 0) {
-                cache.delete(load);
+            if (cached.count > 0) {
+                return false;
             }
+            cache.delete(load);
         }
+        return true;
     }, [cache]);
     return {
         load: loadFunc,
@@ -108,7 +110,20 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
             slides: list.map((src, idx) => ({
                 src,
                 load: () => load(src.load),
-                release: () => release(src.load),
+                release: () => {
+                    if (release(src.load)) {
+                        dispatch({
+                            type: 'load',
+                            index: idx,
+                            slide: {
+                                width: undefined,
+                                height: undefined,
+                                size: undefined,
+                                getImage: undefined,
+                            }
+                        });
+                    }
+                },
                 onLoad: (width: number, height: number, image: Blob) => {
                     dispatch({
                         type: 'load',
@@ -183,6 +198,9 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
             close={onClose}
             slides={slides}
             index={index}
+            controller={{
+                closeOnBackdropClick: true,
+            }}
             carousel={{
                 finite: !loop,
                 preload: 1,

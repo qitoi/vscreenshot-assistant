@@ -48,7 +48,7 @@ export function LazyImageComponent({ load, release, onLoad }: LazyImageProps) {
                 URL.revokeObjectURL(src);
             }
         };
-    }, [ref, load, onLoad]);
+    }, [ref, load, release, onLoad]);
 
     return (
         <>
