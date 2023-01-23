@@ -56,7 +56,13 @@ type CustomLightboxSourceAction = {
 function CustomLightboxSourceReducer(state: LazyImageSlideType[], action: CustomLightboxSourceAction): LazyImageSlideType[] {
     switch (action.type) {
         case "init": {
-            return [...action.slides];
+            // リストが変更されたとき、全てのスライドを新規のオブジェクトにしてしまうと現在表示しているスライドでも再レンダリングされロードが走ってしまう
+            // 同じkeyのスライドが前のステートに存在すれば、そのオブジェクトを流用することで再レンダリングを防ぐ
+            const prevSlideMap = state.reduce<Record<string, LazyImageSlideType>>((acc, current) => {
+                acc[current.key] = current;
+                return acc;
+            }, {});
+            return action.slides.map(s => prevSlideMap[s.key] ?? s);
         }
         case "load": {
             state[action.index] = { ...state[action.index], ...action.slide };
@@ -108,41 +114,43 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
     const { load, release } = useImageCache([list]);
 
     React.useEffect(() => {
+        const generateRelease = (src: CustomLightboxSource, idx: number) => () => {
+            if (release(src.load)) {
+                dispatch({
+                    type: 'load',
+                    index: idx,
+                    slide: {
+                        width: undefined,
+                        height: undefined,
+                        size: undefined,
+                        getImage: undefined,
+                    },
+                });
+            }
+        };
+        const generateOnLoad = (idx: number) => (width: number, height: number, image: Blob): void => {
+            dispatch({
+                type: 'load',
+                index: idx,
+                slide: {
+                    width,
+                    height,
+                    size: image.size,
+                    getImage: async () => {
+                        return { blob: image, name: 'image' + getFileExt(image.type) };
+                    },
+                }
+            })
+        };
         dispatch({
             type: 'init',
             slides: list.map<LazyImageSlideType>((src, idx) => ({
                 src,
                 key: src.key,
                 load: () => load(src.load),
-                release: () => {
-                    if (release(src.load)) {
-                        dispatch({
-                            type: 'load',
-                            index: idx,
-                            slide: {
-                                width: undefined,
-                                height: undefined,
-                                size: undefined,
-                                getImage: undefined,
-                            },
-                        });
-                    }
-                },
-                onLoad: (width: number, height: number, image: Blob) => {
-                    dispatch({
-                        type: 'load',
-                        index: idx,
-                        slide: {
-                            width,
-                            height,
-                            size: image.size,
-                            getImage: async () => {
-                                return { blob: image, name: 'image' + getFileExt(image.type) };
-                            },
-                        }
-                    })
-                },
-            }))
+                release: generateRelease(src, idx),
+                onLoad: generateOnLoad(idx),
+            })),
         });
     }, [list, load, release]);
 
