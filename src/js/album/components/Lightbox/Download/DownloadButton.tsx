@@ -34,7 +34,7 @@ export function DownloadButton({ slides }: DownloadButtonProps) {
 
     const handleClick = React.useCallback(async () => {
         if (slide) {
-            const image = await slides[currentIndex]?.getImage?.();
+            const image = await slide.getImage?.();
             if (image) {
                 const a = document.createElement('a');
                 const objURL = URL.createObjectURL(image.blob);

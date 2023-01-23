@@ -27,7 +27,7 @@ export interface LazyImageSlideType extends GenericSlide {
     height?: number,
     size?: number,
     onLoad?: (width: number, height: number, image: Blob) => void,
-};
+}
 
 export function isLazyImageSlideType(value: any): value is LazyImageSlideType {
     if (typeof value.src === 'object') {
