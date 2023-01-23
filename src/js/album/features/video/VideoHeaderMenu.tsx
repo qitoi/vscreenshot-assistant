@@ -20,7 +20,7 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { FcEmptyTrash, FcDownload, FcSettings, FcPicture } from 'react-icons/fc';
 import { CancelError } from 'p-cancelable';
 
-import { VideoInfo } from '../../../libs/types';
+import { getVideoKey, VideoInfo } from '../../../libs/types';
 import * as storage from '../../../libs/storage';
 import * as prefs from "../../../libs/prefs";
 import { decodeDataURL } from "../../../libs/data-url";
@@ -44,6 +44,7 @@ const VideoHeaderMenu: React.FC = () => {
     const [isDeletingVideo, setIsDeletingVideo] = React.useState<boolean>(false);
     const [thumbnailVideo, setThumbnailVideo] = React.useState<VideoInfo[]>([]);
     const lightboxSource = React.useMemo<CustomLightboxSource[]>(() => thumbnailVideo.map(v => ({
+        key: getVideoKey(v),
         load: async () => {
             const image = await storage.getVideoThumbnail(v.platform, v.videoId);
             return image ? decodeDataURL(image) : null;
