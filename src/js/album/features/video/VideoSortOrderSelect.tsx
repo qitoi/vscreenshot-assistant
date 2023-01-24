@@ -43,7 +43,7 @@ const VideoSortOrderSelect: React.FC = () => {
     }
 
     return (
-        <Select value={order} onChange={handleChangeSortOrder}>
+        <Select userSelect="none" value={order} onChange={handleChangeSortOrder}>
             {Object.entries(videoSortOrderLabels).map(([val, label]) => (
                 <option key={val} style={{ color: 'black' }} value={val}>
                     {label}
