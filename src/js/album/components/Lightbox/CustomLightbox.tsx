@@ -19,17 +19,19 @@ import { chakra, Text } from '@chakra-ui/react';
 import prettyBytes from 'pretty-bytes';
 
 import Lightbox, { Slide } from 'yet-another-react-lightbox';
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
-import "yet-another-react-lightbox/styles.css";
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
+import 'yet-another-react-lightbox/styles.css';
 
 import { getFileExt } from '../../../libs/data-url';
-import LazyImage, { isLazyImageSlideType, LazyImageSlideType, LazyLoadFuncType } from "./LazyImage";
+import LazyImage, { isLazyImageSlideType, LazyImageSlideType, LazyLoadFuncType } from './LazyImage';
 import Download from './Download';
-import Information from "./Information";
+import Information from './Information';
+import ConsistentCarousel from './ConsistentCarousel';
 
 
 export interface CustomLightboxSource {
+    key: number | string,
     load: LazyLoadFuncType,
 }
 
@@ -54,7 +56,13 @@ type CustomLightboxSourceAction = {
 function CustomLightboxSourceReducer(state: LazyImageSlideType[], action: CustomLightboxSourceAction): LazyImageSlideType[] {
     switch (action.type) {
         case "init": {
-            return [...action.slides];
+            // リストが変更されたとき、全てのスライドを新規のオブジェクトにしてしまうと現在表示しているスライドでも再レンダリングされロードが走ってしまう
+            // 同じkeyのスライドが前のステートに存在すれば、そのオブジェクトを流用することで再レンダリングを防ぐ
+            const prevSlideMap = state.reduce<Record<string, LazyImageSlideType>>((acc, current) => {
+                acc[current.key] = current;
+                return acc;
+            }, {});
+            return action.slides.map(s => prevSlideMap[s.key] ?? s);
         }
         case "load": {
             state[action.index] = { ...state[action.index], ...action.slide };
@@ -104,41 +112,45 @@ function useImageCache(deps: React.DependencyList) {
 function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): React.ReactElement {
     const [slides, dispatch] = React.useReducer(CustomLightboxSourceReducer, []);
     const { load, release } = useImageCache([list]);
+
     React.useEffect(() => {
+        const generateRelease = (src: CustomLightboxSource, idx: number) => () => {
+            if (release(src.load)) {
+                dispatch({
+                    type: 'load',
+                    index: idx,
+                    slide: {
+                        width: undefined,
+                        height: undefined,
+                        size: undefined,
+                        getImage: undefined,
+                    },
+                });
+            }
+        };
+        const generateOnLoad = (idx: number) => (width: number, height: number, image: Blob): void => {
+            dispatch({
+                type: 'load',
+                index: idx,
+                slide: {
+                    width,
+                    height,
+                    size: image.size,
+                    getImage: async () => {
+                        return { blob: image, name: 'image' + getFileExt(image.type) };
+                    },
+                }
+            })
+        };
         dispatch({
             type: 'init',
-            slides: list.map((src, idx) => ({
+            slides: list.map<LazyImageSlideType>((src, idx) => ({
                 src,
+                key: src.key,
                 load: () => load(src.load),
-                release: () => {
-                    if (release(src.load)) {
-                        dispatch({
-                            type: 'load',
-                            index: idx,
-                            slide: {
-                                width: undefined,
-                                height: undefined,
-                                size: undefined,
-                                getImage: undefined,
-                            }
-                        });
-                    }
-                },
-                onLoad: (width: number, height: number, image: Blob) => {
-                    dispatch({
-                        type: 'load',
-                        index: idx,
-                        slide: {
-                            width,
-                            height,
-                            size: image.size,
-                            getImage: async () => {
-                                return { blob: image, name: 'image' + getFileExt(image.type) };
-                            },
-                        }
-                    })
-                },
-            }))
+                release: generateRelease(src, idx),
+                onLoad: generateOnLoad(idx),
+            })),
         });
     }, [list, load, release]);
 
@@ -194,6 +206,7 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
 
     return (
         <Lightbox
+            plugins={[LazyImage, Information, Zoom, Fullscreen, Download, ConsistentCarousel]}
             open={open}
             close={onClose}
             slides={slides}
@@ -216,7 +229,6 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
                     paddingBottom: "3rem"
                 }
             }}
-            plugins={[LazyImage, Information, Zoom, Fullscreen, Download]}
             information={{
                 render: renderInformation,
             }}
