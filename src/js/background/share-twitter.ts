@@ -70,6 +70,10 @@ export async function shareScreenshot(video: VideoInfo, screenshots: ScreenshotI
         const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
             if (changeInfo.status === 'complete') {
                 chrome.tabs.get(tabId, tab => {
+                    if (chrome.runtime.lastError) {
+                        // エラーが出たら無視
+                        return;
+                    }
                     if (tab.windowId === window.id) {
                         chrome.tabs.onUpdated.removeListener(handler);
                         let trial = 0;
