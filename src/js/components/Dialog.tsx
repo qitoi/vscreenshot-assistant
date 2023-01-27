@@ -56,10 +56,10 @@ const Dialog = ({ isOpen, title, okLabel, cancelLabel, isButtonDisabled, onOK, o
                     </AlertDialogBody>
                     <AlertDialogFooter>
                         <HStack>
-                            {okLabel && <Button colorScheme="red" disabled={isButtonDisabled} onClick={onOK}>
+                            {okLabel && <Button colorScheme="red" isDisabled={isButtonDisabled} onClick={onOK}>
                                 {okLabel}
                             </Button>}
-                            {cancelLabel && <Button ref={cancelRef} disabled={isButtonDisabled} onClick={onCancel}>
+                            {cancelLabel && <Button ref={cancelRef} isDisabled={isButtonDisabled} onClick={onCancel}>
                                 {cancelLabel}
                             </Button>}
                         </HStack>
