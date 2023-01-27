@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Box, Grid, HStack, Link, Text } from '@chakra-ui/react';
+import { Box, Grid, HStack, Link, Spinner, Text } from '@chakra-ui/react';
 import { Global } from '@emotion/react';
 
 import { getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../libs/types';
@@ -72,10 +72,15 @@ const ScreenshotList: React.FC = () => {
     const [selectedHeight, setSelectedHeight] = React.useState<number>(0);
     const thumbnailPreferences = useSelector(selectThumbnailPreferences);
     const tweetEnabled = useSelector(selectTweetEnabled);
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         if (video !== null) {
-            dispatch(fetchScreenshotList({ platform: video.platform, videoId: video.videoId }));
+            setIsLoading(true);
+            dispatch(fetchScreenshotList({ platform: video.platform, videoId: video.videoId }))
+                .then(() => {
+                    setIsLoading(false);
+                });
         }
     }, [dispatch, video]);
 
@@ -109,7 +114,7 @@ const ScreenshotList: React.FC = () => {
     }
 
     return (
-        <Box w="100%" h="100%" minH="100%" userSelect="none">
+        <Box w="100%" h="100%" minH="100%" position="relative" userSelect="none">
             <Global styles={{
                 // 選択済みのものはツイートが有効であれば常に選択可能
                 '.screenshot-card-checked': {
@@ -150,6 +155,11 @@ const ScreenshotList: React.FC = () => {
                     );
                 })}
             </Grid>
+            {isLoading && (
+                <Box position="absolute" inset="0" display="flex" justifyContent="center" alignItems="center">
+                    <Spinner color="blackAlpha.200" size="xl" thickness="4px" />
+                </Box>
+            )}
             <Box h="1rem" />
             {video !== null && (
                 <SelectedScreenshotList
