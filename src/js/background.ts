@@ -24,6 +24,7 @@ import * as prefs from './libs/prefs';
 import { downloadImage } from './libs/download';
 import { getLocalizedText } from './libs/localize';
 import { listenAuto } from './libs/event-listen';
+import { ignoreRuntimeError } from "./libs/runtime-error";
 import * as popup from './background/popup-window';
 import * as videoSort from './background/video-sort';
 import * as screenshotSort from './background/screenshot-sort';
@@ -51,10 +52,7 @@ listenAuto(action.onClicked, async tab => {
         }
         case prefs.ClickIconActions.CaptureScreenshot: {
             if (tab.id !== undefined) {
-                chrome.tabs.sendMessage(tab.id, { type: 'capture-screenshot' })
-                    .catch(() => {
-                        // 対応ページ以外でキャプチャメッセージを送るとエラーが出るので握り潰す
-                    });
+                chrome.tabs.sendMessage(tab.id, { type: 'capture-screenshot' }, ignoreRuntimeError);
             }
         }
     }
@@ -72,7 +70,8 @@ chrome.runtime.onInstalled.addListener(() => {
             type: 'normal',
             contexts: [actionContext],
             title: getLocalizedText(CONTEXT_MENU_OPEN_ALBUM),
-        }
+        },
+        ignoreRuntimeError
     );
     chrome.contextMenus.create(
         {
@@ -80,7 +79,8 @@ chrome.runtime.onInstalled.addListener(() => {
             type: 'normal',
             contexts: [actionContext],
             title: getLocalizedText(CONTEXT_MENU_OPEN_OPTION),
-        }
+        },
+        ignoreRuntimeError
     );
 });
 
@@ -106,24 +106,30 @@ listenAuto(chrome.webNavigation.onCommitted, details => {
         return;
     }
     if (patterns.test(details.url)) {
-        action.setIcon({
-            tabId: details.tabId,
-            path: {
-                16: chrome.runtime.getURL('img/icon-16.png'),
-                24: chrome.runtime.getURL('img/icon-24.png'),
-                32: chrome.runtime.getURL('img/icon-32.png')
+        action.setIcon(
+            {
+                tabId: details.tabId,
+                path: {
+                    16: chrome.runtime.getURL('img/icon-16.png'),
+                    24: chrome.runtime.getURL('img/icon-24.png'),
+                    32: chrome.runtime.getURL('img/icon-32.png')
+                },
             },
-        });
+            ignoreRuntimeError
+        );
     }
     else {
-        action.setIcon({
-            tabId: details.tabId,
-            path: {
-                16: chrome.runtime.getURL('img/icon-16-disabled.png'),
-                24: chrome.runtime.getURL('img/icon-24-disabled.png'),
-                32: chrome.runtime.getURL('img/icon-32-disabled.png')
+        action.setIcon(
+            {
+                tabId: details.tabId,
+                path: {
+                    16: chrome.runtime.getURL('img/icon-16-disabled.png'),
+                    24: chrome.runtime.getURL('img/icon-24-disabled.png'),
+                    32: chrome.runtime.getURL('img/icon-32-disabled.png')
+                },
             },
-        });
+            ignoreRuntimeError
+        );
     }
 });
 
