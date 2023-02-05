@@ -18,8 +18,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { getVideoKey, VideoInfo } from '../../../libs/types';
 import * as storage from '../../../libs/storage';
-import * as messages from '../../../libs/messages';
 import * as videoSort from '../../../background/video-sort';
+import * as client from "../../../messages/client";
 import { RootState } from '../../store';
 
 
@@ -67,18 +67,7 @@ export const removeVideo = createAsyncThunk<RemoveVideoPayload, { platform: stri
     'video/remove',
     async ({ platform, videoId, removeFromStorage }) => {
         if (removeFromStorage) {
-            const remove: messages.RemoveVideoRequest = {
-                type: 'remove-video',
-                platform,
-                videoId,
-            };
-            await new Promise<void>(resolve => {
-                messages.sendMessage(remove, message => {
-                    if (message.status === 'complete') {
-                        resolve();
-                    }
-                });
-            });
+            await client.sendMessage('remove-video', { platform, videoId });
         }
         return {
             platform,

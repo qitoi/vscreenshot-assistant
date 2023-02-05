@@ -15,17 +15,16 @@
  */
 
 import { ImageDataUrl } from '../libs/types';
-import * as messages from '../libs/messages';
-import { MessageRequest, MessageResponse } from '../libs/messages';
 import * as prefs from '../libs/prefs';
 import { Platform, PlatformVideoInfo } from '../platforms/platform';
+import { CaptureMessageRequest, CaptureRequestAdditionalType } from "../messages/capture";
 
 
 let currentPlatform: Platform | null = null;
 let currentVideoId: string | null = null;
 let currentVideoInfo: PlatformVideoInfo | null = null;
 
-export async function getVideoInfo(platform: Platform): Promise<{ videoId: string, videoInfo: any }> {
+export async function getVideoInfo(platform: Platform): Promise<{ videoId: string, videoInfo: PlatformVideoInfo }> {
     const videoId = platform.getVideoId();
     let videoInfo = currentVideoInfo;
 
@@ -33,7 +32,7 @@ export async function getVideoInfo(platform: Platform): Promise<{ videoId: strin
         return Promise.reject();
     }
 
-    if (currentPlatform !== platform || currentVideoId !== videoId) {
+    if (currentPlatform !== platform || currentVideoId !== videoId || videoInfo === null) {
         videoInfo = await platform.getVideoInfo(videoId);
         currentPlatform = platform;
         currentVideoInfo = videoInfo;
@@ -58,12 +57,9 @@ export function convertToDataURL(canvas: HTMLCanvasElement, prefs: prefs.Prefere
     return canvas.toDataURL(prefs.screenshot.fileType, (+prefs.screenshot.quality / 100));
 }
 
-type MessageSender = {
-    sendMessage: (req: MessageRequest, callback: (res: MessageResponse) => void) => void,
-};
 
-export function saveScreenshot(platform: Platform, videoId: string, videoInfo: PlatformVideoInfo, pos: number, ratio: number, param: messages.CaptureRequestAdditionalType, sender: MessageSender): Promise<void> {
-    const captureParam: messages.CaptureMessageRequest = {
+export function createScreenshotParam(platform: Platform, videoId: string, videoInfo: PlatformVideoInfo, pos: number, ratio: number, param: CaptureRequestAdditionalType): CaptureMessageRequest {
+    return {
         ...param,
         platform: platform.PLATFORM_ID,
         videoId: videoId,
@@ -79,15 +75,4 @@ export function saveScreenshot(platform: Platform, videoId: string, videoInfo: P
         pos: pos,
         datetime: (new Date()).getTime(),
     };
-
-    return new Promise((resolve, reject) => {
-        sender.sendMessage(captureParam, async (message) => {
-            if (message.status === 'error') {
-                reject(message.error);
-            }
-            else {
-                resolve();
-            }
-        });
-    });
 }

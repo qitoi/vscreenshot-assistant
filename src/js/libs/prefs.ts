@@ -181,7 +181,7 @@ export async function resetPreferences(): Promise<void> {
 }
 
 
-type PreferencesEventHandler = EventHandler<Preferences>;
+type PreferencesEventHandler = EventHandler<(prefs: Preferences) => void>;
 
 let onChanged: PreferencesEventHandler | null = null;
 
@@ -190,7 +190,7 @@ export function watch(): PreferencesEventHandler {
         return onChanged;
     }
 
-    const prefsEvent = new Event<Preferences>();
+    const prefsEvent = new Event<(prefs: Preferences) => void>();
 
     loadPreferences().then(prefs => {
         currentPreferences = completePreferences(prefs);
@@ -208,7 +208,7 @@ export function watch(): PreferencesEventHandler {
                 else {
                     currentPreferences = DefaultPreferences;
                 }
-                prefsEvent.dispatch(currentPreferences);
+                prefsEvent.dispatch([currentPreferences]);
                 break;
             }
         }

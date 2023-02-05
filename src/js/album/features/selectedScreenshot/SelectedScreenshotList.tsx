@@ -19,7 +19,7 @@ import { Box, Button, Grid, HStack, Spacer, useBoolean } from '@chakra-ui/react'
 
 import { getScreenshotKey, ScreenshotInfo, VideoInfo } from '../../../libs/types';
 import { LocalizedText } from '../../../components/LocalizedText';
-import * as messages from '../../../libs/messages';
+import * as client from "../../../messages/client";
 import { useSelector } from '../../store';
 import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
@@ -44,16 +44,9 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: Selec
         setLoaded.on();
     };
 
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-
-        const req: messages.ShareScreenshotRequest = {
-            type: 'share-screenshot',
-            video,
-            screenshots,
-            hashtags,
-        };
-        messages.sendMessage(req);
+        await client.sendMessage('share-screenshot', { video, screenshots, hashtags });
     };
 
     if (screenshots.length === 0) {

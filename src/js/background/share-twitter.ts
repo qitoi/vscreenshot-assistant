@@ -18,6 +18,7 @@ import { ScreenshotInfo, VideoInfo } from '../libs/types';
 import * as platforms from '../platforms';
 import * as storage from '../libs/storage';
 import * as prefs from '../libs/prefs';
+import * as client from "../messages/client";
 import * as popup from './popup-window';
 
 
@@ -38,6 +39,30 @@ type TweetOptions = {
 export async function shareScreenshot(video: VideoInfo, screenshots: ScreenshotInfo[], hashtags: string[]): Promise<void> {
     const images = await storage.getScreenshotList(screenshots);
 
+    const options = await getTweetOptions(video, hashtags);
+    const url = new URL(TWITTER_SHARE_URL);
+    url.search = new URLSearchParams(options).toString();
+
+    const popupWindow = popup.PopupWindow.create('twitter', url.toString(), false);
+    const window = await popupWindow.show();
+    if (window !== null && window.id !== undefined) {
+        const tabId = await getPopupTabId(window.id);
+
+        // firefoxでは他部の読み込みが完了したあともしばらくはコネクションが確立できずエラーになるため、成功するまでしばらく送信を繰り返す
+        for (let trial = 0; trial < SHARE_SCREENSHOT_MAX_TRIAL; trial++) {
+            try {
+                // 送信に成功すれば抜ける
+                await client.sendTabMessage(tabId, 'attach-screenshot', { images })
+                break;
+            }
+            catch {
+                await new Promise(resolve => setTimeout(resolve, SHARE_SCREENSHOT_INTERVAL));
+            }
+        }
+    }
+}
+
+async function getTweetOptions(video: VideoInfo, hashtags: string[]): Promise<TweetOptions> {
     const options: TweetOptions = {};
     const text: string[] = [];
 
@@ -60,39 +85,25 @@ export async function shareScreenshot(video: VideoInfo, screenshots: ScreenshotI
         options.hashtags = hashtags.join(',');
     }
 
-    const url = new URL(TWITTER_SHARE_URL);
-    url.search = new URLSearchParams(options).toString();
+    return options;
+}
 
-    const popupWindow = popup.PopupWindow.create('twitter', url.toString(), false);
-    const window = await popupWindow.show();
-    if (window !== null) {
-        // twitterのタブの読み込み完了を待ち、完了後にメッセージを送信
+async function getPopupTabId(windowId: number): Promise<number> {
+    // タブの更新を監視しポップアップのロードが完了したら tabId を返す
+    return new Promise<number>(resolve => {
         const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
             if (changeInfo.status === 'complete') {
                 chrome.tabs.get(tabId, tab => {
                     if (chrome.runtime.lastError) {
-                        // エラーが出たら無視
-                        return;
+                        /* empty */
                     }
-                    if (tab.windowId === window.id) {
+                    else if (tab.windowId === windowId) {
                         chrome.tabs.onUpdated.removeListener(handler);
-                        let trial = 0;
-                        const trySend = () => {
-                            chrome.tabs.sendMessage(tabId, { event: 'share-screenshot', images }, () => {
-                                // firefoxでは他部の読み込みが完了したあともしばらくはコネクションが確立できずエラーになるため、成功するまでしばらく送信を繰り返す
-                                if (chrome.runtime.lastError) {
-                                    if (trial < SHARE_SCREENSHOT_MAX_TRIAL) {
-                                        setTimeout(trySend, SHARE_SCREENSHOT_INTERVAL);
-                                    }
-                                }
-                                trial += 1;
-                            });
-                        };
-                        trySend();
+                        resolve(tabId);
                     }
                 });
             }
         };
         chrome.tabs.onUpdated.addListener(handler);
-    }
+    });
 }

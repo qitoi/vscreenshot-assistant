@@ -14,24 +14,27 @@
  *  limitations under the License.
  */
 
-export interface EventHandler<T> {
-    addListener: (callback: (value: T) => void) => void;
-    removeListener: (callback: (value: T) => void) => void;
+
+type Callback = (...args: any[]) => any;
+
+export interface EventHandler<F extends Callback> {
+    addListener: (callback: F) => void;
+    removeListener: (callback: F) => void;
     clear: () => void;
 }
 
-export interface EventDispatcher<T> {
-    dispatch(value: T): void;
+export interface EventDispatcher<F extends Callback> {
+    dispatch(args: Parameters<F>): void;
 }
 
-export class Event<T> implements EventHandler<T>, EventDispatcher<T> {
-    callbacks: ((value: T) => void)[] = [];
+export class Event<F extends Callback> implements EventHandler<F>, EventDispatcher<F> {
+    callbacks: (F)[] = [];
 
-    addListener(callback: (value: T) => void): void {
+    addListener(callback: F): void {
         this.callbacks.push(callback);
     }
 
-    removeListener(callback: (value: T) => void): void {
+    removeListener(callback: F): void {
         this.callbacks = this.callbacks.filter(cb => cb !== callback);
     }
 
@@ -39,9 +42,9 @@ export class Event<T> implements EventHandler<T>, EventDispatcher<T> {
         this.callbacks = [];
     }
 
-    dispatch(value: T): void {
+    dispatch(args: Parameters<F>): void {
         for (const cb of this.callbacks) {
-            cb(value);
+            cb(...args);
         }
     }
 }
