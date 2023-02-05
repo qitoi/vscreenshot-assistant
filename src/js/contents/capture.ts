@@ -18,8 +18,8 @@
 import { ImageDataUrl } from '../libs/types';
 import * as prefs from '../libs/prefs';
 import * as hotkeys from '../libs/hotkeys';
-import { listenAuto } from '../libs/event-listen';
 import { Platform } from '../platforms/platform';
+import { MessageServer } from "../messages/server";
 import * as screenshot from './screenshot';
 import * as animation from './animation';
 import { showScreenshotToast } from './toast';
@@ -33,16 +33,15 @@ export function Setup(platform: Platform): void {
         setupCaptureHotkey(platform, prefs);
     });
 
-    listenAuto(chrome.runtime.onMessage, message => {
-        if (message.type === 'capture-screenshot') {
+    new MessageServer()
+        .handle('tab-capture-request', async () => {
             if (platform.checkVideoPage()) {
-                prefs.loadPreferences().then(prefs => {
-                    const complete = screenshot.capture(platform, prefs);
-                    captureComplete(complete, prefs);
-                });
+                const p = await prefs.loadPreferences();
+                const complete = screenshot.capture(platform, p);
+                captureComplete(complete, p);
             }
-        }
-    });
+        })
+        .listen();
 }
 
 const unbinder: (() => void)[] = [];

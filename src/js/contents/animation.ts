@@ -15,12 +15,11 @@
  */
 
 import { ImageDataUrl } from '../libs/types';
-import * as messages from '../libs/messages';
-import { Port } from '../libs/port';
 import * as prefs from '../libs/prefs';
 import { Platform } from '../platforms/platform';
 import { getLocalizedText } from '../libs/localize';
-import { captureVideo, convertToDataURL, getVideoInfo, saveScreenshot } from './util';
+import * as client from "../messages/client";
+import { captureVideo, convertToDataURL, getVideoInfo } from './util';
 import { showToast, Toast } from './toast';
 
 
@@ -49,7 +48,7 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
     const id = `anime-capture:${time}-${pos}`;
 
     // backgroundとのコネクション開始
-    const port = new Port(id);
+    const port = client.connectPort('anime');
     port.onDisconnect.addListener(() => {
         setContent('エラーが発生しました');
         setTimeout(() => {
@@ -73,20 +72,25 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
     setContent('0.00 %');
 
     // GIF変換の進捗メッセージ受信
-    port.onMessage.addListener(message => {
-        if (message.type === 'anime-encode-progress') {
-            const percent = (message.progress * 100).toFixed(2);
-            setContent(`${percent} %`);
-        }
+    port.handle('anime-encode-progress', async request => {
+        const percent = (request.progress * 100).toFixed(2);
+        setContent(`${percent} %`);
     });
 
     // GIF変換開始・完了待ち
-    const endParam: Omit<messages.AnimeEndRequest, keyof messages.CaptureRequestBase> = {
-        type: 'anime-end',
-        id,
-        interval,
-    };
-    await saveScreenshot(platform, videoId, videoInfo, pos, ratio, endParam, port);
+    await port.sendMessage('anime-end', {
+        platform: platform.PLATFORM_ID,
+        videoId: videoId,
+        videoInfo: {
+            ...videoInfo,
+            ratio: ratio,
+        },
+        thumbnailUrl: videoInfo.thumbnailUrl,
+        pos: pos,
+        datetime: (new Date()).getTime(),
+        id: id,
+        interval: interval,
+    });
 
     toast.hideToast();
     port.disconnect();
@@ -113,7 +117,7 @@ async function startCaptureAnimation(video: HTMLVideoElement, interval: number, 
 }
 
 
-async function sendFrame(port: Port, id: string, canvases: HTMLCanvasElement[], prefs: prefs.Preferences, onProgress: (progress: number) => void): Promise<ImageDataUrl> {
+async function sendFrame(port: client.PortClient<'anime'>, id: string, canvases: HTMLCanvasElement[], prefs: prefs.Preferences, onProgress: (progress: number) => void): Promise<ImageDataUrl> {
     let firstFrame: ImageDataUrl = '';
     let no = 0;
     let completed = 0;
@@ -128,20 +132,11 @@ async function sendFrame(port: Port, id: string, canvases: HTMLCanvasElement[], 
             firstFrame = image;
         }
 
-        const frame: messages.AnimeFrameRequest = {
-            type: 'anime-frame',
-            id,
-            no,
-            image,
-        };
-
-        promises.push(new Promise<void>(resolve => {
-            port.sendMessage(frame, () => {
-                completed += 1;
-                onProgress(completed / total);
-                resolve();
-            });
-        }));
+        const p = port.sendMessage('anime-frame', { id, no, image }).then(() => {
+            completed += 1;
+            onProgress(completed / total);
+        });
+        promises.push(p);
 
         await new Promise(resolve => setTimeout(resolve, 0));
     }

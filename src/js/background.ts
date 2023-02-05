@@ -16,21 +16,17 @@
 
 import { patternToRegex } from 'webext-patterns';
 
-import { ImageDataUrl, VideoInfo } from './libs/types';
-import * as messages from './libs/messages';
-import * as port from './libs/port';
-import * as storage from './libs/storage';
 import * as prefs from './libs/prefs';
-import { downloadImage } from './libs/download';
 import { getLocalizedText } from './libs/localize';
 import { listenAuto } from './libs/event-listen';
 import { ignoreRuntimeError } from "./libs/runtime-error";
 import * as popup from './background/popup-window';
-import * as videoSort from './background/video-sort';
-import * as screenshotSort from './background/screenshot-sort';
-import { resizeImage } from './background/resize';
-import { makeAnimation } from './background/animation';
-import { shareScreenshot } from './background/share-twitter';
+import { MessageServer, PortServer } from "./messages/server";
+import { AnimeCaptureServer, CaptureServer } from "./messages/capture/server";
+import { KeepAliveServer } from "./messages/keep-alive/server";
+import { AlbumServer } from "./messages/album/server";
+import { SnsShareServer } from "./messages/sns-share/server";
+import * as client from "./messages/client";
 
 
 const action = chrome.action || chrome.browserAction;
@@ -52,7 +48,12 @@ listenAuto(action.onClicked, async tab => {
         }
         case prefs.ClickIconActions.CaptureScreenshot: {
             if (tab.id !== undefined) {
-                chrome.tabs.sendMessage(tab.id, { type: 'capture-screenshot' }, ignoreRuntimeError);
+                try {
+                    await client.sendTabMessage(tab.id, 'tab-capture-request', {})
+                }
+                catch {
+                    // 対象外のページにメッセージを送ると受信側がなくてエラーになるため握り潰す
+                }
             }
         }
     }
@@ -133,206 +134,14 @@ listenAuto(chrome.webNavigation.onCommitted, details => {
     }
 });
 
+// メッセージサーバの設定
+new MessageServer()
+    .bind(CaptureServer)
+    .bind(AlbumServer)
+    .bind(SnsShareServer)
+    .listen();
 
-// スクリーンショットキャプチャやスクリーンショット削除メッセージ対応
-
-listenAuto(chrome.runtime.onMessage, (param, sender, sendResponse) => {
-    const message = param as messages.MessageRequest;
-    switch (message.type) {
-        case 'capture': {
-            // スクリーンショットのサムネイル作成
-            const image = Promise.resolve(message.image);
-
-            saveScreenshot(message, false, image, image)
-                .then(() => {
-                    const response: (message: messages.CaptureResponse) => void = sendResponse;
-                    response({
-                        type: 'capture-response',
-                        status: 'complete',
-                    });
-                });
-
-            break;
-        }
-        case 'remove-video': {
-            const response: (message: messages.RemoveVideoResponse) => void = sendResponse;
-            storage.removeVideoInfo(message.platform, message.videoId)
-                .then(() => {
-                    response({ type: 'remove-video-response', status: 'complete' });
-                });
-            break;
-        }
-        case 'reset-storage': {
-            const response: (message: messages.ResetStorageResponse) => void = sendResponse;
-            clearAllScreenshot()
-                .then(() => {
-                    response({ type: 'reset-storage-response', status: 'complete' });
-                });
-            break;
-        }
-        case 'share-screenshot': {
-            shareScreenshot(message.video, message.screenshots, message.hashtags);
-            sendResponse();
-            break;
-        }
-    }
-    return true;
-});
-
-
-// アニメーションキャプチャのメッセージ対応
-
-type AnimeFrame = {
-    no: number,
-    image: ImageDataUrl,
-}
-
-type AnimeCapture = {
-    thumbnail: Promise<ImageDataUrl> | null,
-    frames: Promise<AnimeFrame>[],
-    width: number,
-    height: number,
-};
-
-const ANIME_CAPTURE_ID_PREFIX = 'anime-capture:';
-const KEEP_ALIVE_PREFIX = 'keep-alive:';
-
-port.listenPort().addListener(port => {
-    // KeepAliveのための接続の場合は何もせず保持
-    if (port.name.startsWith(KEEP_ALIVE_PREFIX)) {
-        return;
-    }
-    // アニメキャプチャ以外の接続であれば切断
-    if (!port.name.startsWith(ANIME_CAPTURE_ID_PREFIX)) {
-        port.disconnect();
-        return;
-    }
-
-    port.onDisconnect.addListener(() => {
-        animeCapture.thumbnail = null;
-        animeCapture.frames = [];
-    });
-
-    const animeCapture: AnimeCapture = {
-        thumbnail: null,
-        frames: [],
-        width: 0,
-        height: 0,
-    };
-
-    prefs.loadPreferences().then(prefs => {
-        animeCapture.width = prefs.animation.width;
-        animeCapture.height = prefs.animation.height;
-    });
-
-    port.onMessage.addListener(message => {
-        switch (message.type) {
-            case 'anime-frame': {
-                if (animeCapture.thumbnail === null) {
-                    animeCapture.thumbnail = Promise.resolve(message.image);
-                }
-
-                const resize = resizeImage(message.image, animeCapture.width, animeCapture.height, 'image/png')
-                    .then((resize): AnimeFrame => ({
-                        no: message.no,
-                        image: resize,
-                    }));
-
-                resize.then(() => message.sendResponse({ type: 'anime-frame-response', status: 'complete' }));
-                animeCapture.frames.push(resize);
-                break;
-            }
-            case 'anime-end': {
-                const thumbnail = animeCapture.thumbnail;
-                if (thumbnail === null) {
-                    message.sendResponse({ type: 'anime-end-response', status: 'error', error: 'invalid' });
-                    break;
-                }
-
-                const image = Promise.all(animeCapture.frames).then(frames =>
-                    makeAnimation(
-                        frames.sort((a, b) => a.no - b.no).map(f => f.image),
-                        message.interval,
-                        progress => {
-                            if (!port.disconnected) {
-                                port.sendMessage({
-                                    type: 'anime-encode-progress',
-                                    progress,
-                                });
-                            }
-                        })
-                );
-
-                saveScreenshot(message, true, image, thumbnail)
-                    .then(() => {
-                        message.sendResponse({
-                            type: 'anime-end-response',
-                            status: 'complete',
-                        });
-                    });
-                break;
-            }
-        }
-    });
-});
-
-
-async function saveScreenshot(param: messages.CaptureRequestBase, isAnime: boolean, image: Promise<ImageDataUrl>, imageForThumbnail: Promise<ImageDataUrl>): Promise<void> {
-    const thumbnailQuality = 94;
-    const p = await prefs.loadPreferences();
-    const videoInfo: VideoInfo = {
-        ...param.videoInfo,
-        platform: param.platform,
-        videoId: param.videoId,
-        lastUpdated: param.datetime,
-    };
-
-    // スクリーンショットのサムネイル作成
-    const thumbnail: Promise<ImageDataUrl> = imageForThumbnail.then(image => resizeImage(image, p.thumbnail.width, p.thumbnail.height, 'image/jpeg', thumbnailQuality));
-
-    // 動画サムネイルが保存されていない場合はダウンロードする
-    type VideoThumbnail = { image: ImageDataUrl, resized: ImageDataUrl };
-    let videoThumbnail: Promise<VideoThumbnail | null> = Promise.resolve(null);
-    const videoThumbnailExists = await storage.existsVideoThumbnail(param.platform, param.videoId);
-    if (!videoThumbnailExists) {
-        const download = (param.thumbnailUrl !== null) ? downloadImage(param.thumbnailUrl, true) : Promise.reject();
-        videoThumbnail =
-            download
-                .then(async image => ({
-                    image,
-                    resized: await resizeImage(image, p.thumbnail.width, p.thumbnail.height, 'image/jpeg', thumbnailQuality),
-                }))
-                // サムネイルのURLが取得できない場合やサムネイルのダウンロードに失敗した場合、キャプチャ画像用のサムネイル画像で代用
-                .catch(async () => ({
-                    image: await imageForThumbnail,
-                    resized: await thumbnail,
-                }));
-    }
-
-    return Promise.all([image, thumbnail, videoThumbnail])
-        .then(([image, thumbnail, videoThumbnail]) => {
-            storage.saveScreenshot(param.platform, param.videoId, isAnime, param.pos, param.datetime, image, thumbnail);
-            // 新規保存する動画サムネイルがある場合は保存
-            if (videoThumbnail !== null) {
-                storage.saveVideoThumbnail(param.platform, param.videoId, videoThumbnail.image, videoThumbnail.resized);
-            }
-            storage.saveVideoInfo({ ...videoInfo, lastUpdated: Date.now() });
-        });
-}
-
-
-async function clearAllScreenshot(): Promise<void> {
-    // スクリーンショット以外の設定を退避
-    const p = await prefs.loadPreferences();
-    const windowSizeSet = await popup.loadWindowSizeSet();
-    const videoSortOrder = await videoSort.loadVideoSortOrder();
-    const screenshotSortOrder = await screenshotSort.loadScreenshotSortOrder();
-
-    await storage.clearAll();
-
-    // 復元
-    await prefs.savePreferences(p);
-    await popup.saveWindowSizeSet(windowSizeSet);
-    await videoSort.saveVideoSortOrder(videoSortOrder);
-    await screenshotSort.saveScreenshotSortOrder(screenshotSortOrder);
-}
+new PortServer()
+    .bind(AnimeCaptureServer)
+    .bind(KeepAliveServer)
+    .listen();

@@ -14,24 +14,24 @@
  *  limitations under the License.
  */
 
-export interface EventHandler<T> {
-    addListener: (callback: (value: T) => void) => void;
-    removeListener: (callback: (value: T) => void) => void;
+export interface EventHandler<T, U extends any[] = []> {
+    addListener: (callback: (value: T, ...opt: U) => void) => void;
+    removeListener: (callback: (value: T, ...opt: U) => void) => void;
     clear: () => void;
 }
 
-export interface EventDispatcher<T> {
-    dispatch(value: T): void;
+export interface EventDispatcher<T, U extends any[] = []> {
+    dispatch(value: T, ...opt: U): void;
 }
 
-export class Event<T> implements EventHandler<T>, EventDispatcher<T> {
-    callbacks: ((value: T) => void)[] = [];
+export class Event<T, U extends any[] = []> implements EventHandler<T, U>, EventDispatcher<T, U> {
+    callbacks: ((value: T, ...opt: U) => void)[] = [];
 
-    addListener(callback: (value: T) => void): void {
+    addListener(callback: (value: T, ...opt: U) => void): void {
         this.callbacks.push(callback);
     }
 
-    removeListener(callback: (value: T) => void): void {
+    removeListener(callback: (value: T, ...opt: U) => void): void {
         this.callbacks = this.callbacks.filter(cb => cb !== callback);
     }
 
@@ -39,9 +39,9 @@ export class Event<T> implements EventHandler<T>, EventDispatcher<T> {
         this.callbacks = [];
     }
 
-    dispatch(value: T): void {
+    dispatch(value: T, ...opt: U): void {
         for (const cb of this.callbacks) {
-            cb(value);
+            cb(value, ...opt);
         }
     }
 }

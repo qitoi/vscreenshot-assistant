@@ -15,10 +15,10 @@
  */
 
 import { ImageDataUrl } from '../libs/types';
-import * as messages from '../libs/messages';
 import * as prefs from '../libs/prefs';
 import { Platform } from '../platforms/platform';
-import { captureVideo, convertToDataURL, getVideoInfo, saveScreenshot } from './util';
+import * as client from "../messages/client";
+import { captureVideo, convertToDataURL, getVideoInfo } from './util';
 
 
 export async function capture(platform: Platform, prefs: prefs.Preferences): Promise<ImageDataUrl> {
@@ -36,11 +36,18 @@ export async function capture(platform: Platform, prefs: prefs.Preferences): Pro
 
     const image = convertToDataURL(canvas, prefs);
 
-    const param: Omit<messages.CaptureRequest, keyof messages.CaptureRequestBase> = {
-        type: 'capture',
-        image,
-    };
+    await client.sendMessage('capture', {
+        platform: platform.PLATFORM_ID,
+        videoId: videoId,
+        videoInfo: {
+            ...videoInfo,
+            ratio: ratio,
+        },
+        thumbnailUrl: videoInfo.thumbnailUrl,
+        pos: pos,
+        datetime: (new Date()).getTime(),
+        image: image,
+    });
 
-    return saveScreenshot(platform, videoId, videoInfo, pos, ratio, param, messages)
-        .then(() => image);
+    return image;
 }

@@ -17,7 +17,7 @@
 import { ImageDataUrl } from './libs/types';
 import { convertScreenshotToFile } from './libs/data-url';
 import * as twitterMessage from './libs/twitter-message';
-import { listenOnce } from './libs/event-listen';
+import { MessageServer } from "./messages/server";
 
 
 // twitterのファイルドロップ先の生成待機設定
@@ -25,16 +25,11 @@ const DROP_FILES_TRIAL = 20;
 const DROP_FILES_INTERVAL = 500;
 
 
-listenOnce(chrome.runtime.onMessage, (message, sender, sendResponse) => {
-    // backgroundからのスクリーンショット受信
-    switch (message.event) {
-        case 'share-screenshot': {
-            pasteScreenshot(message.images);
-            sendResponse();
-            break;
-        }
-    }
-});
+new MessageServer()
+    .handle('attach-screenshot', async request => {
+        pasteScreenshot(request.images);
+    })
+    .listen();
 
 
 function pasteScreenshot(images: ImageDataUrl[]): void {

@@ -17,8 +17,8 @@
 import * as React from 'react';
 import { Box, Button, Center, Progress, Text } from '@chakra-ui/react';
 
-import * as messages from '../../../libs/messages';
 import * as prefs from '../../../libs/prefs';
+import * as messages from '../../../messages/client';
 import { LocalizedText } from '../../../components/LocalizedText';
 import Dialog from '../../../components/Dialog';
 import ControlGroup from '../../components/ControlGroup';
@@ -41,10 +41,7 @@ const ResetPreferences: React.FC = () => {
     const handleResetStorage = React.useCallback(async () => {
         setIsResettingStorage(true);
 
-        const req: messages.ResetStorageRequest = {
-            type: 'reset-storage',
-        };
-        await new Promise<void>(resolve => messages.sendMessage(req, () => resolve()));
+        await messages.sendMessage('reset-storage', {});
 
         setIsOpenResetStorage(false);
         setIsResettingStorage(false);
