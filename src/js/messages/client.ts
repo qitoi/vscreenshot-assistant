@@ -14,9 +14,10 @@
  *  limitations under the License.
  */
 
-import { Event, EventHandler } from "../libs/event";
-import { MessageRequestValue, MessageResponseValue, MessageKey, MessageRequest, MessageResponse } from "./type";
-import { PortRequestValue, PortResponseValue, PortMessageKey, PortRequest, PortRequestValues, PortResponse, PortResponseValues, PortType } from "./type";
+import { Event, EventHandler } from '../libs/event';
+import { MessageRequestValue, MessageResponseValue, MessageKey, MessageRequest, MessageResponse } from './type';
+import { PortRequestValue, PortResponseValue, PortMessageKey, PortRequest, PortRequestValues, PortResponse, PortResponseValues, PortType } from './type';
+import { KeepAliveClient } from './keep-alive/client';
 
 
 export async function sendMessage<Key extends MessageKey>(key: Key, value: MessageRequestValue<Key>): Promise<MessageResponseValue<Key>> {
@@ -64,7 +65,17 @@ export async function sendTabMessage<Key extends MessageKey>(tabId: number, key:
 export function connectPort<Type extends PortType>(type: Type): PortClient<Type> {
     const id = (new Date()).getTime();
     const port = new PortWrapper(`${type}:${id}`);
-    return new PortClient(type, port);
+    const client = new PortClient(type, port);
+
+    // KeepAlive 以外のコネクションの場合は同時に KeepAlive 用のコネクションを開始して ServiceWorker の終了を防ぐ
+    if (type !== 'keep-alive') {
+        const keepAlive = new KeepAliveClient();
+        client.onDisconnect.addListener(() => {
+            keepAlive.disconnect();
+        });
+    }
+
+    return client;
 }
 
 export function wrapPort<Type extends PortType>(type: Type, port: chrome.runtime.Port): PortClient<Type> {
@@ -232,7 +243,7 @@ class PortWrapper {
                         value,
                     };
                     this.port.postMessage(response);
-                }
+                },
             ]);
         }
         // receive response
