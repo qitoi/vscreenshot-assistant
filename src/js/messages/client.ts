@@ -86,7 +86,7 @@ export class PortClient<Type extends PortType> {
         return this.port.disconnected;
     }
 
-    public get onDisconnect(): EventHandler<void> {
+    public get onDisconnect(): PortWrapper['onDisconnect'] {
         return this.port.onDisconnect;
     }
 
@@ -157,20 +157,23 @@ type PortWrapperResponse = {
     value: any,
 };
 
+type MessageEventCallback = (request: any, sendResponse: (response: any) => void) => void;
+type DisconnectEventCallback = () => void;
+
 class PortWrapper {
     private port: chrome.runtime.Port;
     private seqId = 0;
     private responseReceivers: Record<number, (message: any) => void> = {};
     private _disconnected: boolean;
 
-    private readonly onMessageEvent: Event<any, [(response: any) => void]>;
-    private readonly onDisconnectEvent: Event<void>;
+    private readonly onMessageEvent: Event<MessageEventCallback>;
+    private readonly onDisconnectEvent: Event<DisconnectEventCallback>;
 
-    get onMessage(): EventHandler<any, [(response: any) => void]> {
+    get onMessage(): EventHandler<MessageEventCallback> {
         return this.onMessageEvent;
     }
 
-    get onDisconnect(): EventHandler<void> {
+    get onDisconnect(): EventHandler<DisconnectEventCallback> {
         return this.onDisconnectEvent;
     }
 
@@ -192,8 +195,8 @@ class PortWrapper {
 
         this._disconnected = false;
 
-        this.onMessageEvent = new Event<any, [(response: any) => void]>();
-        this.onDisconnectEvent = new Event<void>();
+        this.onMessageEvent = new Event<MessageEventCallback>();
+        this.onDisconnectEvent = new Event<DisconnectEventCallback>();
 
         this.port.onMessage.addListener(this.handleMessage.bind(this));
         this.port.onDisconnect.addListener((this.handleDisconnect.bind(this)));
@@ -221,13 +224,16 @@ class PortWrapper {
     private handleMessage(message: PortWrapperRequest | PortWrapperResponse): void {
         // receive request
         if ('reqId' in message) {
-            this.onMessageEvent.dispatch(message.value, (value) => {
-                const response: PortWrapperResponse = {
-                    resId: message.reqId,
-                    value,
-                };
-                this.port.postMessage(response);
-            });
+            this.onMessageEvent.dispatch([
+                message.value,
+                (value: any) => {
+                    const response: PortWrapperResponse = {
+                        resId: message.reqId,
+                        value,
+                    };
+                    this.port.postMessage(response);
+                }
+            ]);
         }
         // receive response
         else {
@@ -241,7 +247,7 @@ class PortWrapper {
         this._disconnected = true;
         this.onMessageEvent.clear();
 
-        this.onDisconnectEvent.dispatch();
+        this.onDisconnectEvent.dispatch([]);
         this.onDisconnectEvent.clear();
     }
 }
