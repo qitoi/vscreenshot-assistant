@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import * as React from "react";
+import * as React from 'react';
 import { MdFileDownload } from 'react-icons/md';
 import { IconButton, useLightboxState } from 'yet-another-react-lightbox/core'
-import { Slide } from "yet-another-react-lightbox";
+import { Slide } from 'yet-another-react-lightbox';
 
 type DownloadButtonProps = {
     slides: Slide[],

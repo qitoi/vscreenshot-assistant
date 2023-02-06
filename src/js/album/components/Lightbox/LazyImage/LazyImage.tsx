@@ -16,8 +16,8 @@
 
 import * as React from 'react';
 import { Plugin, PluginMethods } from 'yet-another-react-lightbox';
-import { LazyImageComponent } from "./LazyImageComponent";
-import { isLazyImageSlideType } from "./LazyImageSource";
+import { LazyImageComponent } from './LazyImageComponent';
+import { isLazyImageSlideType } from './LazyImageSource';
 
 export const LazyImage: Plugin = ({ augment }: PluginMethods) => {
     augment(({ render, ...restProps }) => ({

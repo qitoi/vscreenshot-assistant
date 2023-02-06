@@ -16,10 +16,10 @@
 
 import * as React from 'react';
 
-import { Information } from "./Information";
-import { Slide } from "yet-another-react-lightbox";
+import { Information } from './Information';
+import { Slide } from 'yet-another-react-lightbox';
 
-declare module "yet-another-react-lightbox/types" {
+declare module 'yet-another-react-lightbox/types' {
     interface LightboxProps {
         information?: {
             render?: (slide: Slide) => React.ReactNode,
@@ -27,7 +27,7 @@ declare module "yet-another-react-lightbox/types" {
     }
 }
 
-declare module "../CustomLightbox" {
+declare module '../CustomLightbox' {
     interface CustomLightboxSource {
         renderFooter?: (slide: Slide) => React.ReactNode,
     }

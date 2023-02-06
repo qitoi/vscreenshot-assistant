@@ -40,20 +40,20 @@
  *  SOFTWARE.
  */
 
-import * as React from "react";
+import * as React from 'react';
 
-import { Component, ComponentProps, Slide } from "yet-another-react-lightbox";
-import { ContainerRect, useContainerRect } from "yet-another-react-lightbox/core";
-import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from "yet-another-react-lightbox/core";
-import { ImageSlide } from "yet-another-react-lightbox/core";
-import { useController } from "yet-another-react-lightbox/core";
-import { useEvents } from "yet-another-react-lightbox/core";
-import { useLightboxState } from "yet-another-react-lightbox/core";
-import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL, YARL_EVENT_BACKDROP_CLICK } from "yet-another-react-lightbox/core";
+import { Component, ComponentProps, Slide } from 'yet-another-react-lightbox';
+import { ContainerRect, useContainerRect } from 'yet-another-react-lightbox/core';
+import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from 'yet-another-react-lightbox/core';
+import { ImageSlide } from 'yet-another-react-lightbox/core';
+import { useController } from 'yet-another-react-lightbox/core';
+import { useEvents } from 'yet-another-react-lightbox/core';
+import { useLightboxState } from 'yet-another-react-lightbox/core';
+import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL, YARL_EVENT_BACKDROP_CLICK } from 'yet-another-react-lightbox/core';
 
 const cssPrefix = (value?: string) => composePrefix(MODULE_CAROUSEL, value);
 
-const cssSlidePrefix = (value?: string) => composePrefix("slide", value);
+const cssSlidePrefix = (value?: string) => composePrefix('slide', value);
 
 type CarouselSlideProps = {
     slide: Slide;
@@ -119,7 +119,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
             ref={setContainerRef}
             className={clsx(
                 cssClass(cssSlidePrefix()),
-                offset === 0 && cssClass(cssSlidePrefix("current")),
+                offset === 0 && cssClass(cssSlidePrefix('current')),
                 cssClass(CLASS_FLEX_CENTER)
             )}
             onClick={handleBackdropClick}
@@ -129,7 +129,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
     );
 };
 
-const Placeholder: React.FC = () => <div className={cssClass("slide")} />;
+const Placeholder: React.FC = () => <div className={cssClass('slide')} />;
 
 type ConsistentCarouselState = {
     prevSlides: Slide[],
@@ -229,14 +229,14 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
     return (
         <div
             ref={setCarouselRef}
-            className={clsx(cssClass(cssPrefix()), items.length > 0 && cssClass(cssPrefix("with_slides")))}
+            className={clsx(cssClass(cssPrefix()), items.length > 0 && cssClass(cssPrefix('with_slides')))}
             style={
                 {
-                    [`${cssVar(cssPrefix("slides_count"))}`]: items.length,
-                    [`${cssVar(cssPrefix("spacing_px"))}`]: spacingValue.pixel || 0,
-                    [`${cssVar(cssPrefix("spacing_percent"))}`]: spacingValue.percent || 0,
-                    [`${cssVar(cssPrefix("padding_px"))}`]: paddingValue.pixel || 0,
-                    [`${cssVar(cssPrefix("padding_percent"))}`]: paddingValue.percent || 0,
+                    [`${cssVar(cssPrefix('slides_count'))}`]: items.length,
+                    [`${cssVar(cssPrefix('spacing_px'))}`]: spacingValue.pixel || 0,
+                    [`${cssVar(cssPrefix('spacing_percent'))}`]: spacingValue.percent || 0,
+                    [`${cssVar(cssPrefix('padding_px'))}`]: paddingValue.pixel || 0,
+                    [`${cssVar(cssPrefix('padding_percent'))}`]: paddingValue.percent || 0,
                 } as React.CSSProperties
             }
         >

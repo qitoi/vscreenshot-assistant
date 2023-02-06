@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import { listenAuto } from "../libs/event-listen";
-import { MessageRequestValue, MessageResponseValue, MessageKey, MessageRequest, MessageRequestValues, MessageResponse, MessageResponseValues } from "./type";
-import { PortRequestValue, PortResponseValue, PortMessageKey, PortRequestValues, PortResponseValues, PortType } from "./type";
-import { wrapPort, PortClient } from "./client";
+import { listenAuto } from '../libs/event-listen';
+import { MessageRequestValue, MessageResponseValue, MessageKey, MessageRequest, MessageRequestValues, MessageResponse, MessageResponseValues } from './type';
+import { PortRequestValue, PortResponseValue, PortMessageKey, PortRequestValues, PortResponseValues, PortType } from './type';
+import { wrapPort, PortClient } from './client';
 
 
 type MessageHandler<Key extends MessageKey> = (request: MessageRequestValue<Key>) => Promise<MessageResponseValue<Key>>;

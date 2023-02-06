@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { chakra } from '@chakra-ui/react';
 import { Component, ComponentProps } from 'yet-another-react-lightbox';
-import { useLightboxState } from "yet-another-react-lightbox/core";
+import { useLightboxState } from 'yet-another-react-lightbox/core';
 
 export const InformationComponent: Component = ({ slides, information }: React.PropsWithChildren<ComponentProps>) => {
     const { state: { currentIndex } } = useLightboxState();

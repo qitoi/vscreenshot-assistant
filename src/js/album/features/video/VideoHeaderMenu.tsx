@@ -22,8 +22,8 @@ import { CancelError } from 'p-cancelable';
 
 import { getVideoKey, VideoInfo } from '../../../libs/types';
 import * as storage from '../../../libs/storage';
-import * as prefs from "../../../libs/prefs";
-import { decodeDataURL } from "../../../libs/data-url";
+import * as prefs from '../../../libs/prefs';
+import { decodeDataURL } from '../../../libs/data-url';
 import { LocalizedText } from '../../../components/LocalizedText';
 import { useDispatch, useSelector } from '../../store';
 import useArchive from '../../hooks/useArchive';

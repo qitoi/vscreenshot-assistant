@@ -15,7 +15,7 @@
  */
 
 import { ImageDataUrl } from '../libs/types';
-import { decodeDataURL, encodeDataURL } from "../libs/data-url";
+import { decodeDataURL, encodeDataURL } from '../libs/data-url';
 
 import * as pica from 'pica';
 

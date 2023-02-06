@@ -19,14 +19,14 @@ import { patternToRegex } from 'webext-patterns';
 import * as prefs from './libs/prefs';
 import { getLocalizedText } from './libs/localize';
 import { listenAuto } from './libs/event-listen';
-import { ignoreRuntimeError } from "./libs/runtime-error";
+import { ignoreRuntimeError } from './libs/runtime-error';
 import * as popup from './background/popup-window';
-import { MessageServer, PortServer } from "./messages/server";
-import { AnimeCaptureServer, CaptureServer } from "./messages/capture/server";
-import { KeepAliveServer } from "./messages/keep-alive/server";
-import { AlbumServer } from "./messages/album/server";
-import { SnsShareServer } from "./messages/sns-share/server";
-import * as client from "./messages/client";
+import { MessageServer, PortServer } from './messages/server';
+import { AnimeCaptureServer, CaptureServer } from './messages/capture/server';
+import { KeepAliveServer } from './messages/keep-alive/server';
+import { AlbumServer } from './messages/album/server';
+import { SnsShareServer } from './messages/sns-share/server';
+import * as client from './messages/client';
 
 
 const action = chrome.action || chrome.browserAction;

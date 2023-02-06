@@ -16,8 +16,8 @@
 
 import * as React from 'react';
 import { Plugin, PluginMethods } from 'yet-another-react-lightbox';
-import { createModule, MODULE_CAROUSEL } from "yet-another-react-lightbox/core";
-import { InformationComponent } from "./InformationComponent";
+import { createModule, MODULE_CAROUSEL } from 'yet-another-react-lightbox/core';
+import { InformationComponent } from './InformationComponent';
 
 const PLUGIN_INFORMATION = 'information';
 

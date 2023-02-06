@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { GenericSlide } from "yet-another-react-lightbox";
-import { CustomLightboxSource } from "../CustomLightbox";
+import { GenericSlide } from 'yet-another-react-lightbox';
+import { CustomLightboxSource } from '../CustomLightbox';
 
 export type LazyLoadFuncType = () => Promise<Blob | null>;
 
