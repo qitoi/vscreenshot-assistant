@@ -21,7 +21,7 @@ import { Global } from '@emotion/react';
 import { getScreenshotKey, ImageDataUrl, ScreenshotInfo } from '../../../libs/types';
 import * as storage from '../../../libs/storage';
 import * as datetime from '../../../libs/datetime';
-import { decodeDataURL } from "../../../libs/data-url";
+import { decodeDataURL } from '../../../libs/data-url';
 import * as platforms from '../../../platforms';
 import { LocalizedText } from '../../../components/LocalizedText';
 import CustomLightbox, { CustomLightboxSource } from '../../components/Lightbox/CustomLightbox';

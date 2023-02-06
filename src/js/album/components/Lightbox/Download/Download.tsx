@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Plugin, PluginMethods } from 'yet-another-react-lightbox';
 
-import { DownloadButton } from "./DownloadButton";
+import { DownloadButton } from './DownloadButton';
 
 export const Download: Plugin = ({ augment }: PluginMethods) => {
     augment(({ toolbar: { buttons, ...restToolbar }, slides, ...restProps }) => ({

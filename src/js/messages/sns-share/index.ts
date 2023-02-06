@@ -15,10 +15,10 @@
  */
 
 
-import { ScreenshotInfo, VideoInfo } from "../../libs/types";
+import { ScreenshotInfo, VideoInfo } from '../../libs/types';
 
 
-declare module "../type" {
+declare module '../type' {
     interface MessageTypes {
         'share-screenshot': [ShareScreenshotRequest, void],
         'attach-screenshot': [AttachScreenshotRequest, void],

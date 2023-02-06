@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import { LazyImage } from "./LazyImage";
-import { LazyImageSlideType } from "./LazyImageSource";
+import { LazyImage } from './LazyImage';
+import { LazyImageSlideType } from './LazyImageSource';
 
-declare module "yet-another-react-lightbox" {
+declare module 'yet-another-react-lightbox' {
     interface SlideTypes {
         LazyImage: LazyImageSlideType,
     }

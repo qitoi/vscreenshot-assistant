@@ -15,12 +15,12 @@
  */
 
 
-import * as storage from "../../libs/storage";
-import * as prefs from "../../libs/prefs";
-import * as popup from "../../background/popup-window";
-import * as videoSort from "../../background/video-sort";
-import * as screenshotSort from "../../background/screenshot-sort";
-import { MessageServerBuilder } from "../server";
+import * as storage from '../../libs/storage';
+import * as prefs from '../../libs/prefs';
+import * as popup from '../../background/popup-window';
+import * as videoSort from '../../background/video-sort';
+import * as screenshotSort from '../../background/screenshot-sort';
+import { MessageServerBuilder } from '../server';
 
 
 export function AlbumServer(server: MessageServerBuilder): void {

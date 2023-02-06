@@ -19,7 +19,7 @@ import { Box, Button, Grid, HStack, Spacer, useBoolean } from '@chakra-ui/react'
 
 import { getScreenshotKey, ScreenshotInfo, VideoInfo } from '../../../libs/types';
 import { LocalizedText } from '../../../components/LocalizedText';
-import * as client from "../../../messages/client";
+import * as client from '../../../messages/client';
 import { useSelector } from '../../store';
 import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';

@@ -19,7 +19,7 @@ import { ImageDataUrl } from '../libs/types';
 import * as prefs from '../libs/prefs';
 import * as hotkeys from '../libs/hotkeys';
 import { Platform } from '../platforms/platform';
-import { MessageServer } from "../messages/server";
+import { MessageServer } from '../messages/server';
 import * as screenshot from './screenshot';
 import * as animation from './animation';
 import { showScreenshotToast } from './toast';

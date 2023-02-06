@@ -18,7 +18,7 @@ import { ScreenshotInfo, VideoInfo } from '../libs/types';
 import * as platforms from '../platforms';
 import * as storage from '../libs/storage';
 import * as prefs from '../libs/prefs';
-import * as client from "../messages/client";
+import * as client from '../messages/client';
 import * as popup from './popup-window';
 
 

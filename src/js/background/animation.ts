@@ -18,7 +18,7 @@ import * as iq from 'image-q';
 import * as omggif from 'omggif';
 
 import { ImageDataUrl } from '../libs/types';
-import { decodeDataURL, encodeDataURL } from "../libs/data-url";
+import { decodeDataURL, encodeDataURL } from '../libs/data-url';
 
 
 type PointContainer = iq.utils.PointContainer;
@@ -61,7 +61,7 @@ export async function makeAnimation(images: ImageDataUrl[], interval: number, on
         const palette = await iq.buildPalette(
             [...prev, current, ...next],
             {
-                paletteQuantization: "rgbquant",
+                paletteQuantization: 'rgbquant',
             }
         );
         const reduced = await iq.applyPalette(current, palette);

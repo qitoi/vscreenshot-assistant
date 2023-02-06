@@ -19,7 +19,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getVideoKey, VideoInfo } from '../../../libs/types';
 import * as storage from '../../../libs/storage';
 import * as videoSort from '../../../background/video-sort';
-import * as client from "../../../messages/client";
+import * as client from '../../../messages/client';
 import { RootState } from '../../store';
 
 

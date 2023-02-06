@@ -15,10 +15,10 @@
  */
 
 
-import { ImageDataUrl, VideoInfo } from "../../libs/types";
+import { ImageDataUrl, VideoInfo } from '../../libs/types';
 
 
-declare module "../type" {
+declare module '../type' {
     interface MessageTypes {
         'capture': [CaptureRequest, void],
         'tab-capture-request': [TabCaptureRequestRequest, void],

@@ -16,10 +16,10 @@
 
 import * as React from 'react';
 import { Plugin, PluginMethods } from 'yet-another-react-lightbox';
-import { createModule, MODULE_CAROUSEL } from "yet-another-react-lightbox/core";
+import { createModule, MODULE_CAROUSEL } from 'yet-another-react-lightbox/core';
 
-import { PLUGIN_CONSISTENT_CAROUSEL } from "./index";
-import { ConsistentCarouselComponent } from "./ConsistentCarouselComponent";
+import { PLUGIN_CONSISTENT_CAROUSEL } from './index';
+import { ConsistentCarouselComponent } from './ConsistentCarouselComponent';
 
 export const ConsistentCarousel: Plugin = ({ replace }: PluginMethods) => {
     replace(MODULE_CAROUSEL, createModule(PLUGIN_CONSISTENT_CAROUSEL, ConsistentCarouselComponent));

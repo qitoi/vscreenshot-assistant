@@ -15,15 +15,15 @@
  */
 
 
-import * as storage from "../../libs/storage";
-import * as prefs from "../../libs/prefs";
-import { ImageDataUrl, VideoInfo } from "../../libs/types";
-import { downloadImage } from "../../libs/download";
-import { resizeImage } from "../../background/resize";
-import { makeAnimation } from "../../background/animation";
-import { CaptureRequestBase } from "./index";
-import { MessageServerBuilder } from "../server";
-import { PortHandler, PortServerBuilder } from "../server";
+import * as storage from '../../libs/storage';
+import * as prefs from '../../libs/prefs';
+import { ImageDataUrl, VideoInfo } from '../../libs/types';
+import { downloadImage } from '../../libs/download';
+import { resizeImage } from '../../background/resize';
+import { makeAnimation } from '../../background/animation';
+import { CaptureRequestBase } from './index';
+import { MessageServerBuilder } from '../server';
+import { PortHandler, PortServerBuilder } from '../server';
 
 
 export function CaptureServer(server: MessageServerBuilder): void {

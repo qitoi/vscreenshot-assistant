@@ -17,7 +17,7 @@
 import { ImageDataUrl } from '../libs/types';
 import * as prefs from '../libs/prefs';
 import { Platform, PlatformVideoInfo } from '../platforms/platform';
-import { CaptureMessageRequest, CaptureRequestAdditionalType } from "../messages/capture";
+import { CaptureMessageRequest, CaptureRequestAdditionalType } from '../messages/capture';
 
 
 let currentPlatform: Platform | null = null;

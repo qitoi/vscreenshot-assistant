@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import { PortHandler, PortServerBuilder } from "../server";
+import { PortHandler, PortServerBuilder } from '../server';
 
 
-declare module "../type" {
+declare module '../type' {
     interface PortMessageTypes {
         // eslint-disable-next-line @typescript-eslint/ban-types
         'keep-alive': {},

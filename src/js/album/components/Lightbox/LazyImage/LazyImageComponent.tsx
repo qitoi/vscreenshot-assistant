@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import * as React from "react";
-import { Image, Spinner } from "@chakra-ui/react";
+import * as React from 'react';
+import { Image, Spinner } from '@chakra-ui/react';
 
-import { LazyLoadFuncType } from "./LazyImageSource";
+import { LazyLoadFuncType } from './LazyImageSource';
 
 type LazyImageProps = {
     load: LazyLoadFuncType,

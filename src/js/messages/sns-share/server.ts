@@ -15,8 +15,8 @@
  */
 
 
-import { shareScreenshot } from "../../background/share-twitter";
-import { MessageServerBuilder } from "../server";
+import { shareScreenshot } from '../../background/share-twitter';
+import { MessageServerBuilder } from '../server';
 
 
 export function SnsShareServer(server: MessageServerBuilder): void {

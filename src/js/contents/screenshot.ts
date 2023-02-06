@@ -17,7 +17,7 @@
 import { ImageDataUrl } from '../libs/types';
 import * as prefs from '../libs/prefs';
 import { Platform } from '../platforms/platform';
-import * as client from "../messages/client";
+import * as client from '../messages/client';
 import { captureVideo, convertToDataURL, getVideoInfo } from './util';
 
 

@@ -17,7 +17,7 @@
 import { ImageDataUrl } from './libs/types';
 import { convertScreenshotToFile } from './libs/data-url';
 import * as twitterMessage from './libs/twitter-message';
-import { MessageServer } from "./messages/server";
+import { MessageServer } from './messages/server';
 
 
 // twitterのファイルドロップ先の生成待機設定
