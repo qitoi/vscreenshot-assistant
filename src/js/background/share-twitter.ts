@@ -19,7 +19,7 @@ import * as platforms from '../platforms';
 import * as storage from '../libs/storage';
 import * as prefs from '../libs/prefs';
 import * as client from '../messages/client';
-import * as popup from './popup-window';
+import { PopupWindow } from './popup-window';
 
 
 const TWITTER_SHARE_URL = 'https://twitter.com/intent/tweet';
@@ -43,8 +43,8 @@ export async function shareScreenshot(video: VideoInfo, screenshots: ScreenshotI
     const url = new URL(TWITTER_SHARE_URL);
     url.search = new URLSearchParams(options).toString();
 
-    const popupWindow = popup.PopupWindow.create('twitter', url.toString(), false);
-    const window = await popupWindow.show();
+    const twitterWindow = PopupWindow.create('twitter', url.toString(), false);
+    const window = await twitterWindow.show();
     if (window !== null && window.id !== undefined) {
         const tabId = await getPopupTabId(window.id);
 
