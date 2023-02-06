@@ -14,125 +14,29 @@
  *  limitations under the License.
  */
 
-import { patternToRegex } from 'webext-patterns';
-
 import * as prefs from './libs/prefs';
-import { getLocalizedText } from './libs/localize';
-import { listenAuto } from './libs/event-listen';
-import { ignoreRuntimeError } from "./libs/runtime-error";
+import * as action from './background/action';
 import * as popup from './background/popup-window';
-import { MessageServer, PortServer } from "./messages/server";
-import { AnimeCaptureServer, CaptureServer } from "./messages/capture/server";
-import { KeepAliveServer } from "./messages/keep-alive/server";
-import { AlbumServer } from "./messages/album/server";
-import { SnsShareServer } from "./messages/sns-share/server";
-import * as client from "./messages/client";
+import { PopupWindow } from './background/popup-window';
+import { MessageServer, PortServer } from './messages/server';
+import { AnimeCaptureServer, CaptureServer } from './messages/capture/server';
+import { KeepAliveServer } from './messages/keep-alive/server';
+import { AlbumServer } from './messages/album/server';
+import { SnsShareServer } from './messages/sns-share/server';
 
 
-const action = chrome.action || chrome.browserAction;
-const actionContext = chrome.action ? 'action' : 'browser_action';
+// アルバムウィンドウの作成
+const albumWindow = PopupWindow.create('album', 'album.html', true);
 
-
-prefs.watch();
+// ポップアップウィンドウのイベント監視
 popup.watch();
 
-// アルバムウィンドウの作成・表示
+// アクションアイコンの設定
+action.setup(albumWindow);
 
-const albumWindow = popup.PopupWindow.create('album', 'album.html', true);
-listenAuto(action.onClicked, async tab => {
-    const p = await prefs.loadPreferences();
-    switch (p.general.iconAction) {
-        case prefs.ClickIconActions.OpenAlbum: {
-            albumWindow.show();
-            break;
-        }
-        case prefs.ClickIconActions.CaptureScreenshot: {
-            if (tab.id !== undefined) {
-                try {
-                    await client.sendTabMessage(tab.id, 'tab-capture-request', {})
-                }
-                catch {
-                    // 対象外のページにメッセージを送ると受信側がなくてエラーになるため握り潰す
-                }
-            }
-        }
-    }
-});
+// 設定の変更監視
+prefs.watch();
 
-
-// コンテキストメニューの設定
-const CONTEXT_MENU_OPEN_ALBUM = 'context_menu_open_album';
-const CONTEXT_MENU_OPEN_OPTION = 'context_menu_open_option';
-
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create(
-        {
-            id: CONTEXT_MENU_OPEN_ALBUM,
-            type: 'normal',
-            contexts: [actionContext],
-            title: getLocalizedText(CONTEXT_MENU_OPEN_ALBUM),
-        },
-        ignoreRuntimeError
-    );
-    chrome.contextMenus.create(
-        {
-            id: CONTEXT_MENU_OPEN_OPTION,
-            type: 'normal',
-            contexts: [actionContext],
-            title: getLocalizedText(CONTEXT_MENU_OPEN_OPTION),
-        },
-        ignoreRuntimeError
-    );
-});
-
-listenAuto(chrome.contextMenus.onClicked, (info, tab) => {
-    switch (info.menuItemId) {
-        case CONTEXT_MENU_OPEN_ALBUM:
-            albumWindow.show();
-            break;
-        case CONTEXT_MENU_OPEN_OPTION:
-            chrome.runtime.openOptionsPage();
-            break;
-    }
-});
-
-
-// ページのロード時にアイコンを切り替え
-
-const manifest = chrome.runtime.getManifest();
-const urls = manifest.content_scripts?.filter(c => !c.js?.includes('js/contents-twitter.js'))?.map(c => c.matches ?? []).flat() ?? [];
-const patterns = patternToRegex(...urls);
-listenAuto(chrome.webNavigation.onCommitted, details => {
-    if (details.frameId !== 0) {
-        return;
-    }
-    if (patterns.test(details.url)) {
-        action.setIcon(
-            {
-                tabId: details.tabId,
-                path: {
-                    16: chrome.runtime.getURL('img/icon-16.png'),
-                    24: chrome.runtime.getURL('img/icon-24.png'),
-                    32: chrome.runtime.getURL('img/icon-32.png')
-                },
-            },
-            ignoreRuntimeError
-        );
-    }
-    else {
-        action.setIcon(
-            {
-                tabId: details.tabId,
-                path: {
-                    16: chrome.runtime.getURL('img/icon-16-disabled.png'),
-                    24: chrome.runtime.getURL('img/icon-24-disabled.png'),
-                    32: chrome.runtime.getURL('img/icon-32-disabled.png')
-                },
-            },
-            ignoreRuntimeError
-        );
-    }
-});
 
 // メッセージサーバの設定
 new MessageServer()
