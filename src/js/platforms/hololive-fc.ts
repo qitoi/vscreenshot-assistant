@@ -44,11 +44,6 @@ const HololiveFC: Platform = {
 
     getVideoUrl(videoId: string): string {
         return `https://${videoId}`;
-        const type = getFCType(videoId);
-        if (type === FCTypes.TokinoSora) {
-            return `https://tokinosora-fc.com/${videoId}`;
-        }
-        return `https://hololive-fc.com/${videoId}`;
     },
 
     getVideoPosUrl(): string | null {
