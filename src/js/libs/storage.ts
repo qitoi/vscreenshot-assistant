@@ -76,20 +76,21 @@ export async function removeVideoInfo(platform: string, videoId: string): Promis
     const resizedId = getVideoResizedThumbnailId(platform, videoId);
     const existenceId = getVideoThumbnailExistenceId(platform, videoId);
     const hashtagsId = getVideoSelectedHashtagsId(platform, videoId);
-    const ids: string[] = [infoId, thumbId, resizedId, existenceId, hashtagsId];
 
     // screenshot info/thumbnail/image ids
     const maxNo = await getPublishedScreenshotNo(platform, videoId);
     for (let i = 1; i <= maxNo; ++i) {
-        ids.push(getScreenshotInfoId(platform, videoId, i));
-        ids.push(getScreenshotThumbnailId(platform, videoId, i));
-        ids.push(getScreenshotId(platform, videoId, i));
+        await removeItems([
+            getScreenshotInfoId(platform, videoId, i),
+            getScreenshotThumbnailId(platform, videoId, i),
+            getScreenshotId(platform, videoId, i),
+        ]);
     }
 
     await Promise.all([
         unregisterVideo(platform, videoId),
         removePublishedScreenshotNo(platform, videoId),
-        removeItems(ids),
+        removeItems([infoId, thumbId, resizedId, existenceId, hashtagsId]),
     ]);
 }
 
@@ -149,7 +150,14 @@ export async function saveScreenshot(platform: string, videoId: string, anime: b
 
 export async function getScreenshotInfoList(platform: string, videoId: string): Promise<ScreenshotInfo[]> {
     const ids = await getScreenshotInfoIdList(platform, videoId);
-    return getItemListByIds(ids);
+    const result: ScreenshotInfo[] = [];
+    for (const id of ids) {
+        const screenshot = await getItemById<ScreenshotInfo | null>(id, null);
+        if (screenshot) {
+            result.push(screenshot);
+        }
+    }
+    return result;
 }
 
 
