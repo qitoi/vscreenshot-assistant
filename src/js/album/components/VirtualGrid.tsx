@@ -50,6 +50,9 @@ type VirtualGridReducerAction<T> = {
     itemHeight: number,
     scrollMax: number,
 } | {
+    type: 'resize-outer',
+    outerHeight: number,
+} | {
     type: 'scroll',
     scrollTop: number,
 };
@@ -193,6 +196,16 @@ function VirtualGridReducer<T>(state: VirtualGridState<T>, action: VirtualGridRe
             const currentState = (state.itemWidth === 0 || state.itemHeight === 0) ? nextState : state;
             return calcStateKeepView(currentState, nextState);
         }
+        case 'resize-outer': {
+            // 高さに変更がない場合は横幅の変更のため、ここでは何もせずresizeの処理にまかせる
+            if (state.outerHeight === action.outerHeight) {
+                return state;
+            }
+            return calcState({
+                ...state,
+                outerHeight,
+            });
+        }
         case 'scroll': {
             // forceScrollが設定されている状態でこのイベントが来たら解除
             if (state.forceScroll !== null) {
@@ -257,7 +270,7 @@ export function VirtualGrid<T>({ items, getItemKey, renderItem, ...restProps }: 
 
     const gridRef = React.useRef<HTMLDivElement>(null);
 
-    // 先頭の1つにリサイズ検出を組み込んだレンダリング済みアイテム
+    // 先頭の1つにリサイズ監視を組み込んだレンダリング済みアイテム
     const renderedItems = React.useMemo(() => state.clippedItems.map((item, index) => {
         let observer: ResizeObserver | null = null;
         const ref = (elem: HTMLDivElement | null): void => {
@@ -296,12 +309,31 @@ export function VirtualGrid<T>({ items, getItemKey, renderItem, ...restProps }: 
         )
     }), [state.clippedItems, getItemKey, renderItem, outerElem, contentElem]);
 
-    // outer のスクロール検出
+    console.log(state);
+
+    // outer のスクロール・リサイズ監視
     React.useEffect(() => {
         if (outerElem) {
             outerElem.addEventListener('scroll', () => {
                 dispatch({ type: 'scroll', scrollTop: outerElem?.scrollTop ?? 0 });
             });
+            // アイテムのリサイズ検出だけではウィンドウの高さが変わったことが取れず、アイテムの表示が更新されないため別途リサイズを監視する
+            const observer = new ResizeObserver(entries => {
+                const entry = entries[0];
+                if (entry && entry.borderBoxSize[0]) {
+                    const { blockSize: outerHeight } = entry.borderBoxSize[0];
+                    if (outerHeight !== 0) {
+                        dispatch({
+                            type: 'resize-outer',
+                            outerHeight,
+                        });
+                    }
+                }
+            });
+            observer.observe(outerElem);
+            return () => {
+                observer.disconnect();
+            };
         }
     }, [outerElem]);
 
