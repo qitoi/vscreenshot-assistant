@@ -157,7 +157,7 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
     const renderInformation = React.useCallback((slide: Slide) => {
         const index = slides.indexOf(slide as LazyImageSlideType);
         const no = (index + 1).toString();
-        const max = list.length.toString();
+        const max = slides.length.toString();
         const pad = '0'.repeat(max.length - no.length);
         const isLazyImage = isLazyImageSlideType(slide);
         const fileSize = isLazyImage ? (slide.size ?? 0) : 0;
@@ -179,7 +179,7 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
                     backgroundColor="blackAlpha.500">
                     <chakra.span fontSize="1rem">
                         <chakra.span visibility="hidden">{pad}</chakra.span>
-                        <chakra.span>{no}&nbsp;/&nbsp;{list.length}</chakra.span>
+                        <chakra.span>{no}&nbsp;/&nbsp;{slides.length}</chakra.span>
                     </chakra.span>
                 </chakra.div>
                 <chakra.div
