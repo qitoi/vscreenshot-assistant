@@ -32,8 +32,8 @@
   "prefs_animation": {
     "message": "Animation"
   },
-  "prefs_thumbnail": {
-    "message": "Thumbnail"
+  "prefs_album": {
+    "message": "Album"
   },
   "prefs_tweet": {
     "message": "Tweet"
@@ -71,9 +71,6 @@
   "prefs_general_notify_duration": {
     "message": "通知の表示時間"
   },
-  "prefs_general_files_per_archive": {
-    "message": "ZIPファイル毎のスクリーンショット数"
-  },
   "prefs_screenshot_hotkey": {
     "message": "スクリーンショット撮影のキー設定"
   },
@@ -97,6 +94,12 @@
   },
   "prefs_screenshot_format_png": {
     "message": "PNG"
+  },
+  "prefs_album_enable_virtual_scroll": {
+    "message": "仮想スクロールの有効化"
+  },
+  "prefs_album_files_per_archive": {
+    "message": "ZIPファイルを分割するスクリーンショット数"
   },
   "prefs_thumbnail_size": {
     "message": "サムネイルのサイズ"

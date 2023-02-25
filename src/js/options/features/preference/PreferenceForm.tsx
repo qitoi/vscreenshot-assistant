@@ -21,7 +21,7 @@ import * as prefs from '../../../libs/prefs';
 import { LocalizedText } from '../../../components/LocalizedText';
 import { FormProvider, useForm } from 'react-hook-form';
 import ScreenshotPreferences from './ScreenshotPreferences';
-import ThumbnailPreferences from './ThumbnailPreferences';
+import AlbumPreferences from './AlbumPreferences';
 import TweetPreferences from './TweetPreferences';
 import GeneralPreferences from './GeneralPreferences';
 import AnimationPreferences from './AnimationPreferences';
@@ -68,7 +68,7 @@ const PreferenceForm: React.FC = () => {
                         <GeneralPreferences />
                         <ScreenshotPreferences />
                         <AnimationPreferences />
-                        <ThumbnailPreferences />
+                        <AlbumPreferences />
                         <TweetPreferences />
                         <ResetPreferences />
                     </VStack>

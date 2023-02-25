@@ -53,7 +53,6 @@ export type Preferences = {
         notify: boolean,
         notifyPosition: ToastPosition,
         notifyDuration: number,
-        filesPerArchive: number,
     },
     screenshot: {
         hotkey: hotkeys.KeyConfig,
@@ -62,6 +61,10 @@ export type Preferences = {
         continuousInterval: number,
         fileType: FileType,
         quality: number,
+    },
+    album: {
+        enabledVirtualScroll: boolean,
+        filesPerArchive: number,
     },
     thumbnail: {
         width: number,
@@ -89,7 +92,6 @@ export const DefaultPreferences: Preferences = {
         notify: true,
         notifyPosition: ToastPositions.LeftBottom,
         notifyDuration: 1000,
-        filesPerArchive: 1000,
     },
     screenshot: {
         hotkey: hotkeys.getKeyConfig('S', { shift: true }),
@@ -105,6 +107,10 @@ export const DefaultPreferences: Preferences = {
         width: 640,
         height: 640,
         interval: 50,
+    },
+    album: {
+        enabledVirtualScroll: true,
+        filesPerArchive: 1000,
     },
     thumbnail: {
         width: 256,
@@ -133,7 +139,6 @@ function completePreferences(prefs: Preferences): Preferences {
             notify: completeBool(prefs?.general?.notify, DefaultPreferences.general.notify),
             notifyPosition: completeToastPosition(prefs?.general?.notifyPosition, DefaultPreferences.general.notifyPosition),
             notifyDuration: completeMinMax(prefs?.general?.notifyDuration, DefaultPreferences.general.notifyDuration, 100, 60000),
-            filesPerArchive: completeMinMax(prefs?.general?.filesPerArchive, DefaultPreferences.general.filesPerArchive, 100, 10000),
         },
         screenshot: {
             hotkey: completeKeyConfig(prefs?.screenshot?.hotkey, DefaultPreferences.screenshot.hotkey),
@@ -142,6 +147,10 @@ function completePreferences(prefs: Preferences): Preferences {
             continuousInterval: completeMinMax(prefs?.screenshot?.continuousInterval, DefaultPreferences.screenshot.continuousInterval, 1, 10000),
             fileType: completeFileType(prefs?.screenshot?.fileType, DefaultPreferences.screenshot.fileType),
             quality: completeMinMax(prefs?.screenshot?.quality, DefaultPreferences.screenshot.quality, 0, 100),
+        },
+        album: {
+            enabledVirtualScroll: completeBool(prefs?.album?.enabledVirtualScroll, DefaultPreferences.album.enabledVirtualScroll),
+            filesPerArchive: completeMinMax(prefs?.album?.filesPerArchive, DefaultPreferences.album.filesPerArchive, 100, 10000),
         },
         thumbnail: {
             width: completeMinMax(prefs?.thumbnail?.width, DefaultPreferences.thumbnail.width, 1, 9999),

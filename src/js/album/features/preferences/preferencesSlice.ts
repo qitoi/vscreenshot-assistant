@@ -43,6 +43,7 @@ const slice = createSlice({
 export default slice.reducer;
 export const { setPreferences } = slice.actions;
 
+export const selectAlbumPreferences = (state: RootState): typeof state.preferences.preferences.album => state.preferences.preferences.album;
 export const selectThumbnailPreferences = (state: RootState): typeof state.preferences.preferences.thumbnail => state.preferences.preferences.thumbnail;
 export const selectTweetEnabled = (state: RootState): typeof state.preferences.preferences.tweet.enabled => state.preferences.preferences.tweet.enabled;
 export const selectHashtagEnabled = (state: RootState): typeof state.preferences.preferences.tweet.hashtag => state.preferences.preferences.tweet.enabled && state.preferences.preferences.tweet.hashtag;
