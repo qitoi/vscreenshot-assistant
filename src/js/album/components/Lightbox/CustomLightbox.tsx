@@ -113,6 +113,15 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
     const [slides, dispatch] = React.useReducer(CustomLightboxSourceReducer, []);
     const { load, release } = useImageCache([list]);
 
+    // Lightboxを開いたとき、左隣→中央→右隣の順に画像がロードされるため、左隣の画像のロードが完了されるまで表示対象の画像が表示されない
+    // 左隣の画像が大きいと中央の画像が表示されるまで時間がかかるため、最初に中央の画像をロードしてキャッシュに載せておくことですぐに表示されるようにする
+    React.useEffect(() => {
+        const first = list[index]?.load;
+        if (first) {
+            void load(first);
+        }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
     React.useEffect(() => {
         const generateRelease = (src: CustomLightboxSource, idx: number) => () => {
             if (release(src.load)) {
