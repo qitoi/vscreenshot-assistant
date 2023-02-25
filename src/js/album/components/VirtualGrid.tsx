@@ -309,8 +309,6 @@ export function VirtualGrid<T>({ items, getItemKey, renderItem, ...restProps }: 
         )
     }), [state.clippedItems, getItemKey, renderItem, outerElem, contentElem]);
 
-    console.log(state);
-
     // outer のスクロール・リサイズ監視
     React.useEffect(() => {
         if (outerElem) {
