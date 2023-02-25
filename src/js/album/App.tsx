@@ -64,7 +64,7 @@ const App: React.FC = () => {
                 </Sidebar>
                 <Flex direction="column" w="100%" h="calc(100vh)" minW={0} overflowX="hidden">
                     <VideoHeader />
-                    <Box flexGrow={1} w="100%" overflowY="scroll">
+                    <Box flexGrow={1} w="100%" overflow="clip">
                         <ScreenshotList />
                     </Box>
                 </Flex>

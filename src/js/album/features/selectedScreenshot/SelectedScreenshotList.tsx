@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Box, Button, Grid, HStack, Spacer, useBoolean } from '@chakra-ui/react';
+import { Box, Button, Grid, HStack, Spacer, StackProps, useBoolean } from '@chakra-ui/react';
 
 import { getScreenshotKey, ScreenshotInfo, VideoInfo } from '../../../libs/types';
 import { LocalizedText } from '../../../components/LocalizedText';
@@ -32,9 +32,9 @@ type SelectedScreenshotListProps = {
     screenshots: ScreenshotInfoWithThumbnail[],
     onResize: (width: number, height: number) => void,
     onClick: (info: ScreenshotInfo) => void,
-};
+} & Omit<StackProps, 'onResize' | 'onClick'>;
 
-const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: SelectedScreenshotListProps) => {
+const SelectedScreenshotList = ({ video, screenshots, onResize, onClick, ...stackProps }: SelectedScreenshotListProps) => {
     const [loaded, setLoaded] = useBoolean(false);
     const ref = useResizeObserver<HTMLDivElement>(onResize);
     const thumbPrefs = useSelector(selectThumbnailPreferences);
@@ -54,15 +54,12 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick }: Selec
     }
 
     return (
-        <HStack ref={ref}
-                position="sticky"
-                w="100%"
-                minW="fit-content"
-                bottom={0}
-                alignItems="flex-end"
-                p="1rem"
-                visibility={loaded ? 'visible' : 'hidden'}
-                bg="gray.300">
+        <HStack
+            {...stackProps}
+            ref={ref}
+            alignItems="flex-end"
+            visibility={loaded ? 'visible' : 'hidden'}
+            bg="gray.300">
             <Spacer />
             <Grid gridTemplateColumns={`repeat(4, minmax(${thumbPrefs.width / 4}px, ${thumbPrefs.width}px))`}
                   gap={2}

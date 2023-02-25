@@ -77,7 +77,7 @@ const VideoHeaderMenu: React.FC = () => {
 
         try {
             const p = await prefs.loadPreferences();
-            await archive(video, p.general.filesPerArchive, (zip, index, max) => {
+            await archive(video, p.album.filesPerArchive, (zip, index, max) => {
                 const a = document.createElement('a') as HTMLAnchorElement;
                 const url = URL.createObjectURL(zip);
                 const filename = (video.title !== '') ? video.title : 'images';

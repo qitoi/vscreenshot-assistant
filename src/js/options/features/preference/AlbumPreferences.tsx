@@ -21,10 +21,27 @@ import ControlGroup from '../../components/ControlGroup';
 import NumberInputControl from '../../components/NumberInputControl';
 import LabeledControl from '../../components/LabeledControl';
 import PreferenceBlock from './PreferenceBlock';
+import SwitchControl from '../../components/SwitchControl';
 
-const ThumbnailPreferences: React.FC = () => {
+const AlbumPreferences: React.FC = () => {
     return (
-        <PreferenceBlock messageId="prefs_thumbnail">
+        <PreferenceBlock messageId="prefs_album">
+            <ControlGroup isEnabledHover>
+                <LabeledControl messageId="prefs_album_enable_virtual_scroll">
+                    <SwitchControl<Preferences> name="album.enabledVirtualScroll" />
+                </LabeledControl>
+            </ControlGroup>
+            <ControlGroup>
+                <LabeledControl messageId="prefs_album_files_per_archive">
+                    <NumberInputControl<Preferences>
+                        name="album.filesPerArchive"
+                        w="10em"
+                        min={100}
+                        max={10000}
+                        step={100}
+                        precision={0} />
+                </LabeledControl>
+            </ControlGroup>
             <ControlGroup label="prefs_thumbnail_size">
                 <ControlGroup indent="left">
                     <LabeledControl messageId="prefs_thumbnail_width">
@@ -43,4 +60,4 @@ const ThumbnailPreferences: React.FC = () => {
     );
 };
 
-export default ThumbnailPreferences;
+export default AlbumPreferences;

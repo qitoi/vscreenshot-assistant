@@ -22,6 +22,7 @@ import { ImageDataUrl, ScreenshotInfo } from '../../../libs/types';
 import { AnimationMark } from '../../components/AnimationMark';
 import { FadeBox } from '../../components/FadeBox';
 import LazyLoadScreenshotThumbnail from './LazyLoadScreenshotThumbnail';
+import ScreenshotThumbnail from './ScreenshotThumbnail';
 
 
 type ScreenshotCardProps = {
@@ -29,11 +30,13 @@ type ScreenshotCardProps = {
     isChecked: boolean,
     disabled: boolean,
     className?: string,
+    lazyLoad: boolean,
+    loadThumbnail: (platform: string, videoId: string, no: number) => Promise<string>,
     onClick: (info: ScreenshotInfo, thumbnail: ImageDataUrl) => void,
     onExpandClick: (info: ScreenshotInfo) => void,
 };
 
-const ScreenshotCard = ({ info, isChecked, disabled, className, onClick, onExpandClick }: ScreenshotCardProps) => {
+const ScreenshotCard = ({ info, isChecked, disabled, className, lazyLoad, loadThumbnail, onClick, onExpandClick }: ScreenshotCardProps) => {
     const [isShown, setIsShown] = React.useState<boolean>(false);
     const [isClickable, setIsClickable] = React.useState<boolean>(false);
     const ref = React.useRef<HTMLImageElement>(null);
@@ -78,13 +81,24 @@ const ScreenshotCard = ({ info, isChecked, disabled, className, onClick, onExpan
                     onMouseEnter={handleMouseOver}
                     onMouseLeave={handleMouseOut}
                     onMouseMove={handleMouseOver}>
-            <LazyLoadScreenshotThumbnail
-                ref={ref}
-                platform={info.platform}
-                videoId={info.videoId}
-                no={info.no}
-                onLoad={handleLoad}
-                onVisible={handleVisible} />
+            {lazyLoad ? (
+                <LazyLoadScreenshotThumbnail
+                    ref={ref}
+                    platform={info.platform}
+                    videoId={info.videoId}
+                    no={info.no}
+                    onLoad={handleLoad}
+                    onVisible={handleVisible} />
+            ) : (
+                <ScreenshotThumbnail
+                    ref={ref}
+                    platform={info.platform}
+                    videoId={info.videoId}
+                    no={info.no}
+                    loadThumbnail={loadThumbnail}
+                    onLoad={handleLoad}
+                    onVisible={handleVisible} />
+            )}
             <FadeBox show={isShown || isChecked} />
             {!disabled && (
                 <Box position="absolute"

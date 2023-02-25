@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021 qitoi
+ *  Copyright 2023 qitoi
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,32 +16,28 @@
 
 import * as React from 'react';
 import { Image, useMergeRefs } from '@chakra-ui/react';
-import { useInView } from 'react-intersection-observer';
 
-import * as storage from '../../../libs/storage';
 import { useDispatch } from '../../store';
-import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import { ThumbnailAspectRatio } from '../../components/ThumbnailAspectRatio';
+import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import { removeThumbnail, selectCachedThumbnail } from './screenshotSlice';
 
-export type LazyLoadScreenshotThumbnail = {
+export type ScreenshotThumbnailProps = {
     platform: string,
     videoId: string,
     no: number,
+    loadThumbnail: (platform: string, videoId: string, no: number) => Promise<string>,
     onLoad: () => void,
     onVisible: () => void,
 };
 
-const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadScreenshotThumbnail>(
-    function LazyLoadScreenshotThumbnail({ platform, videoId, no, onLoad, onVisible }: LazyLoadScreenshotThumbnail, forwardedRef) {
+const ScreenshotThumbnail = React.forwardRef<HTMLImageElement, ScreenshotThumbnailProps>(
+    function ScreenshotThumbnail({ platform, videoId, no, loadThumbnail, onLoad, onVisible }: ScreenshotThumbnailProps, forwardedRef) {
         const dispatch = useDispatch();
         const thumbnail = useParameterizedSelector(selectCachedThumbnail, platform, videoId, no);
 
         const ref = React.useRef<HTMLImageElement>(null);
-        const { ref: inViewRef, inView } = useInView({
-            triggerOnce: true,
-        });
-        const refs = useMergeRefs(ref, inViewRef, forwardedRef);
+        const refs = useMergeRefs(ref, forwardedRef);
 
         React.useEffect(() => {
             if (thumbnail !== null) {
@@ -58,22 +54,20 @@ const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadS
             }
             else {
                 if (ref.current && ref.current.src === '') {
-                    if (inView) {
-                        storage.getScreenshotThumbnail(platform, videoId, no).then(image => {
-                            if (ref.current !== null && image !== null) {
-                                ref.current.onload = () => {
-                                    if (ref.current !== null) {
-                                        onLoad();
-                                    }
-                                };
-                                ref.current.src = image;
-                            }
-                        });
-                    }
+                    loadThumbnail(platform, videoId, no).then(image => {
+                        if (ref.current !== null && image !== null) {
+                            ref.current.onload = () => {
+                                if (ref.current !== null) {
+                                    onLoad();
+                                }
+                            };
+                            ref.current.src = image;
+                        }
+                    });
                     onVisible();
                 }
             }
-        }, [dispatch, thumbnail, platform, videoId, no, inView, onLoad, onVisible]);
+        }, [dispatch, loadThumbnail, thumbnail, platform, videoId, no, onLoad, onVisible]);
 
         return (
             <ThumbnailAspectRatio>
@@ -87,4 +81,4 @@ const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadS
     }
 );
 
-export default React.memo(LazyLoadScreenshotThumbnail);
+export default React.memo(ScreenshotThumbnail);
