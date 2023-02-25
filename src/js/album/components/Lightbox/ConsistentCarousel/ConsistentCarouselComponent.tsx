@@ -15,7 +15,7 @@
  *
  *
  *  Original Source Code
- *  https://github.com/igordanchenko/yet-another-react-lightbox/blob/v2.2.7/src/core/modules/Carousel.tsx
+ *  https://github.com/igordanchenko/yet-another-react-lightbox/blob/v2.4.3/src/core/modules/Carousel.tsx
  *
  *  MIT License
  *
@@ -42,14 +42,16 @@
 
 import * as React from 'react';
 
-import { Component, ComponentProps, Slide } from 'yet-another-react-lightbox';
-import { ContainerRect, useContainerRect } from 'yet-another-react-lightbox/core';
+import { Component, ContainerRect, Slide } from 'yet-another-react-lightbox';
+import { useContainerRect } from 'yet-another-react-lightbox/core';
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from 'yet-another-react-lightbox/core';
 import { ImageSlide } from 'yet-another-react-lightbox/core';
 import { useController } from 'yet-another-react-lightbox/core';
 import { useEvents } from 'yet-another-react-lightbox/core';
 import { useLightboxState } from 'yet-another-react-lightbox/core';
 import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL, YARL_EVENT_BACKDROP_CLICK } from 'yet-another-react-lightbox/core';
+
+import { ComponentProps } from 'yet-another-react-lightbox';
 
 const cssPrefix = (value?: string) => composePrefix(MODULE_CAROUSEL, value);
 
@@ -64,15 +66,12 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
     const { setContainerRef, containerRect, containerRef } = useContainerRect();
 
     const { publish } = useEvents();
-    const {
-        state: { currentIndex },
-    } = useLightboxState();
-    const { getLightboxProps } = useController();
+    const { currentIndex } = useLightboxState().state;
     const {
         render,
         carousel: { imageFit },
         on: { click: onClick },
-    } = getLightboxProps();
+    } = useController().getLightboxProps();
 
     const renderSlide = (rect: ContainerRect) => {
         let rendered = render.slide?.(slide, offset, rect);
@@ -139,10 +138,8 @@ type ConsistentCarouselState = {
 };
 
 export const ConsistentCarouselComponent: Component = ({ slides, carousel: { finite, preload, padding, spacing } }: React.PropsWithChildren<ComponentProps>) => {
-    const {
-        state: { currentIndex, globalIndex },
-        dispatch,
-    } = useLightboxState();
+    const { currentIndex, globalIndex } = useLightboxState().state;
+    const { dispatch } = useLightboxState();
     const [state, setState] = React.useState<ConsistentCarouselState>({ prevSlides: slides, prevGlobalIndex: globalIndex, prevKey: null, loop: 0 });
 
     const { setCarouselRef } = useController();
@@ -153,7 +150,7 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
             const slideKeepIndex = slides.findIndex(v => v.key === state.prevKey);
             if (slideKeepIndex !== -1) {
                 const diff = slideKeepIndex - currentIndex;
-                dispatch({ increment: diff, animationDuration: 0 });
+                dispatch({ increment: diff, duration: 0 });
                 setState({ ...state, prevSlides: slides, prevGlobalIndex: globalIndex });
             }
         }
@@ -170,6 +167,7 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
             }
         }
     }, [slides, currentIndex, globalIndex, state, dispatch]);
+
 
     const spacingValue = parseLengthPercentage(spacing);
     const paddingValue = parseLengthPercentage(padding);
