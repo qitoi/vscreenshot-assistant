@@ -109,7 +109,7 @@ function useImageCache(deps: React.DependencyList) {
     };
 }
 
-function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): React.ReactElement {
+function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): React.ReactElement | null {
     const [slides, dispatch] = React.useReducer(CustomLightboxSourceReducer, []);
     const { load, release } = useImageCache([list]);
 
@@ -203,6 +203,10 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
             </>
         );
     }, [slides]);
+
+    if (slides.length === 0) {
+        return null;
+    }
 
     return (
         <Lightbox
