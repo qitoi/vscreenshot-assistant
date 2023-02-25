@@ -48,7 +48,6 @@ export async function sendTabMessage<Key extends MessageKey>(tabId: number, key:
         };
         chrome.tabs.sendMessage(tabId, request, (response: MessageResponse<Key>) => {
             if (chrome.runtime.lastError) {
-                console.log('send tab error', chrome.runtime.lastError);
                 reject(chrome.runtime.lastError.message);
             }
             else if ('error' in response) {
