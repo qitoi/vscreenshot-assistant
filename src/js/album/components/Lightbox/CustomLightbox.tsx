@@ -55,7 +55,7 @@ type CustomLightboxSourceAction = {
 
 function CustomLightboxSourceReducer(state: LazyImageSlideType[], action: CustomLightboxSourceAction): LazyImageSlideType[] {
     switch (action.type) {
-        case "init": {
+        case 'init': {
             // リストが変更されたとき、全てのスライドを新規のオブジェクトにしてしまうと現在表示しているスライドでも再レンダリングされロードが走ってしまう
             // 同じkeyのスライドが前のステートに存在すれば、そのオブジェクトを流用することで再レンダリングを防ぐ
             const prevSlideMap = state.reduce<Record<string, LazyImageSlideType>>((acc, current) => {
@@ -64,7 +64,7 @@ function CustomLightboxSourceReducer(state: LazyImageSlideType[], action: Custom
             }, {});
             return action.slides.map(s => prevSlideMap[s.key] ?? s);
         }
-        case "load": {
+        case 'load': {
             state[action.index] = { ...state[action.index], ...action.slide };
             return [...state];
         }
@@ -228,9 +228,9 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
             }}
             styles={{
                 container: {
-                    backgroundColor: "rgba(0, 0, 0, .85)",
-                    paddingTop: "4rem",
-                    paddingBottom: "3rem"
+                    backgroundColor: 'rgba(0, 0, 0, .85)',
+                    paddingTop: '4rem',
+                    paddingBottom: '3rem'
                 }
             }}
             information={{
