@@ -51,16 +51,16 @@ const Youtube: Platform = {
         const defaultThumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
 
         // トップページから動画ページに遷移した場合などでDOMが不安定になるため、直接動画ページをfetchして情報を取り出す
-        const getProperty = (elem: HTMLElement | Document, tag: string, item: string): string | null => elem.querySelector(`${tag}[itemprop="${item}"]`)?.getAttribute('content') ?? null;
+        const getProperty = (elem: HTMLElement | Document, tag: string, item: string, value: string): string | null => elem.querySelector(`${tag}[itemprop="${item}"]`)?.getAttribute(value) ?? null;
         const document = await fetch(videoUrl)
             .then(res => res.text())
             .then(text => new DOMParser().parseFromString(text, 'text/html'));
 
-        const title = getProperty(document, 'meta', 'name');
-        const author = getProperty(document, 'link', 'name');
-        const thumbnail = getProperty(document, 'link', 'thumbnailUrl');
-        const isUnlisted = getProperty(document, 'meta', 'unlisted')?.toLowerCase() === 'true';
-        const startDate = getProperty(document, 'meta', 'startDate');
+        const title = getProperty(document, 'meta', 'name', 'content');
+        const author = getProperty(document, 'link', 'name', 'content');
+        const thumbnail = getProperty(document, 'link', 'thumbnailUrl', 'href');
+        const isUnlisted = getProperty(document, 'meta', 'unlisted', 'content')?.toLowerCase() === 'true';
+        const startDate = getProperty(document, 'meta', 'startDate', 'content');
 
         let isPrivate = isUnlisted;
         let date: Date | null = convertDate(startDate);
