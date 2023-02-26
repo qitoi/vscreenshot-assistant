@@ -8,6 +8,8 @@ const { merge } = require('webpack-merge');
 const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
+const Package = require('./package.json');
+
 // サポートするブラウザ
 const browsers = ['chrome', 'firefox', 'edge', 'opera'];
 const browsersPattern = browsers.join('|');
@@ -162,6 +164,14 @@ module.exports = [
                             return filename.replace(new RegExp(`(${browsersPattern})\\.(?<ext>[^.]+)$`), '$<ext>');
                         },
                         context: 'src',
+                        transform: (input, absoluteFilename) => {
+                            if (path.extname(absoluteFilename) === '.json') {
+                                const content = input.toString('utf-8');
+                                const replaced = content.replaceAll('__EXTENSION_VERSION__', Package.version);
+                                return Buffer.from(replaced);
+                            }
+                            return input;
+                        },
                     },
                 ],
             }),
