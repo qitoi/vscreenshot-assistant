@@ -7,5 +7,10 @@
     "incremental": true,
     "strict": true,
     "resolveJsonModule": true
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
   }
 }
