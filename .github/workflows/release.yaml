@@ -1,0 +1,29 @@
+name: release
+on:
+  push:
+    tags:
+      - 'v[0-9]+\.[0-9]+\.[0-9]+.*'
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: setup nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: build
+        run: |
+          npm ci
+          npm run build
+
+      - name: release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/*.zip
