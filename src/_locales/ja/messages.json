@@ -23,6 +23,9 @@
   "options_tab_license": {
     "message": "ライセンス"
   },
+  "options_tab_changelog": {
+    "message": "変更履歴"
+  },
   "prefs_general": {
     "message": "General"
   },

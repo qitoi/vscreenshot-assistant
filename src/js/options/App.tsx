@@ -23,6 +23,7 @@ import { LocalizedText } from '../components/LocalizedText';
 import LicenseNoticeList from './features/license/LicenseNoticeList';
 import PreferenceForm from './features/preference/PreferenceForm';
 import Help from './features/help/Help';
+import ChangeLog from './features/changelog/ChangeLog';
 
 const theme = extendTheme({
     boxShadow: 'none',
@@ -104,6 +105,13 @@ const App: React.FC = () => {
             messageId: 'options_tab_license',
             panel: (
                 <LicenseNoticeList />
+            ),
+        },
+        {
+            hash: '#changelog',
+            messageId: 'options_tab_changelog',
+            panel: (
+                <ChangeLog />
             ),
         },
     ], []);
