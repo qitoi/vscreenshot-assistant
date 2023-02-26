@@ -84,7 +84,6 @@ const App: React.FC = () => {
     const location = useLocation();
     const { pathname, hash } = location;
     const navigate = useNavigate();
-    const [index, setIndex] = React.useState<number>(0);
     const tabs = React.useMemo<TabConfig[]>(() => [
         {
             hash: '',
@@ -115,6 +114,9 @@ const App: React.FC = () => {
             ),
         },
     ], []);
+
+    const initialIndex = tabs.findIndex(t => t.hash === hash);
+    const [index, setIndex] = React.useState<number>((initialIndex !== -1) ? initialIndex : 0);
 
     React.useEffect(() => {
         const index = tabs.findIndex(t => t.hash === hash);
