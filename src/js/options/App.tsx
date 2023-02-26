@@ -23,6 +23,7 @@ import { LocalizedText } from '../components/LocalizedText';
 import LicenseNoticeList from './features/license/LicenseNoticeList';
 import PreferenceForm from './features/preference/PreferenceForm';
 import Help from './features/help/Help';
+import ChangeLog from './features/changelog/ChangeLog';
 
 const theme = extendTheme({
     boxShadow: 'none',
@@ -83,7 +84,6 @@ const App: React.FC = () => {
     const location = useLocation();
     const { pathname, hash } = location;
     const navigate = useNavigate();
-    const [index, setIndex] = React.useState<number>(0);
     const tabs = React.useMemo<TabConfig[]>(() => [
         {
             hash: '',
@@ -106,7 +106,17 @@ const App: React.FC = () => {
                 <LicenseNoticeList />
             ),
         },
+        {
+            hash: '#changelog',
+            messageId: 'options_tab_changelog',
+            panel: (
+                <ChangeLog />
+            ),
+        },
     ], []);
+
+    const initialIndex = tabs.findIndex(t => t.hash === hash);
+    const [index, setIndex] = React.useState<number>((initialIndex !== -1) ? initialIndex : 0);
 
     React.useEffect(() => {
         const index = tabs.findIndex(t => t.hash === hash);

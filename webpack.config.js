@@ -144,6 +144,7 @@ module.exports = [
                 patterns: [
                     'LICENSE',
                     'THIRD-PARTY-NOTICES',
+                    'CHANGELOG.md',
                     {
                         from: '**/*.*',
                         context: 'src',
