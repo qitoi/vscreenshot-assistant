@@ -53,7 +53,7 @@ export function LazyImageComponent({ load, release, onLoad }: LazyImageProps) {
     return (
         <>
             {!loaded && <Spinner color="white" thickness="4px" size="xl" />}
-            <Image ref={ref} display={loaded ? 'inline' : 'none'} draggable={false} />
+            <Image ref={ref} display={loaded ? undefined : 'none'} maxW="100%" maxH="100%" draggable={false} />
         </>
     );
 }

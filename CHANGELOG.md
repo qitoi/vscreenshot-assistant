@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+### Fixed
+
+- [アルバム] 縦長の画像を Lightbox で表示した場合に上下が切れてしまう問題を修正
+
 ## v1.3.0 - 2023-02-27
 
 ### Added
