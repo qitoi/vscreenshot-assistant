@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Manifest V3 に対応 (Firefox)
+
 ### Fixed
 
 - [アルバム] 縦長の画像を Lightbox で表示した場合に上下が切れてしまう問題を修正
@@ -10,7 +14,7 @@
 
 ### Added
 
-- Manifest V3 に対応 (Chrome, Edge のみ)
+- Manifest V3 に対応 (Chrome, Edge)
 - [アルバム] まとめて保存で一定枚数ごとに ZIP ファイルを分割する機能を追加
 - [アルバム] スクリーンショットリストの表示に仮想スクロールを導入
 - [オプション] 変更履歴を追加

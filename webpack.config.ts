@@ -106,6 +106,11 @@ const config: webpack.Configuration = {
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        // twitter-text で古い core-js が使われており CSP の unsafe-eval の違反のためエラーになる
+        // 対象としているブラウザではこれらの polyfill は不要なので import させない
+        alias: {
+            'core-js': false,
+        }
     },
     performance: {
         hints: false,

@@ -20,7 +20,7 @@ import { decodeDataURL, encodeDataURL } from '../libs/data-url';
 import * as pica from 'pica';
 
 const resizer = pica({
-    features: ['js', 'wasm'],
+    features: ['js'],
     createCanvas(width: number, height: number): HTMLCanvasElement {
         // @ts-ignore
         return new OffscreenCanvas(width, height);
