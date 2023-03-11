@@ -114,5 +114,10 @@
         "*://*.twitter.com/*"
       ]
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{7f00d646-42ff-43b7-9eb7-4f070fc68bfd}"
+    }
+  }
 }
