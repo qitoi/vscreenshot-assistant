@@ -154,13 +154,21 @@ function searchObjectContainsKey(obj: any, key: string): any[] {
 }
 
 function searchHashtagsFromInitialData(ytInitialData: { contents?: object }): string[] {
-    const hashtags = searchObjectContainsKey(ytInitialData?.contents ?? {}, 'navigationEndpoint')
-        .filter(o => typeof o.text === 'string')
-        .map(o => extractHashtags(o.text))
-        .flat()
+    const hashtags = [
+        // ファーストビューで表示される範囲のリンク文字列を探す
+        ...searchObjectContainsKey(ytInitialData?.contents ?? {}, 'navigationEndpoint')
+            .filter(o => typeof o.text === 'string')
+            .map(o => extractHashtags(o.text))
+            .flat(),
+        // 折り畳まれた概要欄中のURLを探して抜き出す
+        ...searchObjectContainsKey(ytInitialData?.contents ?? {}, 'url')
+            .filter(o => o.url.startsWith('/hashtag/'))
+            .map(o => decodeURI(o.url.substring('/hashtag/'.length)))
+    ];
+    const uniqueHashtags = hashtags
         .reduce((acc, current) => acc.set(current, null), new Map<string, null>())
         .keys();
-    return Array.from(hashtags);
+    return Array.from(uniqueHashtags);
 }
 
 export default Youtube;
