@@ -5,6 +5,7 @@
 ### Added
 
 - Manifest V3 に対応 (Firefox)
+- [YouTube] YouTube ショートに対応
 
 ### Fixed
 
