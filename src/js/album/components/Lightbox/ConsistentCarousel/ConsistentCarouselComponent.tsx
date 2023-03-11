@@ -15,7 +15,7 @@
  *
  *
  *  Original Source Code
- *  https://github.com/igordanchenko/yet-another-react-lightbox/blob/v2.4.3/src/core/modules/Carousel.tsx
+ *  https://github.com/igordanchenko/yet-another-react-lightbox/blob/v2.6.1/src/core/modules/Carousel.tsx
  *
  *  MIT License
  *
@@ -42,8 +42,7 @@
 
 import * as React from 'react';
 
-import { Component, ContainerRect, Slide } from 'yet-another-react-lightbox';
-import { useContainerRect } from 'yet-another-react-lightbox/core';
+import { ComponentProps, ContainerRect, Slide } from 'yet-another-react-lightbox';
 import { clsx, composePrefix, cssClass, cssVar, isImageSlide, parseLengthPercentage } from 'yet-another-react-lightbox/core';
 import { ImageSlide } from 'yet-another-react-lightbox/core';
 import { useController } from 'yet-another-react-lightbox/core';
@@ -51,19 +50,24 @@ import { useEvents } from 'yet-another-react-lightbox/core';
 import { useLightboxState } from 'yet-another-react-lightbox/core';
 import { CLASS_FLEX_CENTER, CLASS_FULLSIZE, MODULE_CAROUSEL, YARL_EVENT_BACKDROP_CLICK } from 'yet-another-react-lightbox/core';
 
-import { ComponentProps } from 'yet-another-react-lightbox';
+import { Component } from 'yet-another-react-lightbox';
 
-const cssPrefix = (value?: string) => composePrefix(MODULE_CAROUSEL, value);
+function cssPrefix(value?: string) {
+    return composePrefix(MODULE_CAROUSEL, value);
+}
 
-const cssSlidePrefix = (value?: string) => composePrefix('slide', value);
+function cssSlidePrefix(value?: string) {
+    return composePrefix('slide', value);
+}
 
 type CarouselSlideProps = {
     slide: Slide;
     offset: number;
+    rect: ContainerRect;
 };
 
-const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
-    const { setContainerRef, containerRect, containerRef } = useContainerRect();
+function CarouselSlide({ slide, offset, rect }: CarouselSlideProps) {
+    const containerRef = React.useRef<HTMLDivElement | null>(null);
 
     const { publish } = useEvents();
     const { currentIndex } = useLightboxState().state;
@@ -73,7 +77,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
         on: { click: onClick },
     } = useController().getLightboxProps();
 
-    const renderSlide = (rect: ContainerRect) => {
+    const renderSlide = () => {
         let rendered = render.slide?.(slide, offset, rect);
 
         if (!rendered && isImageSlide(slide)) {
@@ -115,7 +119,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
 
     return (
         <div
-            ref={setContainerRef}
+            ref={containerRef}
             className={clsx(
                 cssClass(cssSlidePrefix()),
                 offset === 0 && cssClass(cssSlidePrefix('current')),
@@ -123,12 +127,15 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({ slide, offset }) => {
             )}
             onClick={handleBackdropClick}
         >
-            {containerRect && renderSlide(containerRect)}
+            {renderSlide()}
         </div>
     );
-};
+}
 
-const Placeholder: React.FC = () => <div className={cssClass('slide')} />;
+function Placeholder() {
+    return <div className={cssClass('slide')} />;
+}
+
 
 type ConsistentCarouselState = {
     prevSlides: Slide[],
@@ -137,12 +144,15 @@ type ConsistentCarouselState = {
     loop: number,
 };
 
+
 export const ConsistentCarouselComponent: Component = ({ slides, carousel: { finite, preload, padding, spacing } }: React.PropsWithChildren<ComponentProps>) => {
     const { currentIndex, globalIndex } = useLightboxState().state;
+    const { setCarouselRef, containerRect } = useController();
+
+
     const { dispatch } = useLightboxState();
     const [state, setState] = React.useState<ConsistentCarouselState>({ prevSlides: slides, prevGlobalIndex: globalIndex, prevKey: null, loop: 0 });
 
-    const { setCarouselRef } = useController();
 
     React.useEffect(() => {
         // スライドのリストが変更された場合は元のスライドを表示するようにLightboxの表示位置を移動
@@ -172,6 +182,14 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
     const spacingValue = parseLengthPercentage(spacing);
     const paddingValue = parseLengthPercentage(padding);
 
+    const paddingPixels =
+        paddingValue.percent !== undefined ? (containerRect.width / 100) * paddingValue.percent : paddingValue.pixel;
+
+    const rect = {
+        width: Math.max(containerRect.width - 2 * paddingPixels, 0),
+        height: Math.max(containerRect.height - 2 * paddingPixels, 0),
+    };
+
     // スライドのリストが変更され、表示するスライドの index がずれた場合は同じスライドを表示し続けるため補正する
     let index = currentIndex;
     if (slides[currentIndex].key !== state.prevSlides[currentIndex].key) {
@@ -189,7 +207,7 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
     }
     const loop = state.loop + loopDiff;
 
-    const items = [];
+    const items: JSX.Element[] = [];
 
     if (slides?.length > 0) {
         for (let i = index - preload; i < index; i += 1) {
@@ -198,7 +216,7 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
             const key = `${slide.key}:${suffix}`;
             items.push(
                 !finite || i >= 0 ? (
-                    <CarouselSlide key={key} slide={slide} offset={i - index} />
+                    <CarouselSlide key={key} slide={slide} rect={rect} offset={i - index} />
                 ) : (
                     <Placeholder key={key} />
                 )
@@ -207,7 +225,7 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
 
         {
             const key = `${slides[index].key}:${loop}`;
-            items.push(<CarouselSlide key={key} slide={slides[index]} offset={0} />);
+            items.push(<CarouselSlide key={key} slide={slides[index]} rect={rect} offset={0} />);
         }
 
         for (let i = index + 1; i <= index + preload; i += 1) {
@@ -216,7 +234,7 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
             const key = `${slide.key}:${suffix}`;
             items.push(
                 !finite || i <= slides.length - 1 ? (
-                    <CarouselSlide key={key} slide={slide} offset={i - index} />
+                    <CarouselSlide key={key} slide={slide} rect={rect} offset={i - index} />
                 ) : (
                     <Placeholder key={key} />
                 )
