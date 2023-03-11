@@ -239,6 +239,33 @@
   "help_supported_platforms": {
     "message": "対応プラットフォーム"
   },
+  "help_supported_platform_youtube": {
+    "message": "YouTube"
+  },
+  "help_supported_platform_twitch": {
+    "message": "Twitch"
+  },
+  "help_supported_platform_nicovideo": {
+    "message": "ニコニコ動画"
+  },
+  "help_supported_platform_spwn": {
+    "message": "SPWN"
+  },
+  "help_supported_platform_streaming_plus": {
+    "message": "Streaming+ (イープラス)"
+  },
+  "help_supported_platform_hololive_fc": {
+    "message": "ホロライブ公式ファンクラブ"
+  },
+  "help_supported_platform_tokinosora_fc": {
+    "message": "ときのそらオフィシャルファンクラブ"
+  },
+  "help_source_code": {
+    "message": "ソースコード"
+  },
+  "help_license": {
+    "message": "ライセンス"
+  },
   "license_third_party_notices": {
     "message": "The following sets forth attribution notices for third party software that may be contained in portions of this application."
   },
