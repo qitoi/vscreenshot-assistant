@@ -17,6 +17,8 @@
 import * as React from 'react';
 import {
     chakra,
+    Code,
+    Link,
     ListItem,
     Table,
     Tbody,
@@ -190,6 +192,37 @@ const Help: React.FC = () => {
                         <ListItem>Streaming+ (イープラス)</ListItem>
                         <ListItem>ホロライブ公式ファンクラブ/ときのそらオフィシャルファンクラブ</ListItem>
                     </UnorderedList>
+                </Description>
+            </Block>
+            <Block>
+                <H2><LocalizedText messageId="help_source_code" /></H2>
+                <Description>
+                    <Link href="https://github.com/qitoi/vscreenshot-assistant" target="_blank">
+                        https://github.com/qitoi/vscreenshot-assistant
+                    </Link>
+                </Description>
+            </Block>
+            <Block>
+                <H2><LocalizedText messageId="help_license" /></H2>
+                <Description display="flex" flexDirection="column" gap="1em">
+                    <Block>Apache License 2.0</Block>
+                    <Code w="100%">
+                        <chakra.pre p="1em" whiteSpace="pre-wrap">
+                            {`Copyright 2021 qitoi
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.`}
+                        </chakra.pre>
+                    </Code>
                 </Description>
             </Block>
         </VStack>

@@ -239,6 +239,12 @@
   "help_supported_platforms": {
     "message": "対応プラットフォーム"
   },
+  "help_source_code": {
+    "message": "ソースコード"
+  },
+  "help_license": {
+    "message": "ライセンス"
+  },
   "license_third_party_notices": {
     "message": "The following sets forth attribution notices for third party software that may be contained in portions of this application."
   },
