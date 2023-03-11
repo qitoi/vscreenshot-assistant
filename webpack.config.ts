@@ -15,7 +15,7 @@
  */
 
 import * as path from 'path';
-import * as glob from 'glob';
+import { globSync } from 'glob';
 import * as webpack from 'webpack';
 import { merge } from 'webpack-merge';
 import * as CopyPlugin from 'copy-webpack-plugin';
@@ -23,6 +23,14 @@ import * as TerserPlugin from 'terser-webpack-plugin';
 import * as ZipPlugin from 'zip-webpack-plugin';
 
 import * as Package from './package.json';
+
+
+function glob(pattern: string): string[] {
+    return globSync(pattern)
+        .map(p => './' + path.relative(__dirname, p))
+        .map(p => p.replace(/\\/g, '/'));
+}
+
 
 const ENV = (process.env?.NODE_ENV === 'development' || process.env?.NODE_ENV === 'production') ? process.env?.NODE_ENV : 'development';
 const BROWSER = process.env?.BROWSER ?? 'chrome';
@@ -41,12 +49,12 @@ const entries = (prefix: string, files: string[]): Record<string, string> => fil
 
 
 const reactAppPrefix = 'react-app:';
-const reactAppEntries = entries(reactAppPrefix, glob.sync('./src/js/*.tsx'));
+const reactAppEntries = entries(reactAppPrefix, glob('./src/js/*.tsx'));
 const contentsPrefix = 'contents:';
-const contentsScripts = glob.sync('./src/js/contents-!(twitter)*.ts');
+const contentsScripts = glob('./src/js/contents-!(twitter)*.ts');
 const contentsEntries = entries(contentsPrefix, contentsScripts);
 const otherPrefix = ':';
-const otherEntries = entries(otherPrefix, glob.sync('./src/js/*.ts').filter(file => !contentsScripts.includes(file)));
+const otherEntries = entries(otherPrefix, glob('./src/js/*.ts').filter(file => !contentsScripts.includes(file)));
 
 
 const envConfig: Partial<webpack.Configuration> = (ENV === 'production') ? {
