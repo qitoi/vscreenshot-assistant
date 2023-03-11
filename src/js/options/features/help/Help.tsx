@@ -185,12 +185,13 @@ const Help: React.FC = () => {
                 <H2><LocalizedText messageId="help_supported_platforms" /></H2>
                 <Description>
                     <UnorderedList p="1em">
-                        <ListItem>YouTube</ListItem>
-                        <ListItem>Twitch</ListItem>
-                        <ListItem>ニコニコ動画</ListItem>
-                        <ListItem>SPWN</ListItem>
-                        <ListItem>Streaming+ (イープラス)</ListItem>
-                        <ListItem>ホロライブ公式ファンクラブ/ときのそらオフィシャルファンクラブ</ListItem>
+                        <ListItem><LocalizedText messageId="help_supported_platform_youtube" /></ListItem>
+                        <ListItem><LocalizedText messageId="help_supported_platform_twitch" /></ListItem>
+                        <ListItem><LocalizedText messageId="help_supported_platform_nicovideo" /></ListItem>
+                        <ListItem><LocalizedText messageId="help_supported_platform_spwn" /></ListItem>
+                        <ListItem><LocalizedText messageId="help_supported_platform_streaming_plus" /></ListItem>
+                        <ListItem><LocalizedText messageId="help_supported_platform_hololive_fc" /></ListItem>
+                        <ListItem><LocalizedText messageId="help_supported_platform_tokinosora_fc" /></ListItem>
                     </UnorderedList>
                 </Description>
             </Block>
