@@ -159,7 +159,8 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
         if (slides[currentIndex].key !== state.prevSlides[currentIndex].key) {
             const slideKeepIndex = slides.findIndex(v => v.key === state.prevKey);
             if (slideKeepIndex !== -1) {
-                const diff = slideKeepIndex - currentIndex;
+                const slideKeepGlobalIndex = (state.loop * slides.length) + slideKeepIndex;
+                const diff = slideKeepGlobalIndex - globalIndex;
                 dispatch({ increment: diff, duration: 0 });
                 setState({ ...state, prevSlides: slides, prevGlobalIndex: globalIndex });
             }
