@@ -30,10 +30,15 @@ const Youtube: Platform = {
     },
 
     checkVideoPage(): boolean {
-        return document.location.pathname === '/watch';
+        const pathname = document.location.pathname;
+        return (pathname === '/watch') || isShorts(pathname);
     },
 
     getVideoId(): string | null {
+        const pathname = document.location.pathname;
+        if (isShorts(pathname)) {
+            return pathname.substring('/shorts/'.length);
+        }
         const params = new URLSearchParams(document.location.search);
         return params.get('v');
     },
@@ -96,6 +101,10 @@ const Youtube: Platform = {
         };
     },
 };
+
+function isShorts(pathname: string): boolean {
+    return pathname.startsWith('/shorts/');
+}
 
 function convertDate(value: string | null): Date | null {
     if (!value) {
