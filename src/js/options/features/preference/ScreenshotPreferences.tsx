@@ -70,6 +70,11 @@ const ScreenshotPreferences: React.FC = () => {
                     </RadioGroupControl>
                 </LabeledControl>
             </ControlGroup>
+            <ControlGroup isEnabledHover conditionKey="screenshot.fileType" conditionValue="image/png">
+                <LabeledControl messageId="prefs_screenshot_enabled_save_to_clipboard">
+                    <SwitchControl<Preferences> name="screenshot.enabledSaveToClipboard" />
+                </LabeledControl>
+            </ControlGroup>
         </PreferenceBlock>
     );
 };

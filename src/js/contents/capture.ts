@@ -113,6 +113,19 @@ function captureComplete(capture: Promise<ImageDataUrl>, prefs: prefs.Preference
             if (prefs.general.notify) {
                 showScreenshotToast(image, prefs);
             }
+            if (prefs.screenshot.fileType == "image/png" && prefs.screenshot.enabledSaveToClipboard) {
+                saveToClipboard(image)
+            }
         })
         .catch(() => null);
+}
+
+function saveToClipboard(image:ImageDataUrl)
+{
+    fetch(image)
+        .then(res => res.blob())
+        .then(blob => {
+            navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})]);
+        });
+    
 }

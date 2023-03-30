@@ -98,6 +98,9 @@
   "prefs_screenshot_format_png": {
     "message": "PNG"
   },
+  "prefs_screenshot_enabled_save_to_clipboard": {
+    "message": "クリップボードに保存"
+  },
   "prefs_album_enable_virtual_scroll": {
     "message": "仮想スクロールの有効化"
   },
