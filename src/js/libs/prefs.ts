@@ -61,6 +61,7 @@ export type Preferences = {
         continuousInterval: number,
         fileType: FileType,
         quality: number,
+        enabledSaveToClipboard: boolean,
     },
     album: {
         enabledVirtualScroll: boolean,
@@ -100,6 +101,7 @@ export const DefaultPreferences: Preferences = {
         continuousInterval: 500,
         fileType: 'image/jpeg',
         quality: 94,
+        enabledSaveToClipboard: false,
     },
     animation: {
         enabled: true,
@@ -147,6 +149,7 @@ function completePreferences(prefs: Preferences): Preferences {
             continuousInterval: completeMinMax(prefs?.screenshot?.continuousInterval, DefaultPreferences.screenshot.continuousInterval, 1, 10000),
             fileType: completeFileType(prefs?.screenshot?.fileType, DefaultPreferences.screenshot.fileType),
             quality: completeMinMax(prefs?.screenshot?.quality, DefaultPreferences.screenshot.quality, 0, 100),
+            enabledSaveToClipboard: completeBool(prefs?.screenshot?.enabledSaveToClipboard, DefaultPreferences.screenshot.enabledSaveToClipboard),
         },
         album: {
             enabledVirtualScroll: completeBool(prefs?.album?.enabledVirtualScroll, DefaultPreferences.album.enabledVirtualScroll),
