@@ -61,7 +61,7 @@ export type Preferences = {
         continuousInterval: number,
         fileType: FileType,
         quality: number,
-        enabledSaveToClipboard: boolean
+        enabledSaveToClipboard: boolean,
     },
     album: {
         enabledVirtualScroll: boolean,
@@ -101,7 +101,7 @@ export const DefaultPreferences: Preferences = {
         continuousInterval: 500,
         fileType: 'image/jpeg',
         quality: 94,
-        enabledSaveToClipboard: false
+        enabledSaveToClipboard: false,
     },
     animation: {
         enabled: true,

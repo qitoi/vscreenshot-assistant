@@ -113,8 +113,10 @@ function captureComplete(capture: Promise<ImageDataUrl>, prefs: prefs.Preference
             if (prefs.general.notify) {
                 showScreenshotToast(image, prefs);
             }
-            if (prefs.screenshot.fileType == "image/png" && prefs.screenshot.enabledSaveToClipboard && !!ClipboardItem) {
-                saveToClipboardNavigator(image);
+            if (process.env.BROWSER !== 'firefox') {
+                if (prefs.screenshot.fileType == "image/png" && prefs.screenshot.enabledSaveToClipboard) {
+                    saveToClipboardNavigator(image);
+                }
             }
         })
         .catch(() => null);

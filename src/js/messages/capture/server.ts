@@ -33,9 +33,10 @@ export function CaptureServer(server: MessageServerBuilder): void {
         await saveScreenshot(message, false, image, image)
 
         const p = await prefs.loadPreferences();
-        if(p.screenshot.enabledSaveToClipboard && p.screenshot.fileType == "image/png" && !!globalThis?.browser?.clipboard)
-        {
-            saveToClipboardFirefox(message.image);
+        if (process.env.BROWSER === 'firefox') {
+            if (p.screenshot.enabledSaveToClipboard && p.screenshot.fileType == "image/png") {
+                saveToClipboardFirefox(message.image);
+            }
         }
     });
 }
