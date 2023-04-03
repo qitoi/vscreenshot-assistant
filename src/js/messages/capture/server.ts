@@ -31,6 +31,12 @@ export function CaptureServer(server: MessageServerBuilder): void {
         // スクリーンショットのサムネイル作成
         const image = Promise.resolve(message.image);
         await saveScreenshot(message, false, image, image)
+
+        const p = await prefs.loadPreferences();
+        if(p.screenshot.enabledSaveToClipboard && p.screenshot.fileType == "image/png" && !!globalThis?.browser?.clipboard)
+        {
+            saveToClipboardFirefox(message.image);
+        }
     });
 }
 
@@ -153,4 +159,15 @@ async function saveScreenshot(param: CaptureRequestBase, isAnime: boolean, image
             }
             storage.saveVideoInfo({ ...videoInfo, lastUpdated: Date.now() });
         });
+}
+
+async function saveToClipboardFirefox(image:ImageDataUrl)
+{
+    fetch(image)
+        .then(res => res.blob())
+        .then(blob => blob.arrayBuffer())
+        .then(arrayBuffer =>{
+            browser.clipboard.setImageData(arrayBuffer,"png");
+        })
+        .catch(console.error);
 }
