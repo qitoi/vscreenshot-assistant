@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+### Added
+
+- キャプチャ時にスクリーンショットをクリップボードに保存する機能を追加 ([@rickymohk](https://github.com/rickymohk))
+
 ## v1.4.0 - 2023-03-11
 
 ### Added
