@@ -15,9 +15,9 @@
  */
 
 import * as React from 'react';
-import { Box } from '@chakra-ui/react';
-import Markdown from 'markdown-to-jsx';
+import { Box, Link } from '@chakra-ui/react';
 import { css } from '@emotion/react';
+import Markdown from 'markdown-to-jsx';
 
 
 const style = css`
@@ -68,7 +68,18 @@ const ChangeLog: React.FC = () => {
 
     return (
         <Box maxW="56em" py="4em" mx="auto" fontSize="md" css={style}>
-            <Markdown>
+            <Markdown
+                options={{
+                    overrides: {
+                        a: {
+                            component: Link,
+                            props: {
+                                target: '_blank',
+                            },
+                        },
+                    },
+                }}
+            >
                 {changeLog}
             </Markdown>
         </Box>

@@ -71,6 +71,14 @@ const theme = extendTheme({
                 },
             },
         },
+        Link: {
+            baseStyle: {
+                color: 'blue.500',
+            },
+            _hover: {
+                textDecoration: 'underline',
+            }
+        }
     },
 });
 
