@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+### Fixed
+
+- [YouTube] 全ての動画がプライベートとして判定され、 Twitter への共有ができなくなっていた問題を修正
+
 ## v1.5.0 - 2023-04-15
 
 ### Added
