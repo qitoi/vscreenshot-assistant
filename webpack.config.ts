@@ -130,7 +130,7 @@ const config: webpack.Configuration = {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendor',
                     chunks(chunk) {
-                        return chunk.name.startsWith(reactAppPrefix);
+                        return chunk.name?.startsWith(reactAppPrefix) ?? false;
                     },
                     minChunks: 2,
                 },
@@ -138,7 +138,7 @@ const config: webpack.Configuration = {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendor-contents',
                     chunks(chunk) {
-                        return chunk.name.startsWith(contentsPrefix);
+                        return chunk.name?.startsWith(contentsPrefix) ?? false;
                     },
                     minChunks: 2,
                 },
