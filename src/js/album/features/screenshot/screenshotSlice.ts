@@ -164,11 +164,13 @@ const slice = createSlice<ScreenshotState, SliceCaseReducers<ScreenshotState>>({
 export default slice.reducer;
 export const { appendScreenshot, removeThumbnail } = slice.actions;
 
+const empty: RootState['screenshot']['screenshots'] = [];
+
 export const selectScreenshotList = (state: RootState, platform: string, videoId: string): typeof state.screenshot.screenshots => {
     if (state.screenshot.videoInfoKey !== null && compareVideoInfo(state.screenshot.videoInfoKey, { platform, videoId })) {
         return state.screenshot.screenshots;
     }
-    return [];
+    return empty;
 };
 export const selectScreenshotSortOrder = (state: RootState): typeof state.screenshot.order => state.screenshot.order;
 export const selectCachedThumbnail = (state: RootState, platform: string, videoId: string, no: number): ImageDataUrl | null => {
