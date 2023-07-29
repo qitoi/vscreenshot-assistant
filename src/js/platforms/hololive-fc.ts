@@ -71,16 +71,20 @@ const HololiveFC: Platform = {
     async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
         const vid = videoId.split('/').pop();
         const fcType = getFCType(videoId);
-        const resp = await fetch(`https://nfc-api.${fcType}/fc/video_pages/${vid}`);
+        const resp = await fetch(`https://nfc-api.${fcType}/fc/video_pages/${vid}`, {
+            headers: {
+                fc_site_id: (fcType === FCTypes.Hololive) ? '57' : '58',
+                fc_use_device: 'null',
+            },
+        });
         const info = await resp.json();
         const videoInfo = info?.data?.video_page;
-
-        const d = videoInfo?.live_started_at ?? videoInfo?.live_scheduled_start_at ?? videoInfo.released_at ?? null;
+        const d = videoInfo?.live_started_at ?? videoInfo?.live_scheduled_start_at ?? videoInfo?.released_at ?? null;
         const datetime = (d !== null) ? new Date(d + 'Z').getTime() : 0;
 
         // タイトルからハッシュタグを抽出
         const hashtags: Record<string, boolean> = {};
-        const tags = extractHashtags(videoInfo.title ?? '');
+        const tags = extractHashtags(videoInfo?.title ?? '');
         for (const tag of tags) {
             if (tag !== undefined && tag !== '') {
                 hashtags[tag] = true;
@@ -91,10 +95,10 @@ const HololiveFC: Platform = {
         }
 
         return {
-            title: videoInfo.title ?? '-',
+            title: videoInfo?.title ?? '-',
             author: getFCName(fcType),
             date: datetime,
-            thumbnailUrl: videoInfo.thumbnail_url ?? null,
+            thumbnailUrl: videoInfo?.thumbnail_url ?? null,
             hashtags: Object.keys(hashtags),
             private: true,
         };
