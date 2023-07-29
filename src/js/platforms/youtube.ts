@@ -86,7 +86,7 @@ const Youtube: Platform = {
                 }
             }
             // 初期データからバッジ情報を取り出して限定公開、メンバー限定かをチェック
-            isPrivate ||= searchObjectContainsKey(ytInitialData, 'metadataBadgeRenderer')
+            isPrivate ||= searchObjectContainsKey(ytInitialData?.contents?.twoColumnWatchNextResults?.results ?? {}, 'metadataBadgeRenderer')
                 .map(b => b?.metadataBadgeRenderer?.icon?.iconType)
                 .some(type => ['PRIVACY_UNLISTED', 'SPONSORSHIP_STAR'].includes(type));
         }
@@ -117,7 +117,7 @@ function convertDate(value: string | null): Date | null {
     return d;
 }
 
-function extractInitialData(document: Document): object | null {
+function extractInitialData(document: Document): any {
     const initialScript = Array.from(document.querySelectorAll<HTMLScriptElement>('script')).filter(e => e.text.match(/ytInitialData *=/));
     if (initialScript.length > 0) {
         const initialObject = initialScript[0].text.match(/\{.+}/) || [];
