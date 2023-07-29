@@ -190,6 +190,7 @@ const Help: React.FC = () => {
                         <ListItem><LocalizedText messageId="help_supported_platform_nicovideo" /></ListItem>
                         <ListItem><LocalizedText messageId="help_supported_platform_spwn" /></ListItem>
                         <ListItem><LocalizedText messageId="help_supported_platform_streaming_plus" /></ListItem>
+                        <ListItem><LocalizedText messageId="help_supported_platform_zan" /></ListItem>
                         <ListItem><LocalizedText messageId="help_supported_platform_hololive_fc" /></ListItem>
                         <ListItem><LocalizedText messageId="help_supported_platform_tokinosora_fc" /></ListItem>
                     </UnorderedList>
