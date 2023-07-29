@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- 対応プラットフォームに Z-aN を追加
+
 ### Fixed
 
 - [YouTube] 全ての動画がプライベートとして判定され、 Twitter への共有ができなくなっていた問題を修正

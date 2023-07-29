@@ -93,6 +93,15 @@
     },
     {
       "matches": [
+        "https://*.zan-live.com/*"
+      ],
+      "js": [
+        "js/vendor-contents.js",
+        "js/contents-zan.js"
+      ]
+    },
+    {
+      "matches": [
         "https://twitter.com/intent/tweet*"
       ],
       "js": [

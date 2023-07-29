@@ -257,6 +257,9 @@
   "help_supported_platform_streaming_plus": {
     "message": "Streaming+ (イープラス)"
   },
+  "help_supported_platform_zan": {
+    "message": "Z-aN"
+  },
   "help_supported_platform_hololive_fc": {
     "message": "ホロライブ公式ファンクラブ"
   },
