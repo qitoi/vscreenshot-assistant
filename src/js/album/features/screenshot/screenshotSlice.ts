@@ -97,7 +97,7 @@ export const setScreenshotSortOrder = createAsyncThunk<FetchSortOrderPayload, Se
 );
 
 
-const slice = createSlice<ScreenshotState, SliceCaseReducers<ScreenshotState>>({
+const slice = createSlice({
     name: 'screenshot',
     initialState,
     reducers: {
