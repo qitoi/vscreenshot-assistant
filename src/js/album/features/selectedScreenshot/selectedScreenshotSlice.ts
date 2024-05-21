@@ -23,7 +23,7 @@ import { removeVideo } from '../video/videoSlice';
 
 
 const SELECTED_SCREENSHOT_MAX_COUNT = 4;
-const SELECTED_ANIME_MAX_COUNT = 1;
+const SELECTED_ANIME_MAX_COUNT = 4;
 
 
 export type ScreenshotInfoWithThumbnail = ScreenshotInfo & {
