@@ -15,6 +15,7 @@
  */
 
 const TWITTER_ORIGIN = 'https://twitter.com';
+const X_ORIGIN = 'https://x.com';
 const MESSAGE_TAG = 'vscreenshot-assistant';
 
 type Message = {
@@ -39,11 +40,16 @@ function FileMessage(files: File[]): Message {
 }
 
 export function sendFiles(files: File[]): void {
-    window.postMessage(FileMessage(files), TWITTER_ORIGIN);
+    if (window.location.origin === TWITTER_ORIGIN) {
+        window.postMessage(FileMessage(files), TWITTER_ORIGIN);
+    }
+    else {
+        window.postMessage(FileMessage(files), X_ORIGIN);
+    }
 }
 
 export function receiveFiles(message: MessageEvent): File[] | null {
-    if (message.origin !== TWITTER_ORIGIN) {
+    if (message.origin !== TWITTER_ORIGIN && message.origin !== X_ORIGIN) {
         return null;
     }
 

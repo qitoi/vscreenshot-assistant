@@ -104,7 +104,8 @@
     },
     {
       "matches": [
-        "https://twitter.com/intent/tweet*"
+        "https://twitter.com/intent/tweet*",
+        "https://x.com/intent/post*"
       ],
       "js": [
         "js/contents-twitter.js"
@@ -121,7 +122,8 @@
         "js/inject-twitter.js"
       ],
       "matches": [
-        "*://*.twitter.com/*"
+        "*://*.twitter.com/*",
+        "*://*.x.com/*"
       ]
     }
   ],
