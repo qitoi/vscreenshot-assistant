@@ -22,7 +22,7 @@ import * as client from '../messages/client';
 import { PopupWindow } from './popup-window';
 
 
-const TWITTER_SHARE_URL = 'https://twitter.com/intent/tweet';
+const TWITTER_SHARE_URL = 'https://x.com/intent/post';
 
 // twitter側のコンテンツスクリプトへのメッセージ送信待機設定
 const SHARE_SCREENSHOT_MAX_TRIAL = 20;

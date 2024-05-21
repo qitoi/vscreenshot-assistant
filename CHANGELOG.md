@@ -1,5 +1,9 @@
 # Change Log
 
+## Unreleased
+
+- [Twitter] 画像投稿機能の x.com への対応
+
 ## v1.6.0 - 2023-07-30
 
 ### Added
