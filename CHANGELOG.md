@@ -3,6 +3,7 @@
 ## Unreleased
 
 - [Twitter] 画像投稿機能の x.com への対応
+- [Twitter] アニメーション GIF の同時投稿上限を 4 に変更
 
 ## v1.6.0 - 2023-07-30
 
