@@ -23,7 +23,6 @@ import { removeVideo } from '../video/videoSlice';
 
 
 const SELECTED_SCREENSHOT_MAX_COUNT = 4;
-const SELECTED_ANIME_MAX_COUNT = 4;
 
 
 export type ScreenshotInfoWithThumbnail = ScreenshotInfo & {
@@ -60,7 +59,7 @@ const slice = createSlice({
                 state.selected = filtered;
             }
             else {
-                if (isSelectableScreenshot(state.selected, action.payload.info)) {
+                if (isSelectableScreenshot(state.selected)) {
                     state.selected.push({ ...p.info, thumbnail: p.thumbnail });
                 }
             }
@@ -87,17 +86,11 @@ const slice = createSlice({
     },
 });
 
-export function isSelectableScreenshot(selected: ScreenshotInfoWithThumbnail[], screenshot: ScreenshotInfo): boolean {
-    if (screenshot.anime) {
-        return selected.length < SELECTED_ANIME_MAX_COUNT;
-    }
-    return selected.length < SELECTED_SCREENSHOT_MAX_COUNT && selected.every(s => !s.anime);
+export function isSelectableScreenshot(selected: ScreenshotInfoWithThumbnail[]): boolean {
+    return selected.length < SELECTED_SCREENSHOT_MAX_COUNT;
 }
 
 export function isFulfilledSelectedScreenshot(selected: ScreenshotInfoWithThumbnail[]): boolean {
-    if (selected.length === SELECTED_ANIME_MAX_COUNT && selected[0].anime) {
-        return true;
-    }
     return selected.length === SELECTED_SCREENSHOT_MAX_COUNT;
 }
 

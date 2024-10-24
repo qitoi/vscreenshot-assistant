@@ -89,7 +89,6 @@ function ScreenshotGrid({ video, screenshots, enableTweet, onScreenshotExpandCli
     const renderScreenshotCard = React.useCallback((s: ScreenshotInfo, isChecked: boolean, lazyLoad: boolean) => {
         const classNames = [];
         classNames.push(isChecked ? 'screenshot-card-checked' : 'screenshot-card-unchecked');
-        classNames.push(s.anime ? 'screenshot-card-anime' : 'screenshot-card-screenshot');
         return (
             <ScreenshotCard
                 key={getScreenshotKey(s)}
@@ -213,7 +212,6 @@ const ScreenshotList: React.FC = () => {
 
     const fulfilled = isFulfilledSelectedScreenshot(selected);
     const tweetDisabled = video?.private || !tweetEnabled;
-    const animeSelected = selected.some(s => s.anime);
 
     return (
         <Box w="100%" h="100%" minH="100%" position="relative" userSelect="none">
@@ -222,15 +220,10 @@ const ScreenshotList: React.FC = () => {
                 '.screenshot-card-checked': {
                     cursor: tweetDisabled ? 'default' : 'pointer',
                 },
-                // 未選択のアニメ
-                '.screenshot-card-unchecked.screenshot-card-anime': {
-                    // ツイートが無効化されていればデフォルト、選択済みが一杯か、選択されているものがアニメでなければ無効化、それ以外は選択可能
-                    cursor: tweetDisabled ? 'default' : (fulfilled || (selected.length > 0 && !animeSelected)) ? 'not-allowed' : 'pointer',
-                },
                 // 未選択のスクリーンショット
-                '.screenshot-card-unchecked.screenshot-card-screenshot': {
-                    // ツイートが無効化されていればデフォルト、選択済みが一杯か、選択されているものがアニメであれば無効化、それ以外は選択可能
-                    cursor: tweetDisabled ? 'default' : (fulfilled || (selected.length > 0 && animeSelected)) ? 'not-allowed' : 'pointer',
+                '.screenshot-card-unchecked': {
+                    // ツイートが無効化されていればデフォルト、選択済みが一杯であれば無効化、それ以外は選択可能
+                    cursor: tweetDisabled ? 'default' : (fulfilled) ? 'not-allowed' : 'pointer',
                 },
             }} />
             {video !== null && (
