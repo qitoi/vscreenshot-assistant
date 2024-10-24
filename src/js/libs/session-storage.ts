@@ -26,6 +26,10 @@ export async function set(items: { [key: string]: any }): Promise<void> {
 }
 
 export async function get(keys: string | string[] | null): Promise<{ [key: string]: any }> {
+    if (typeof keys === 'string') {
+        keys = [keys];
+    }
+
     if (chrome.storage.session) {
         return new Promise<{ [key: string]: any }>(resolve => chrome.storage.session.get(keys, resolve));
     }
@@ -34,9 +38,6 @@ export async function get(keys: string | string[] | null): Promise<{ [key: strin
         return { ...storage };
     }
 
-    if (typeof keys === 'string') {
-        keys = [keys];
-    }
     const result: { [key: string]: any } = {};
     for (const key of keys) {
         if (key in storage) {

@@ -16,12 +16,8 @@
 
 import * as React from 'react';
 import { chakra } from '@chakra-ui/system';
-import { Omit } from '@chakra-ui/utils';
-import { Tag, useCheckbox, UseCheckboxProps, TagProps, useCheckboxGroup, UseCheckboxGroupProps, HStack } from '@chakra-ui/react';
+import { Tag, useCheckbox, UseCheckboxProps, useCheckboxGroup, UseCheckboxGroupProps, HStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-
-
-const MotionTag = motion<Omit<TagProps, 'transition'>>(Tag);
 
 export interface CheckboxProps extends React.PropsWithChildren<UseCheckboxProps> {
     checkedColor: string,
@@ -40,7 +36,8 @@ export const HashtagCheckbox = (props: CheckboxProps) => {
     return (
         <chakra.label {...htmlProps} cursor={state.isDisabled ? 'default' : 'pointer'}>
             <chakra.input type="checkbox" {...getInputProps()} />
-            <MotionTag
+            <Tag
+                as={motion.div}
                 bgColor={(state.isChecked && !state.isDisabled) ? checkedColor : uncheckedColor}
                 rounded="1em"
                 borderColor="gray.400"
@@ -49,9 +46,9 @@ export const HashtagCheckbox = (props: CheckboxProps) => {
                 whileHover={{ filter: 'brightness(90%)' }}
                 variants={variants}
                 animate={(state.isChecked && !state.isDisabled) ? 'select' : 'unselect'}
-                transition={{ ease: 'easeOut', duration: 0.1 }}>
+                transition="0.1s easeOut">
                 {children}
-            </MotionTag>
+            </Tag>
         </chakra.label>
     );
 };

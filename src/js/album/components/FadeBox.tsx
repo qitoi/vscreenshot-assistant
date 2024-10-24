@@ -14,10 +14,11 @@
  *  limitations under the License.
  */
 
-import { MotionBox, MotionBoxProps } from './MotionBox';
 import * as React from 'react';
+import { Box, BoxProps } from "@chakra-ui/react";
+import { motion } from 'framer-motion';
 
-type FadeBoxProps = MotionBoxProps & {
+type FadeBoxProps = BoxProps & {
     show: boolean,
 };
 export const FadeBox: React.FC<FadeBoxProps> = ({ show, ...rest }: FadeBoxProps) => {
@@ -26,12 +27,19 @@ export const FadeBox: React.FC<FadeBoxProps> = ({ show, ...rest }: FadeBoxProps)
         hide: { opacity: 0 },
     };
     return (
-        <MotionBox w="100%" h="100%" position="absolute" top={0} left={0} bgColor="rgba(0, 0, 0, 0.5)"
-                   opacity={0}
-                   variants={variants}
-                   animate={show ? 'show' : 'hide'}
-                   transition={{ ease: 'easeOut', duration: 0.1 }}
-                   {...rest}
+        <Box
+            as={motion.div}
+            w="100%"
+            h="100%"
+            position="absolute"
+            top={0}
+            left={0}
+            bgColor="rgba(0, 0, 0, 0.5)"
+            opacity={0}
+            variants={variants}
+            animate={show ? 'show' : 'hide'}
+            transition="0.1s easeOut"
+            {...rest}
         />
     );
 };

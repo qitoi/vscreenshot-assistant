@@ -75,7 +75,14 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick, ...stac
                 )}
             </Grid>
             <Box>
-                <Button colorScheme="twitter" onClick={handleClick}><LocalizedText messageId="album_tweet_screenshot_button" /></Button>
+                <Button
+                    onClick={handleClick}
+                    color="white"
+                    bgColor="rgb(29, 155, 240)"
+                    _hover={{ backgroundColor: 'rgb(26, 140, 216)' }}
+                    _active={{ backgroundColor: 'rgb(23, 124, 192)' }}>
+                    <LocalizedText messageId="album_tweet_screenshot_button" />
+                </Button>
             </Box>
             <Spacer />
         </HStack>
