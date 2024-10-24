@@ -15,6 +15,7 @@
  */
 
 import { Platform, PlatformVideoInfo } from './platform';
+import { filterHashtags } from "./util";
 
 
 const NicoVideo: Platform = {
@@ -62,32 +63,38 @@ const NicoVideo: Platform = {
     },
 
     async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
-        // live
-        if (videoId.startsWith('lv')) {
-            const info = JSON.parse((document.querySelector('#embedded-data') as HTMLElement)?.getAttribute('data-props') ?? '{}');
-            const thumbnail = info?.program?.thumbnail;
-            const thumbnailUrl = thumbnail?.huge?.s1920x1080 ?? thumbnail?.huge?.s1280x720 ?? thumbnail?.huge?.s640x360 ?? thumbnail?.huge?.s352x198;
-            return {
-                title: info?.program?.title ?? '-',
-                author: ((info?.socialGroup?.type === 'channel') ? (info?.socialGroup?.name) : (info?.program?.supplier?.name)) ?? '-',
-                date: (info?.program?.beginTime ?? 0) * 1000,
-                thumbnailUrl: thumbnailUrl,
-                hashtags: info?.program?.twitter?.hashTags ?? [],
-                private: false,
-            };
+        const scripts = document.querySelectorAll<HTMLScriptElement>('script[type="application/ld+json"]')
+        for (const script of scripts) {
+            try {
+                const data = JSON.parse(script.textContent ?? '{}');
+                let keywords = data?.keywords ?? [];
+                if (typeof keywords === 'string') {
+                    keywords = keywords.split(',');
+                }
+                if (data['@type'] === 'VideoObject') {
+                    console.log('hit');
+                    return {
+                        title: data?.name ?? '-',
+                        author: data?.author?.name ?? '-',
+                        date: new Date(data?.uploadDate).getTime(),
+                        thumbnailUrl: data?.thumbnailUrl[0] ?? null,
+                        hashtags: filterHashtags(keywords),
+                        private: false,
+                    }
+                }
+            }
+            catch {
+                // ignored
+            }
         }
-        // video
-        else {
-            const info = JSON.parse((document.querySelector('#js-initial-watch-data') as HTMLElement)?.getAttribute('data-api-data') ?? '{}');
-            const thumbnail = info?.video?.thumbnail;
-            return {
-                title: info?.video?.title ?? '-',
-                author: info?.channel?.name ?? info?.owner?.nickname ?? '-',
-                date: (new Date(info?.video?.registeredAt ?? 0)).getTime(),
-                thumbnailUrl: thumbnail?.ogp ?? thumbnail?.player ?? thumbnail?.largeUrl ?? thumbnail?.middleUrl ?? thumbnail?.url ?? null,
-                hashtags: [],
-                private: false,
-            };
+
+        return {
+            title: '-',
+            author: '-',
+            date: 0,
+            thumbnailUrl: null,
+            hashtags: [],
+            private: false,
         }
     },
 };

@@ -20,3 +20,7 @@ import tt from 'twitter-text';
 export function extractHashtags(text: string): string[] {
     return tt.extractHashtags(text);
 }
+
+export function filterHashtags(hashtags: string[]): string[] {
+    return hashtags.filter(hashtag => tt.isValidHashtag('#' + hashtag));
+}
