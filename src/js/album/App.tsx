@@ -62,9 +62,9 @@ const App: React.FC = () => {
                 <Sidebar>
                     <VideoList />
                 </Sidebar>
-                <Flex direction="column" w="100%" h="calc(100vh)" minW={0} overflowX="hidden">
+                <Flex direction="column" w="100%" h="calc(100vh)" minW={0}>
                     <VideoHeader />
-                    <Box flexGrow={1} w="100%" overflow="clip">
+                    <Box flexGrow={1} w="100%" overflow="hidden">
                         <ScreenshotList />
                     </Box>
                 </Flex>
