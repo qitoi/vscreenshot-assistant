@@ -78,7 +78,7 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
     });
 
     // GIF変換開始・完了待ち
-    await port.sendMessage('anime-end', {
+    const result = await port.sendMessage('anime-end', {
         platform: platform.PLATFORM_ID,
         videoId: videoId,
         videoInfo: {
@@ -91,6 +91,13 @@ export async function capture(platform: Platform, stop: Promise<void>, prefs: pr
         id: id,
         interval: interval,
     });
+
+    if (prefs.general.enableAutoDownload && result.type === 'anime') {
+        const a = document.createElement('a');
+        a.href = result.image;
+        a.download = `${result.platform}_${result.videoId}_${result.no}.gif`;
+        a.click();
+    }
 
     toast.hideToast();
     port.disconnect();
