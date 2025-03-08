@@ -20,13 +20,13 @@ import { CustomLightboxSource } from '../CustomLightbox';
 export type LazyLoadFuncType = () => Promise<Blob | null>;
 
 export interface LazyImageSlideType extends GenericSlide {
-    src: CustomLightboxSource,
-    load: LazyLoadFuncType,
-    release?: () => void,
-    width?: number,
-    height?: number,
-    size?: number,
-    onLoad?: (width: number, height: number, image: Blob) => void,
+    src: CustomLightboxSource;
+    load: LazyLoadFuncType;
+    release?: () => void;
+    width?: number;
+    height?: number;
+    size?: number;
+    onLoad?: (width: number, height: number, image: Blob) => void;
 }
 
 export function isLazyImageSlideType(value: any): value is LazyImageSlideType {

@@ -25,7 +25,7 @@ export type NonUndefined<T> = T extends undefined ? never : T;
 const VIDEO_KEYMAP_KEY = 'video-keys';
 
 type VideoKeyMap = {
-    [id: string]: number,
+    [id: string]: number;
 };
 type VideoKey = [platform: string, id: string];
 

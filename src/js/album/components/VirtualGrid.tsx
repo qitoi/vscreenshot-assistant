@@ -22,8 +22,8 @@ import { createContext } from 'react';
 
 type VirtualGridContainerProps = HTMLChakraProps<'div'>;
 type VirtualGridContextType = {
-    outerRef: React.RefObject<HTMLDivElement>,
-    contentRef: React.RefObject<HTMLDivElement>,
+    outerRef: React.RefObject<HTMLDivElement>;
+    contentRef: React.RefObject<HTMLDivElement>;
 };
 const VirtualGridContext = createContext<VirtualGridContextType>({
     outerRef: React.createRef<HTMLDivElement>(),
@@ -31,54 +31,54 @@ const VirtualGridContext = createContext<VirtualGridContextType>({
 });
 
 type VirtualGridProps<T> = {
-    items: T[]
-    getItemKey: (item: T) => string,
-    renderItem: (item: T) => React.ReactElement,
+    items: T[];
+    getItemKey: (item: T) => string;
+    renderItem: (item: T) => React.ReactElement;
 } & GridProps;
 
 
 type VirtualGridReducerAction<T> = {
-    type: 'items',
-    items: T[],
+    type: 'items';
+    items: T[];
 } | {
-    type: 'resize',
-    outerHeight: number,
-    gridWidth: number,
-    gridRowGap: number,
-    gridColumnGap: number,
-    itemWidth: number,
-    itemHeight: number,
-    scrollMax: number,
+    type: 'resize';
+    outerHeight: number;
+    gridWidth: number;
+    gridRowGap: number;
+    gridColumnGap: number;
+    itemWidth: number;
+    itemHeight: number;
+    scrollMax: number;
 } | {
-    type: 'resize-outer',
-    outerHeight: number,
+    type: 'resize-outer';
+    outerHeight: number;
 } | {
-    type: 'scroll',
-    scrollTop: number,
+    type: 'scroll';
+    scrollTop: number;
 };
 
 type VirtualGridState<T> = {
-    initialize: boolean,
-    items: T[],
+    initialize: boolean;
+    items: T[];
 
-    outerHeight: number,
-    outerScrollTop: number,
-    gridColumnGap: number,
-    gridRowGap: number,
-    gridWidth: number,
-    itemWidth: number,
-    itemHeight: number,
-    scrollMaxOffset: number,
+    outerHeight: number;
+    outerScrollTop: number;
+    gridColumnGap: number;
+    gridRowGap: number;
+    gridWidth: number;
+    itemWidth: number;
+    itemHeight: number;
+    scrollMaxOffset: number;
 
-    prevGridWidth: number,
-    prevOuterHeight: number,
+    prevGridWidth: number;
+    prevOuterHeight: number;
 
     // output
-    clippedItems: T[],
-    gridTop: number,
-    gridOffset: number,
-    innerHeight: number,
-    forceScroll: number | null,
+    clippedItems: T[];
+    gridTop: number;
+    gridOffset: number;
+    innerHeight: number;
+    forceScroll: number | null;
 };
 
 function VirtualGridStateInitializer<T>(): VirtualGridState<T> {

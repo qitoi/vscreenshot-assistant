@@ -43,7 +43,7 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
 
     const archiveFunc = React.useCallback(async (video: VideoInfo, filesPerArchive: number, callback: ArchiveCallback): Promise<void> => {
         // reset progress
-        onProgressRef.current && onProgressRef.current(0);
+        onProgressRef.current?.(0);
 
         // screenshot info list
         const listCancelable = new PCancelable<ScreenshotInfo[]>(async resolve => {
@@ -55,13 +55,13 @@ export default function useArchive(): [ArchiveFunc, CancelFunc, SetProgressHandl
         screenshots.sort((a, b) => a.no - b.no);
 
         const archiveCancelable = archive(video, screenshots, filesPerArchive, callback, (current, max) => {
-            onProgressRef.current && onProgressRef.current(100 * current / (max + 1));
+            onProgressRef.current?.(100 * current / (max + 1));
         });
         setCancelable(archiveCancelable);
         await archiveCancelable;
 
         // complete progress
-        onProgressRef.current && onProgressRef.current(100);
+        onProgressRef.current?.(100);
 
         setCancelable(null);
         setProgressHandler(() => undefined);

@@ -94,9 +94,9 @@ const Description = chakra('div', {
 
 
 type KeyConfigs = {
-    screenshot: string,
-    continuous: string,
-    animation: string,
+    screenshot: string;
+    continuous: string;
+    animation: string;
 };
 
 

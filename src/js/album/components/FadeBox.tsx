@@ -19,7 +19,7 @@ import { Box, BoxProps } from "@chakra-ui/react";
 import { motion } from 'framer-motion';
 
 type FadeBoxProps = BoxProps & {
-    show: boolean,
+    show: boolean;
 };
 export const FadeBox: React.FC<FadeBoxProps> = ({ show, ...rest }: FadeBoxProps) => {
     const variants = {

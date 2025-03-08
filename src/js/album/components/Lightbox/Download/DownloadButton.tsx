@@ -20,7 +20,7 @@ import { IconButton, useLightboxState } from 'yet-another-react-lightbox/core'
 import { Slide } from 'yet-another-react-lightbox';
 
 type DownloadButtonProps = {
-    slides: Slide[],
+    slides: Slide[];
 };
 
 export function DownloadButton({ slides }: DownloadButtonProps) {

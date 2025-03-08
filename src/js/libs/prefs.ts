@@ -49,42 +49,42 @@ const isToastPosition = (type: any): type is ToastPosition => Object.values(Toas
 
 export type Preferences = {
     general: {
-        iconAction: ClickIconAction,
-        notify: boolean,
-        notifyPosition: ToastPosition,
-        notifyDuration: number,
-    },
+        iconAction: ClickIconAction;
+        notify: boolean;
+        notifyPosition: ToastPosition;
+        notifyDuration: number;
+    };
     screenshot: {
-        hotkey: hotkeys.KeyConfig,
-        enabledContinuous: boolean,
-        continuousHotkey: hotkeys.KeyConfig,
-        continuousInterval: number,
-        fileType: FileType,
-        quality: number,
-        enabledSaveToClipboard: boolean,
-    },
+        hotkey: hotkeys.KeyConfig;
+        enabledContinuous: boolean;
+        continuousHotkey: hotkeys.KeyConfig;
+        continuousInterval: number;
+        fileType: FileType;
+        quality: number;
+        enabledSaveToClipboard: boolean;
+    };
     album: {
-        enabledVirtualScroll: boolean,
-        filesPerArchive: number,
-    },
+        enabledVirtualScroll: boolean;
+        filesPerArchive: number;
+    };
     thumbnail: {
-        width: number,
-        height: number,
-    },
+        width: number;
+        height: number;
+    };
     tweet: {
-        enabled: boolean,
-        hashtag: boolean,
-        url: boolean,
-        title: boolean,
-        author: boolean,
-    },
+        enabled: boolean;
+        hashtag: boolean;
+        url: boolean;
+        title: boolean;
+        author: boolean;
+    };
     animation: {
-        enabled: boolean,
-        hotkey: hotkeys.KeyConfig,
-        width: number,
-        height: number,
-        interval: number,
-    },
+        enabled: boolean;
+        hotkey: hotkeys.KeyConfig;
+        width: number;
+        height: number;
+        interval: number;
+    };
 };
 
 export const DefaultPreferences: Preferences = {

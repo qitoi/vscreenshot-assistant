@@ -24,10 +24,10 @@ import { FadeBox } from '../../components/FadeBox';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
 
 type SelectedScreenshotProps = React.PropsWithChildren<{
-    info: ScreenshotInfo,
-    screenshot: ImageDataUrl,
-    onClick: (info: ScreenshotInfo) => void,
-    onLoad?: () => void,
+    info: ScreenshotInfo;
+    screenshot: ImageDataUrl;
+    onClick: (info: ScreenshotInfo) => void;
+    onLoad?: () => void;
 }>;
 
 export const SelectedScreenshot: React.FC<SelectedScreenshotProps> = ({ info, screenshot, onClick, onLoad }: SelectedScreenshotProps) => {

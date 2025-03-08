@@ -20,7 +20,7 @@ export const PLUGIN_CONSISTENT_CAROUSEL = 'consistent-carousel';
 
 declare module "yet-another-react-lightbox" {
     interface GenericSlide {
-        key: number | string,
+        key: number | string;
     }
 }
 

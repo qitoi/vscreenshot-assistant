@@ -138,10 +138,10 @@ function Placeholder() {
 
 
 type ConsistentCarouselState = {
-    prevSlides: Slide[],
-    prevGlobalIndex: number,
-    prevKey: any,
-    loop: number,
+    prevSlides: Slide[];
+    prevGlobalIndex: number;
+    prevKey: any;
+    loop: number;
 };
 
 

@@ -20,7 +20,7 @@ import { listenAuto } from '../libs/event-listen';
 
 
 const WINDOW_SIZE_KEY = 'window-size';
-type WindowSizeSet = Record<string, { width: number, height: number }>;
+type WindowSizeSet = Record<string, { width: number; height: number }>;
 
 export function loadWindowSizeSet(): Promise<WindowSizeSet> {
     return storage.getItemById<WindowSizeSet>(WINDOW_SIZE_KEY, {});

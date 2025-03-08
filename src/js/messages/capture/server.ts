@@ -133,7 +133,7 @@ async function saveScreenshot(param: CaptureRequestBase, isAnime: boolean, image
     const thumbnail: Promise<ImageDataUrl> = imageForThumbnail.then(image => resizeImage(image, p.thumbnail.width, p.thumbnail.height, 'image/jpeg', thumbnailQuality));
 
     // 動画サムネイルが保存されていない場合はダウンロードする
-    type VideoThumbnail = { image: ImageDataUrl, resized: ImageDataUrl };
+    type VideoThumbnail = { image: ImageDataUrl; resized: ImageDataUrl };
     let videoThumbnail: Promise<VideoThumbnail | null> = Promise.resolve(null);
     const videoThumbnailExists = await storage.existsVideoThumbnail(param.platform, param.videoId);
     if (!videoThumbnailExists) {

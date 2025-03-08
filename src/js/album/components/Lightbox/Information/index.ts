@@ -22,14 +22,14 @@ import { Slide } from 'yet-another-react-lightbox';
 declare module 'yet-another-react-lightbox/types' {
     interface LightboxProps {
         information?: {
-            render?: (slide: Slide) => React.ReactNode,
+            render?: (slide: Slide) => React.ReactNode;
         };
     }
 }
 
 declare module '../CustomLightbox' {
     interface CustomLightboxSource {
-        renderFooter?: (slide: Slide) => React.ReactNode,
+        renderFooter?: (slide: Slide) => React.ReactNode;
     }
 }
 

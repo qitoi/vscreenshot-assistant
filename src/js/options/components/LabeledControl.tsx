@@ -21,8 +21,8 @@ import { MessageId } from '../../libs/localize';
 import { LocalizedText } from '../../components/LocalizedText';
 
 type LabeledControlProps = FormLabelProps & {
-    messageId: MessageId,
-    isVertical?: boolean,
+    messageId: MessageId;
+    isVertical?: boolean;
 };
 
 const LabeledControl: React.FC<LabeledControlProps> = ({ messageId, isVertical, children, ...rest }: LabeledControlProps) => {

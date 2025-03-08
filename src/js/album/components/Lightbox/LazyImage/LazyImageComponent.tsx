@@ -20,9 +20,9 @@ import { Image, Spinner } from '@chakra-ui/react';
 import { LazyLoadFuncType } from './LazyImageSource';
 
 type LazyImageProps = {
-    load: LazyLoadFuncType,
-    release?: () => void,
-    onLoad?: (width: number, height: number, image: Blob) => void,
+    load: LazyLoadFuncType;
+    release?: () => void;
+    onLoad?: (width: number, height: number, image: Blob) => void;
 };
 
 export function LazyImageComponent({ load, release, onLoad }: LazyImageProps) {

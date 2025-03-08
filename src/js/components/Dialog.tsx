@@ -27,13 +27,13 @@ import {
 import * as React from 'react';
 
 type DeleteDialogProps = React.PropsWithChildren<{
-    isOpen: boolean,
-    title?: string,
-    okLabel?: React.ReactElement,
-    cancelLabel?: React.ReactElement,
-    isButtonDisabled?: boolean,
-    onOK?: () => void,
-    onCancel: () => void,
+    isOpen: boolean;
+    title?: string;
+    okLabel?: React.ReactElement;
+    cancelLabel?: React.ReactElement;
+    isButtonDisabled?: boolean;
+    onOK?: () => void;
+    onCancel: () => void;
 }>;
 
 const Dialog = ({ isOpen, title, okLabel, cancelLabel, isButtonDisabled, onOK, onCancel, children }: DeleteDialogProps) => {

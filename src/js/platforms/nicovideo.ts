@@ -62,6 +62,7 @@ const NicoVideo: Platform = {
         return video.currentTime;
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
         const scripts = document.querySelectorAll<HTMLScriptElement>('script[type="application/ld+json"]')
         for (const script of scripts) {

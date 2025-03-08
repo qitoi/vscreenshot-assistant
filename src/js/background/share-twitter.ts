@@ -30,9 +30,9 @@ const SHARE_SCREENSHOT_INTERVAL = 250;
 
 
 type TweetOptions = {
-    url?: string,
-    text?: string,
-    hashtags?: string,
+    url?: string;
+    text?: string;
+    hashtags?: string;
 };
 
 

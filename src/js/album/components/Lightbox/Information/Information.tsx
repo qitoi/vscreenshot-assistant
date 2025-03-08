@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-import * as React from 'react';
 import { Plugin, PluginMethods } from 'yet-another-react-lightbox';
 import { createModule, MODULE_CAROUSEL } from 'yet-another-react-lightbox/core';
 import { InformationComponent } from './InformationComponent';

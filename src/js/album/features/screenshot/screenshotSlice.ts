@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { createAsyncThunk, createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { compareVideoInfo, ImageDataUrl, ScreenshotInfo, VideoInfoKey } from '../../../libs/types';
 import * as storage from '../../../libs/storage';
@@ -25,11 +25,11 @@ import { removeVideo } from '../video/videoSlice';
 
 
 type ScreenshotState = {
-    order: screenshotSort.ScreenshotSortOrder | null,
-    videoInfoKey: VideoInfoKey | null,
-    screenshots: ScreenshotInfo[],
-    screenshotMap: { [no: number]: ScreenshotInfo },
-    thumbnails: { [no: number]: ImageDataUrl },
+    order: screenshotSort.ScreenshotSortOrder | null;
+    videoInfoKey: VideoInfoKey | null;
+    screenshots: ScreenshotInfo[];
+    screenshotMap: { [no: number]: ScreenshotInfo };
+    thumbnails: { [no: number]: ImageDataUrl };
 };
 
 const initialState: ScreenshotState = {
@@ -41,30 +41,30 @@ const initialState: ScreenshotState = {
 };
 
 type AppendScreenshotPayload = {
-    platform: string,
-    videoId: string,
-    target: ScreenshotInfo,
-    thumbnail: ImageDataUrl,
+    platform: string;
+    videoId: string;
+    target: ScreenshotInfo;
+    thumbnail: ImageDataUrl;
 };
 type RemoveScreenshotPayload = {
-    platform: string,
-    videoId: string,
-    target: ScreenshotInfo,
+    platform: string;
+    videoId: string;
+    target: ScreenshotInfo;
 };
 type FetchScreenshotListPayload = {
-    platform: string,
-    videoId: string,
-    screenshots: ScreenshotInfo[],
+    platform: string;
+    videoId: string;
+    screenshots: ScreenshotInfo[];
 }
 type FetchSortOrderPayload = {
-    order: screenshotSort.ScreenshotSortOrder,
+    order: screenshotSort.ScreenshotSortOrder;
 };
 type SetSortOrderPayload = {
-    order: screenshotSort.ScreenshotSortOrder,
+    order: screenshotSort.ScreenshotSortOrder;
 };
 
 
-export const fetchScreenshotList = createAsyncThunk<FetchScreenshotListPayload, { platform: string, videoId: string }>(
+export const fetchScreenshotList = createAsyncThunk<FetchScreenshotListPayload, { platform: string; videoId: string }>(
     'screenshot/fetchScreenshotList',
     async ({ platform, videoId }): Promise<FetchScreenshotListPayload> => {
         const screenshots = await storage.getScreenshotInfoList(platform, videoId);

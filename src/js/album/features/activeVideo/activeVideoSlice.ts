@@ -23,8 +23,8 @@ import { removeVideo } from '../video/videoSlice';
 
 
 type ActiveVideoState = {
-    video: VideoInfo | null,
-    hashtags: string[],
+    video: VideoInfo | null;
+    hashtags: string[];
 };
 
 const initialState: ActiveVideoState = {
@@ -33,8 +33,8 @@ const initialState: ActiveVideoState = {
 };
 
 type SetActiveVideoPayload = {
-    video: VideoInfo | null,
-    hashtags: string[],
+    video: VideoInfo | null;
+    hashtags: string[];
 };
 
 export const setActiveVideo = createAsyncThunk<SetActiveVideoPayload, VideoInfo | null>(
@@ -55,8 +55,8 @@ export const setActiveVideo = createAsyncThunk<SetActiveVideoPayload, VideoInfo 
 );
 
 type SetHashtagsPayload = {
-    video: VideoInfo,
-    hashtags: string[],
+    video: VideoInfo;
+    hashtags: string[];
 };
 
 export const setHashtags = createAsyncThunk<SetHashtagsPayload, SetHashtagsPayload>(

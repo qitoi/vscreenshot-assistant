@@ -24,6 +24,7 @@ const StreamingPlus: Platform = {
         return `https://live.eplus.jp/${liveId}?show_id=${showId}`;
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getVideoPosUrl(videoId: string, pos: number): string | null {
         return null;
     },

@@ -18,7 +18,7 @@ import { Download } from './Download';
 
 declare module "yet-another-react-lightbox" {
     interface GenericSlide {
-        getImage?: () => Promise<{ blob: Blob, name: string }>,
+        getImage?: () => Promise<{ blob: Blob; name: string }>;
     }
 }
 

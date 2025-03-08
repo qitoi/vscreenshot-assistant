@@ -23,7 +23,7 @@ import { TypedFieldPath } from './TypedFieldPath';
 type ValueType = string | number;
 
 type RadioGroupControlProps<T extends FieldValues> = Omit<RadioGroupProps, 'name'> & {
-    name: TypedFieldPath<T, ValueType>,
+    name: TypedFieldPath<T, ValueType>;
 };
 
 const RadioGroupControl = <T extends FieldValues, >({ name, children, ...rest }: RadioGroupControlProps<T>): React.ReactElement => {

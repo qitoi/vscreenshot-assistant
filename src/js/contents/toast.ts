@@ -21,11 +21,11 @@ import * as prefs from '../libs/prefs';
 
 
 type ToastOption = Toastify.Options & {
-    style?: Partial<CSSStyleDeclaration & { aspectRatio: string }>,
+    style?: Partial<CSSStyleDeclaration & { aspectRatio: string }>;
 }
 
 export type Toast = ReturnType<typeof Toastify> & {
-    hideToast(): void,
+    hideToast(): void;
 }
 
 

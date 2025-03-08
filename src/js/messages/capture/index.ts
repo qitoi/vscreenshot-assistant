@@ -42,39 +42,38 @@ export type CaptureRequestAdditionalType = OmitAll<CaptureMessageRequest, keyof 
 
 
 export type CaptureRequestBase = {
-    platform: string,
-    videoId: string,
+    platform: string;
+    videoId: string;
     // video
-    videoInfo: Omit<VideoInfo, 'platform' | 'videoId' | 'lastUpdated'>,
-    thumbnailUrl: string | null,
+    videoInfo: Omit<VideoInfo, 'platform' | 'videoId' | 'lastUpdated'>;
+    thumbnailUrl: string | null;
     // screenshot
-    pos: number,
-    datetime: number,
+    pos: number;
+    datetime: number;
 };
 
 
 export type CaptureRequest = CaptureRequestBase & {
-    image: ImageDataUrl,
+    image: ImageDataUrl;
 };
 
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type TabCaptureRequestRequest = {};
 
 
 export type AnimeFrameRequest = {
-    id: string,
-    no: number,
-    image: ImageDataUrl,
+    id: string;
+    no: number;
+    image: ImageDataUrl;
 };
 
 
 export type AnimeEndRequest = CaptureRequestBase & {
-    id: string,
-    interval: number,
+    id: string;
+    interval: number;
 };
 
 
 export type AnimeEncodeProgressRequest = {
-    progress: number,
+    progress: number;
 };

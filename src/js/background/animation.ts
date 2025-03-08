@@ -33,7 +33,7 @@ export async function makeAnimation(images: ImageDataUrl[], interval: number, on
     const paletteAdditionalCount = 2;
     const prevCount = Math.floor(paletteAdditionalCount / 2);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     let current: PointContainer | null = await loadImage(images.shift()!);
     let prev: PointContainer[] = [];
     const next: PointContainer[] = [];
@@ -87,7 +87,7 @@ export async function makeAnimation(images: ImageDataUrl[], interval: number, on
         })
 
         processed += 1;
-        onProgress && onProgress(processed / frameCount);
+        onProgress?.(processed / frameCount);
 
         prev = [...prev, current].slice(-prevCount);
         current = next.shift() ?? null;

@@ -20,7 +20,7 @@ import { DefaultPreferences, Preferences } from '../../../libs/prefs';
 import { RootState } from '../../store';
 
 type PreferencesState = {
-    preferences: Preferences,
+    preferences: Preferences;
 };
 
 const initialState: PreferencesState = {

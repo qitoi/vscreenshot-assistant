@@ -19,8 +19,7 @@ import { PortHandler, PortServerBuilder } from '../server';
 
 declare module '../type' {
     interface PortMessageTypes {
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        'keep-alive': {},
+        'keep-alive': {};
     }
 }
 

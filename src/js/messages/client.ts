@@ -159,12 +159,12 @@ export class PortClient<Type extends PortType> {
 // chrome.runtime.Port の通信にレスポンスを導入するためのラッパー
 
 type PortWrapperRequest = {
-    reqId: number,
-    value: any,
+    reqId: number;
+    value: any;
 };
 type PortWrapperResponse = {
-    resId: number,
-    value: any,
+    resId: number;
+    value: any;
 };
 
 type MessageEventCallback = (request: any, sendResponse: (response: any) => void) => void;

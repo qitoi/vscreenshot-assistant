@@ -17,20 +17,20 @@
 export type ImageDataUrl = string;
 
 export type VideoInfoKey = {
-    platform: string,
-    videoId: string,
+    platform: string;
+    videoId: string;
 };
 
 export type VideoInfo = {
-    platform: string,
-    videoId: string,
-    title: string,
-    author: string,
-    hashtags: string[],
-    private: boolean,
-    ratio: number,
-    date: number,
-    lastUpdated: number,
+    platform: string;
+    videoId: string;
+    title: string;
+    author: string;
+    hashtags: string[];
+    private: boolean;
+    ratio: number;
+    date: number;
+    lastUpdated: number;
 };
 
 export function getVideoKey(v: VideoInfoKey): string {
@@ -42,18 +42,18 @@ export function compareVideoInfo(v1: VideoInfoKey, v2: VideoInfoKey): boolean {
 }
 
 export type ScreenshotInfoKey = {
-    platform: string,
-    videoId: string,
-    no: number,
+    platform: string;
+    videoId: string;
+    no: number;
 };
 
 export type ScreenshotInfo = {
-    platform: string,
-    videoId: string,
-    no: number,
-    anime: boolean,
-    pos: number, // time position
-    datetime: number, // capture time
+    platform: string;
+    videoId: string;
+    no: number;
+    anime: boolean;
+    pos: number; // time position
+    datetime: number; // capture time
 };
 
 export function getScreenshotKey(s: ScreenshotInfoKey): string {

@@ -49,23 +49,27 @@ import * as twitterMessage from './libs/twitter-message';
         effectAllowed = 'all';
         types = ['Files'];
         files: File[];
-        items: { kind: string, type: string }[];
+        items: { kind: string; type: string }[];
 
         constructor(files: File[]) {
             this.files = files;
             this.items = files.map(f => ({ kind: 'file', type: f.type }));
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         clearData(format?: string): void {
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         getData(format: string): string {
             return '';
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         setData(format: string, data: string): void {
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         setDragImage(image: Element, xOffset: number, yOffset: number): void {
         }
     }
