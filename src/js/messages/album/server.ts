@@ -27,6 +27,9 @@ export function AlbumServer(server: MessageServerBuilder): void {
     server.handle('remove-video', async message => {
         await storage.removeVideoInfo(message.platform, message.videoId);
     });
+    server.handle('remove-screenshot', async message => {
+        await Promise.all(message.no.map(no => storage.removeScreenshotInfo(message.platform, message.videoId, no)));
+    });
     server.handle('reset-storage', async () => {
         await clearAllScreenshot();
     });

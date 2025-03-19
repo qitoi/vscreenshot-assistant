@@ -287,8 +287,11 @@
   "album_menu_show_thumbnail": {
     "message": "サムネイルを表示"
   },
+  "album_menu_screenshot_delete": {
+    "message": "選択して削除"
+  },
   "album_menu_delete": {
-    "message": "削除"
+    "message": "全て削除"
   },
   "album_menu_preferences": {
     "message": "設定"
@@ -334,6 +337,12 @@
   },
   "album_tweet_screenshot_button": {
     "message": "Tweet"
+  },
+  "album_delete_screenshot_button": {
+    "message": "削除"
+  },
+  "album_cancel_screenshot_button": {
+    "message": "キャンセル"
   },
   "album_screenshot_capture_date": {
     "message": "撮影日時"
