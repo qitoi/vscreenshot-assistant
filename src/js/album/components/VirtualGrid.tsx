@@ -22,8 +22,8 @@ import { createContext } from 'react';
 
 type VirtualGridContainerProps = HTMLChakraProps<'div'>;
 type VirtualGridContextType = {
-    outerRef: React.RefObject<HTMLDivElement>;
-    contentRef: React.RefObject<HTMLDivElement>;
+    outerRef: React.RefObject<HTMLDivElement | null>;
+    contentRef: React.RefObject<HTMLDivElement | null>;
 };
 const VirtualGridContext = createContext<VirtualGridContextType>({
     outerRef: React.createRef<HTMLDivElement>(),
@@ -261,8 +261,7 @@ export function VirtualGrid<T>({ items, getItemKey, renderItem, ...restProps }: 
     const { templateAreas, gap, rowGap, columnGap, column, row, autoFlow, autoRows, templateRows, autoColumns, templateColumns, ...props } = restProps;
     const gridProps = { templateAreas, gap, rowGap, columnGap, column, row, autoFlow, autoRows, templateRows, autoColumns, templateColumns };
 
-    type Reducer = React.Reducer<VirtualGridState<T>, VirtualGridReducerAction<T>>;
-    const [state, dispatch] = React.useReducer<Reducer, null>(VirtualGridReducer, null, VirtualGridStateInitializer);
+    const [state, dispatch] = React.useReducer(VirtualGridReducer, VirtualGridStateInitializer<T>());
 
     const context = React.useContext(VirtualGridContext);
     const outerElem = context.outerRef.current;

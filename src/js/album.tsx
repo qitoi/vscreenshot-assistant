@@ -17,23 +17,20 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { getLocalizedText } from './libs/localize';
 import App from './album/App';
 import { store } from './album/store';
+
+const title = `${getLocalizedText('extension_name')} - ${getLocalizedText('album')}`;
 
 const container = document.getElementById('root');
 if (container) {
     createRoot(container).render(
         <React.StrictMode>
             <Provider store={store}>
-                <HelmetProvider>
-                    <Helmet titleTemplate={`${getLocalizedText('extension_name')} - %s`}>
-                        <title>{getLocalizedText('album')}</title>
-                    </Helmet>
-                    <App />
-                </HelmetProvider>
+                <title>{title}</title>
+                <App />
             </Provider>
         </React.StrictMode>
     );

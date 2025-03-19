@@ -17,22 +17,19 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { getLocalizedText } from './libs/localize';
 import App from './options/App';
+
+const title = `${getLocalizedText('extension_name')} - ${getLocalizedText('options')}`;
 
 const container = document.getElementById('root');
 if (container) {
     createRoot(container).render(
         <React.StrictMode>
             <BrowserRouter>
-                <HelmetProvider>
-                    <Helmet titleTemplate={`${getLocalizedText('extension_name')} - %s`}>
-                        <title>{getLocalizedText('options')}</title>
-                    </Helmet>
-                    <App />
-                </HelmetProvider>
+                <title>{title}</title>
+                <App />
             </BrowserRouter>
         </React.StrictMode>,
     );
