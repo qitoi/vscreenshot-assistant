@@ -53,7 +53,7 @@ export const HashtagCheckbox = (props: CheckboxProps) => {
     );
 };
 
-export type HashtagCheckboxGroupProps = UseCheckboxGroupProps & { children: React.ReactElement[] };
+export type HashtagCheckboxGroupProps = UseCheckboxGroupProps & { children: React.ReactElement<CheckboxProps>[] };
 
 export const HashtagCheckboxGroup = (props: HashtagCheckboxGroupProps) => {
     const { children, ...rest } = props;
@@ -61,7 +61,7 @@ export const HashtagCheckboxGroup = (props: HashtagCheckboxGroupProps) => {
 
     return (
         <HStack>
-            {React.Children.map(children, (child: React.ReactElement) => React.cloneElement(child, { ...getCheckboxProps(child.props) }))}
+            {React.Children.map(children, child => React.cloneElement(child, { ...getCheckboxProps(child.props) }))}
         </HStack>
     );
 };

@@ -208,7 +208,7 @@ export const ConsistentCarouselComponent: Component = ({ slides, carousel: { fin
     }
     const loop = state.loop + loopDiff;
 
-    const items: JSX.Element[] = [];
+    const items: React.JSX.Element[] = [];
 
     if (slides?.length > 0) {
         for (let i = index - preload; i < index; i += 1) {
