@@ -31,13 +31,16 @@ const Youtube: Platform = {
 
     checkVideoPage(): boolean {
         const pathname = document.location.pathname;
-        return (pathname === '/watch') || isShorts(pathname);
+        return (pathname === '/watch') || isShorts(pathname) || isLive(pathname);
     },
 
     getVideoId(): string | null {
         const pathname = document.location.pathname;
         if (isShorts(pathname)) {
             return pathname.substring('/shorts/'.length);
+        }
+        if (isLive(pathname)) {
+            return pathname.substring('/live/'.length);
         }
         const params = new URLSearchParams(document.location.search);
         return params.get('v');
@@ -104,6 +107,10 @@ const Youtube: Platform = {
 
 function isShorts(pathname: string): boolean {
     return pathname.startsWith('/shorts/');
+}
+
+function isLive(pathname: string): boolean {
+    return pathname.startsWith('/live/');
 }
 
 function convertDate(value: string | null): Date | null {
