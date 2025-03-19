@@ -19,6 +19,7 @@ import * as prefs from '../libs/prefs';
 import { Platform } from '../platforms/platform';
 import * as client from '../messages/client';
 import { captureVideo, convertToDataURL, getVideoInfo } from './util';
+import { getFileExt } from "../libs/data-url";
 
 
 export async function capture(platform: Platform, prefs: prefs.Preferences): Promise<ImageDataUrl> {
@@ -36,7 +37,7 @@ export async function capture(platform: Platform, prefs: prefs.Preferences): Pro
 
     const image = convertToDataURL(canvas, prefs);
 
-    await client.sendMessage('capture', {
+    const result = await client.sendMessage('capture', {
         platform: platform.PLATFORM_ID,
         videoId: videoId,
         videoInfo: {
@@ -48,6 +49,14 @@ export async function capture(platform: Platform, prefs: prefs.Preferences): Pro
         datetime: (new Date()).getTime(),
         image: image,
     });
+
+    if (prefs.general.enableAutoDownload) {
+        const ext = getFileExt(prefs.screenshot.fileType);
+        const a = document.createElement('a');
+        a.href = image;
+        a.download = `${platform.PLATFORM_ID}_${videoId}_${result.no}.${ext}`;
+        a.click();
+    }
 
     return image;
 }

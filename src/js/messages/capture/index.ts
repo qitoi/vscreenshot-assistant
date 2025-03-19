@@ -20,16 +20,16 @@ import { ImageDataUrl, VideoInfo } from '../../libs/types';
 
 declare module '../type' {
     interface MessageTypes {
-        'capture': [CaptureRequest, void],
-        'tab-capture-request': [TabCaptureRequestRequest, void],
+        'capture': [CaptureRequest, CaptureResponse];
+        'tab-capture-request': [TabCaptureRequestRequest, void];
     }
 
     interface PortMessageTypes {
         'anime': {
-            'anime-frame': [AnimeFrameRequest, void],
-            'anime-end': [AnimeEndRequest, void],
-            'anime-encode-progress': [AnimeEncodeProgressRequest, void],
-        }
+            'anime-frame': [AnimeFrameRequest, void];
+            'anime-end': [AnimeEndRequest, CaptureResponse];
+            'anime-encode-progress': [AnimeEncodeProgressRequest, void];
+        };
     }
 }
 
@@ -56,6 +56,19 @@ export type CaptureRequestBase = {
 export type CaptureRequest = CaptureRequestBase & {
     image: ImageDataUrl;
 };
+
+export type CaptureResponse = {
+    type: 'screenshot';
+    platform: string;
+    videoId: string;
+    no: number;
+} | {
+    type: 'anime';
+    platform: string;
+    videoId: string;
+    no: number;
+    image: string;
+}
 
 
 export type TabCaptureRequestRequest = {};

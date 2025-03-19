@@ -21,23 +21,30 @@ import { ImageDataUrl, VideoInfo } from '../../libs/types';
 import { downloadImage } from '../../libs/download';
 import { resizeImage } from '../../background/resize';
 import { makeAnimation } from '../../background/animation';
-import { CaptureRequestBase } from './index';
+import { CaptureRequestBase, CaptureResponse } from './index';
 import { MessageServerBuilder } from '../server';
 import { PortHandler, PortServerBuilder } from '../server';
 
 
 export function CaptureServer(server: MessageServerBuilder): void {
-    server.handle('capture', async message => {
+    server.handle('capture', async (message): Promise<CaptureResponse> => {
         // スクリーンショットのサムネイル作成
         const image = Promise.resolve(message.image);
-        await saveScreenshot(message, false, image, image)
+        const no = await saveScreenshot(message, false, image, image);
 
         const p = await prefs.loadPreferences();
         if (process.env.BROWSER === 'firefox') {
             if (p.screenshot.enabledSaveToClipboard && p.screenshot.fileType == "image/png") {
-                saveToClipboardFirefox(message.image);
+                await saveToClipboardFirefox(message.image);
             }
         }
+
+        return {
+            type: 'screenshot',
+            platform: message.platform,
+            videoId: message.videoId,
+            no: no,
+        };
     });
 }
 
@@ -74,7 +81,7 @@ export function AnimeCaptureServer(server: PortServerBuilder): void {
         await resize;
     });
 
-    handler.addMessageHandler('anime-end', async (request, context, port) => {
+    handler.addMessageHandler('anime-end', async (request, context, port): Promise<CaptureResponse> => {
         const thumbnail = context.thumbnail;
         if (thumbnail === null) {
             throw new Error('unexpected error');
@@ -92,7 +99,15 @@ export function AnimeCaptureServer(server: PortServerBuilder): void {
                 })
         );
 
-        await saveScreenshot(request, true, image, thumbnail);
+        const no = await saveScreenshot(request, true, image, thumbnail);
+
+        return {
+            type: 'anime',
+            platform: request.platform,
+            videoId: request.videoId,
+            no: no,
+            image: await image,
+        };
     });
 
     handler.addDisconnectHandler(context => {
@@ -107,19 +122,19 @@ export function AnimeCaptureServer(server: PortServerBuilder): void {
 // アニメーションキャプチャのメッセージ対応
 
 type AnimeFrame = {
-    no: number,
-    image: ImageDataUrl,
+    no: number;
+    image: ImageDataUrl;
 }
 
 type AnimeCaptureContext = {
-    thumbnail: Promise<ImageDataUrl> | null,
-    frames: Promise<AnimeFrame>[],
-    width: number,
-    height: number,
+    thumbnail: Promise<ImageDataUrl> | null;
+    frames: Promise<AnimeFrame>[];
+    width: number;
+    height: number;
 };
 
 
-async function saveScreenshot(param: CaptureRequestBase, isAnime: boolean, image: Promise<ImageDataUrl>, imageForThumbnail: Promise<ImageDataUrl>): Promise<void> {
+async function saveScreenshot(param: CaptureRequestBase, isAnime: boolean, image: Promise<ImageDataUrl>, imageForThumbnail: Promise<ImageDataUrl>): Promise<number> {
     const thumbnailQuality = 94;
     const p = await prefs.loadPreferences();
     const videoInfo: VideoInfo = {
@@ -153,12 +168,14 @@ async function saveScreenshot(param: CaptureRequestBase, isAnime: boolean, image
 
     return Promise.all([image, thumbnail, videoThumbnail])
         .then(([image, thumbnail, videoThumbnail]) => {
-            storage.saveScreenshot(param.platform, param.videoId, isAnime, param.pos, param.datetime, image, thumbnail);
-            // 新規保存する動画サムネイルがある場合は保存
-            if (videoThumbnail !== null) {
-                storage.saveVideoThumbnail(param.platform, param.videoId, videoThumbnail.image, videoThumbnail.resized);
-            }
-            storage.saveVideoInfo({ ...videoInfo, lastUpdated: Date.now() });
+            return Promise.all([
+                storage.saveScreenshot(param.platform, param.videoId, isAnime, param.pos, param.datetime, image, thumbnail),
+                storage.saveVideoInfo({ ...videoInfo, lastUpdated: Date.now() }),
+                (videoThumbnail !== null) ? storage.saveVideoThumbnail(param.platform, param.videoId, videoThumbnail.image, videoThumbnail.resized) : Promise.resolve(),
+            ]);
+        })
+        .then(async ([no]) => {
+            return no;
         });
 }
 
