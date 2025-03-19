@@ -28,7 +28,7 @@ const ZaN: Platform = {
     },
 
     checkVideoPage(): boolean {
-        return document.location.pathname.startsWith('/live/play/');
+        return document.location.pathname.includes('/live/play/');
     },
 
     getVideoId(): string | null {
