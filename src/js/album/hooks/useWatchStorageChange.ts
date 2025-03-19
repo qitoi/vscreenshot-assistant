@@ -20,7 +20,7 @@ import { VideoInfo } from '../../libs/types';
 import { listenAuto } from '../../libs/event-listen';
 import { useDispatch } from '../store';
 import { appendVideo, removeVideo } from '../features/video/videoSlice';
-import { appendScreenshot } from '../features/screenshot/screenshotSlice';
+import { appendScreenshot, removeScreenshot } from '../features/screenshot/screenshotSlice';
 
 export function useWatchStorageChange(): void {
     const dispatch = useDispatch();
@@ -49,6 +49,10 @@ export function useWatchStorageChange(): void {
                             const [, , platform, videoId] = key.split(':');
                             const thumbnail = changes['s:t' + key.substring(3)].newValue;
                             dispatch(appendScreenshot({ platform, videoId, target: change.newValue, thumbnail: thumbnail }));
+                        }
+                        else {
+                            const [, , platform, videoId, no] = key.split(':');
+                            dispatch(removeScreenshot({ platform, videoId, no: [parseInt(no, 10)], removeFromStorage: false }));
                         }
                         break;
                     }

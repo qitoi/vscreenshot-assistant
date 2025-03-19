@@ -18,6 +18,7 @@
 declare module "../type" {
     interface MessageTypes {
         'remove-video': [RemoveVideoRequest, void];
+        'remove-screenshot': [RemoveScreenshotRequest, void];
         'reset-storage': [ResetStorageRequest, void];
     }
 }
@@ -26,6 +27,12 @@ declare module "../type" {
 export type RemoveVideoRequest = {
     platform: string;
     videoId: string;
+};
+
+export type RemoveScreenshotRequest = {
+    platform: string;
+    videoId: string;
+    no: number[];
 };
 
 

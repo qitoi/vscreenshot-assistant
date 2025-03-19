@@ -25,6 +25,8 @@ import { removeVideo } from '../video/videoSlice';
 const SELECTED_SCREENSHOT_MAX_COUNT = 4;
 
 
+type SelectMode = 'share' | 'delete';
+
 export type ScreenshotInfoWithThumbnail = ScreenshotInfo & {
     thumbnail: ImageDataUrl;
 };
@@ -32,11 +34,13 @@ export type ScreenshotInfoWithThumbnail = ScreenshotInfo & {
 type SelectedScreenshotState = {
     videoInfoKey: VideoInfoKey | null;
     selected: ScreenshotInfoWithThumbnail[];
+    selectMode: SelectMode;
 };
 
 const initialState: SelectedScreenshotState = {
     videoInfoKey: null,
     selected: [],
+    selectMode: 'share',
 };
 
 
@@ -46,6 +50,9 @@ type AppendSelectedScreenshotPayload = {
 };
 type RemoveSelectedScreenshotPayload = {
     info: ScreenshotInfo;
+};
+type SetSelectModePayload = {
+    mode: SelectMode;
 };
 
 const slice = createSlice({
@@ -68,12 +75,22 @@ const slice = createSlice({
             const p = action.payload;
             state.selected = state.selected.filter(s => !compareScreenshotInfo(s, p.info));
         },
+        clearSelectedScreenshot: (state): void => {
+            state.selected = [];
+        },
+        setScreenshotSelectMode: (state, action: PayloadAction<SetSelectModePayload>) => {
+            if (state.selectMode !== action.payload.mode) {
+                state.selected = [];
+            }
+            state.selectMode = action.payload.mode;
+        },
     },
     extraReducers: builder => {
         builder.addCase(setActiveVideo.fulfilled, (state, action): void => {
             const video = action.payload.video;
             if (state.videoInfoKey === null || video === null || !compareVideoInfo(state.videoInfoKey, video)) {
                 state.videoInfoKey = (video === null) ? null : { platform: video.platform, videoId: video.videoId };
+                state.selectMode = 'share';
                 state.selected = [];
             }
         });
@@ -95,6 +112,7 @@ export function isFulfilledSelectedScreenshot(selected: ScreenshotInfoWithThumbn
 }
 
 export default slice.reducer;
-export const { toggleSelectedScreenshot, removeSelectedScreenshot } = slice.actions;
+export const { toggleSelectedScreenshot, removeSelectedScreenshot, clearSelectedScreenshot, setScreenshotSelectMode } = slice.actions;
 
 export const selectSelectedScreenshot = (state: RootState): typeof state.selectedScreenshot.selected => state.selectedScreenshot.selected;
+export const selectScreenshotSelectMode = (state: RootState): typeof state.selectedScreenshot.selectMode => state.selectedScreenshot.selectMode;

@@ -22,6 +22,7 @@ import * as screenshotSort from '../../../background/screenshot-sort';
 import { RootState } from '../../store';
 import { setActiveVideo } from '../activeVideo/activeVideoSlice';
 import { removeVideo } from '../video/videoSlice';
+import * as client from "../../../messages/client";
 
 
 type ScreenshotState = {
@@ -46,11 +47,6 @@ type AppendScreenshotPayload = {
     target: ScreenshotInfo;
     thumbnail: ImageDataUrl;
 };
-type RemoveScreenshotPayload = {
-    platform: string;
-    videoId: string;
-    target: ScreenshotInfo;
-};
 type FetchScreenshotListPayload = {
     platform: string;
     videoId: string;
@@ -62,6 +58,11 @@ type FetchSortOrderPayload = {
 type SetSortOrderPayload = {
     order: screenshotSort.ScreenshotSortOrder;
 };
+type RemoveScreenshotPayload = {
+    platform: string;
+    videoId: string;
+    no: number[];
+}
 
 
 export const fetchScreenshotList = createAsyncThunk<FetchScreenshotListPayload, { platform: string; videoId: string }>(
@@ -96,6 +97,20 @@ export const setScreenshotSortOrder = createAsyncThunk<FetchSortOrderPayload, Se
     }
 );
 
+export const removeScreenshot = createAsyncThunk<RemoveScreenshotPayload, { platform: string; videoId: string; no: number[]; removeFromStorage: boolean }>(
+    'screenshot/remove',
+    async ({ platform, videoId, no, removeFromStorage }) => {
+        if (removeFromStorage) {
+            await client.sendMessage('remove-screenshot', { platform, videoId, no });
+        }
+        return {
+            platform,
+            videoId,
+            no,
+        };
+    }
+);
+
 
 const slice = createSlice({
     name: 'screenshot',
@@ -107,13 +122,6 @@ const slice = createSlice({
                 state.screenshotMap[p.target.no] = p.target;
                 state.screenshots = screenshotSort.sortScreenshot(Object.values(state.screenshotMap), state.order ?? screenshotSort.DefaultSortOrder);
                 state.thumbnails[p.target.no] = p.thumbnail;
-            }
-        },
-        removeScreenshot: (state, action: PayloadAction<RemoveScreenshotPayload>): void => {
-            const p = action.payload;
-            if (state.videoInfoKey !== null && compareVideoInfo(state.videoInfoKey, p)) {
-                delete state.screenshotMap[p.target.no];
-                state.screenshots = screenshotSort.sortScreenshot(Object.values(state.screenshotMap), state.order ?? screenshotSort.DefaultSortOrder);
             }
         },
         removeThumbnail: (state, action) => {
@@ -156,6 +164,15 @@ const slice = createSlice({
                 state.screenshots = [];
                 state.screenshotMap = {};
                 state.thumbnails = {};
+            }
+        });
+        builder.addCase(removeScreenshot.fulfilled, (state, action): void => {
+            if (state.videoInfoKey !== null && compareVideoInfo(state.videoInfoKey, action.payload)) {
+                state.screenshots = state.screenshots.filter(s => !action.payload.no.includes(s.no));
+                for (const no of action.payload.no) {
+                    delete state.screenshotMap[no];
+                    delete state.thumbnails[no];
+                }
             }
         });
     },

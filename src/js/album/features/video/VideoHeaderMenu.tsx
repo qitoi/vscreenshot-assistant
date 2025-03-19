@@ -17,7 +17,7 @@
 import * as React from 'react';
 import { Box, Center, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Progress, Text } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { FcEmptyTrash, FcDownload, FcSettings, FcPicture } from 'react-icons/fc';
+import { FcEmptyTrash, FcDownload, FcSettings, FcPicture, FcRemoveImage } from 'react-icons/fc';
 import { CancelError } from 'p-cancelable';
 
 import { getVideoKey, VideoInfo } from '../../../libs/types';
@@ -31,6 +31,7 @@ import Dialog from '../../../components/Dialog';
 import DownloadDialog from '../../components/DownloadDialog';
 import CustomLightbox, { CustomLightboxSource } from '../../components/Lightbox/CustomLightbox';
 import { selectActiveVideo } from '../activeVideo/activeVideoSlice';
+import { setScreenshotSelectMode } from '../selectedScreenshot/selectedScreenshotSlice';
 import { removeVideo } from './videoSlice';
 
 const VideoHeaderMenu: React.FC = () => {
@@ -67,6 +68,10 @@ const VideoHeaderMenu: React.FC = () => {
         setIsDeleteOpen(false);
         setIsDeletingVideo(false);
     };
+
+    const handleDeleteMode = () => {
+        dispatch(setScreenshotSelectMode({ mode: 'delete' }));
+    }
 
     const handleDownload = React.useCallback(async () => {
         setIsDownloadOpen(true);
@@ -126,6 +131,11 @@ const VideoHeaderMenu: React.FC = () => {
                     <MenuItem isDisabled={video === null} icon={<FcPicture size="1.5em" />} onClick={handleShowThumbnail}>
                         <LocalizedText messageId="album_menu_show_thumbnail" />
                     </MenuItem>
+                    <MenuDivider />
+                    <MenuItem isDisabled={video === null} icon={<FcRemoveImage size="1.5em" />} onClick={handleDeleteMode}>
+                        <LocalizedText messageId="album_menu_screenshot_delete" />
+                    </MenuItem>
+                    <MenuDivider />
                     <MenuItem isDisabled={video === null} icon={<FcEmptyTrash size="1.5em" />} onClick={handleDeleteConfirm}>
                         <LocalizedText messageId="album_menu_delete" />
                     </MenuItem>
