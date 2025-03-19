@@ -147,7 +147,7 @@ async function sendFrame(port: client.PortClient<'anime'>, id: string, canvases:
 }
 
 
-function showProgressToast(prefs: prefs.Preferences): { toast: Toast, setCaption: (text: string) => void, setContent: (text: string) => void } {
+function showProgressToast(prefs: prefs.Preferences): { toast: Toast; setCaption: (text: string) => void; setContent: (text: string) => void } {
     const div = document.createElement('div');
 
     const caption = document.createElement('p');

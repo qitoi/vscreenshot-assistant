@@ -23,12 +23,12 @@ import useParameterizedSelector from '../../hooks/useParameterizedSelector';
 import { removeThumbnail, selectCachedThumbnail } from './screenshotSlice';
 
 export type ScreenshotThumbnailProps = {
-    platform: string,
-    videoId: string,
-    no: number,
-    loadThumbnail: (platform: string, videoId: string, no: number) => Promise<string>,
-    onLoad: () => void,
-    onVisible: () => void,
+    platform: string;
+    videoId: string;
+    no: number;
+    loadThumbnail: (platform: string, videoId: string, no: number) => Promise<string>;
+    onLoad: () => void;
+    onVisible: () => void;
 };
 
 const ScreenshotThumbnail = React.forwardRef<HTMLImageElement, ScreenshotThumbnailProps>(

@@ -18,8 +18,8 @@ import * as React from 'react';
 import { getLocalizedText, MessageId } from '../libs/localize';
 
 type LocalizedTextProps = {
-    messageId: MessageId,
-    substitutions?: string[],
+    messageId: MessageId;
+    substitutions?: string[];
 };
 
 export function useLocalizedText(messageId: MessageId, substitutions?: string[]): string {

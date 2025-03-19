@@ -32,8 +32,8 @@ import { TypedFieldPath } from './TypedFieldPath';
 type ValueType = number;
 
 type NumberInputControlProps<T extends FieldValues> = Omit<NumberInputProps, 'name'> & {
-    name: TypedFieldPath<T, ValueType>,
-    unit?: string,
+    name: TypedFieldPath<T, ValueType>;
+    unit?: string;
 };
 
 const NumberInputControl = <T extends FieldValues, >({ unit, ...rest }: NumberInputControlProps<T>): React.ReactElement => {

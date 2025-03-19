@@ -28,10 +28,10 @@ import { ScreenshotInfoWithThumbnail } from './selectedScreenshotSlice';
 import { SelectedScreenshot } from './SelectedScreenshot';
 
 type SelectedScreenshotListProps = {
-    video: VideoInfo,
-    screenshots: ScreenshotInfoWithThumbnail[],
-    onResize: (width: number, height: number) => void,
-    onClick: (info: ScreenshotInfo) => void,
+    video: VideoInfo;
+    screenshots: ScreenshotInfoWithThumbnail[];
+    onResize: (width: number, height: number) => void;
+    onClick: (info: ScreenshotInfo) => void;
 } & Omit<StackProps, 'onResize' | 'onClick'>;
 
 const SelectedScreenshotList = ({ video, screenshots, onResize, onClick, ...stackProps }: SelectedScreenshotListProps) => {

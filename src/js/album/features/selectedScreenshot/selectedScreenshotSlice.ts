@@ -26,12 +26,12 @@ const SELECTED_SCREENSHOT_MAX_COUNT = 4;
 
 
 export type ScreenshotInfoWithThumbnail = ScreenshotInfo & {
-    thumbnail: ImageDataUrl,
+    thumbnail: ImageDataUrl;
 };
 
 type SelectedScreenshotState = {
-    videoInfoKey: VideoInfoKey | null,
-    selected: ScreenshotInfoWithThumbnail[],
+    videoInfoKey: VideoInfoKey | null;
+    selected: ScreenshotInfoWithThumbnail[];
 };
 
 const initialState: SelectedScreenshotState = {
@@ -41,11 +41,11 @@ const initialState: SelectedScreenshotState = {
 
 
 type AppendSelectedScreenshotPayload = {
-    info: ScreenshotInfo,
-    thumbnail: ImageDataUrl,
+    info: ScreenshotInfo;
+    thumbnail: ImageDataUrl;
 };
 type RemoveSelectedScreenshotPayload = {
-    info: ScreenshotInfo,
+    info: ScreenshotInfo;
 };
 
 const slice = createSlice({

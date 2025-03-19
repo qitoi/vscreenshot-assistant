@@ -21,8 +21,8 @@ import { MessageId } from '../../libs/localize';
 import { LocalizedText } from '../../components/LocalizedText';
 
 type RadioItemProps<T extends string | number> = BoxProps & {
-    value: T,
-    messageId: MessageId,
+    value: T;
+    messageId: MessageId;
 };
 
 const RadioItem = <T extends string | number, >({ value, messageId, children }: RadioItemProps<T>): React.ReactElement => {

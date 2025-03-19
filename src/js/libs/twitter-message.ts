@@ -19,8 +19,8 @@ const X_ORIGIN = 'https://x.com';
 const MESSAGE_TAG = 'vscreenshot-assistant';
 
 type Message = {
-    tag: 'vscreenshot-assistant',
-    files: File[],
+    tag: 'vscreenshot-assistant';
+    files: File[];
 };
 
 function isMessage(value: any): value is Message {

@@ -15,14 +15,18 @@
  */
 
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { globSync } from 'glob';
-import * as webpack from 'webpack';
+import webpack from 'webpack';
 import { merge } from 'webpack-merge';
-import * as CopyPlugin from 'copy-webpack-plugin';
-import * as TerserPlugin from 'terser-webpack-plugin';
-import * as ZipPlugin from 'zip-webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import ZipPlugin from 'zip-webpack-plugin';
 
-import * as Package from './package.json';
+import Package from './package.json' with {type: 'json'};
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 function glob(pattern: string): string[] {

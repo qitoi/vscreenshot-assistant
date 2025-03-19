@@ -15,12 +15,12 @@
  */
 
 export type PlatformVideoInfo = {
-    title: string,
-    author: string,
-    date: number,
-    thumbnailUrl: string | null,
-    hashtags: string[],
-    private: boolean,
+    title: string;
+    author: string;
+    date: number;
+    thumbnailUrl: string | null;
+    hashtags: string[];
+    private: boolean;
 };
 
 export interface Platform {

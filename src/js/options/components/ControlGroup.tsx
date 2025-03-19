@@ -22,11 +22,11 @@ import { MessageId } from '../../libs/localize';
 import { LocalizedText } from '../../components/LocalizedText';
 
 type ControlGroupProps<T extends FieldValues> = Omit<FormControlProps, 'label'> & {
-    label?: MessageId,
-    isEnabledHover?: boolean,
-    indent?: 'none' | 'left' | 'right' | 'both',
-    conditionKey?: FieldPath<T>,
-    conditionValue?: FieldPathValue<T, FieldPath<T>>,
+    label?: MessageId;
+    isEnabledHover?: boolean;
+    indent?: 'none' | 'left' | 'right' | 'both';
+    conditionKey?: FieldPath<T>;
+    conditionValue?: FieldPathValue<T, FieldPath<T>>;
     hideIfDisabled?: boolean;
 };
 

@@ -24,9 +24,9 @@ import { RootState } from '../../store';
 
 
 type VideoState = {
-    videos: VideoInfo[],
-    videoMap: { [key: string]: VideoInfo },
-    order: videoSort.VideoSortOrder | null,
+    videos: VideoInfo[];
+    videoMap: { [key: string]: VideoInfo };
+    order: videoSort.VideoSortOrder | null;
 };
 
 const initialState: VideoState = {
@@ -36,18 +36,18 @@ const initialState: VideoState = {
 };
 
 type FetchVideoListPayload = {
-    videos: VideoInfo[],
-    order: videoSort.VideoSortOrder,
+    videos: VideoInfo[];
+    order: videoSort.VideoSortOrder;
 };
 type RemoveVideoPayload = {
-    platform: string,
-    videoId: string,
+    platform: string;
+    videoId: string;
 }
 type FetchSortOrderPayload = {
-    order: videoSort.VideoSortOrder,
+    order: videoSort.VideoSortOrder;
 };
 type SetSortOrderPayload = {
-    order: videoSort.VideoSortOrder,
+    order: videoSort.VideoSortOrder;
 };
 
 
@@ -63,7 +63,7 @@ export const fetchVideoList = createAsyncThunk<FetchVideoListPayload, void>(
     }
 );
 
-export const removeVideo = createAsyncThunk<RemoveVideoPayload, { platform: string, videoId: string, removeFromStorage: boolean }>(
+export const removeVideo = createAsyncThunk<RemoveVideoPayload, { platform: string; videoId: string; removeFromStorage: boolean }>(
     'video/remove',
     async ({ platform, videoId, removeFromStorage }) => {
         if (removeFromStorage) {

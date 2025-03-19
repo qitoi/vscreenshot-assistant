@@ -19,7 +19,7 @@ import { LazyImageSlideType } from './LazyImageSource';
 
 declare module 'yet-another-react-lightbox' {
     interface SlideTypes {
-        LazyImage: LazyImageSlideType,
+        LazyImage: LazyImageSlideType;
     }
 }
 

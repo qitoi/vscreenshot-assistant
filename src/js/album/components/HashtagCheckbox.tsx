@@ -20,8 +20,8 @@ import { Tag, useCheckbox, UseCheckboxProps, useCheckboxGroup, UseCheckboxGroupP
 import { motion } from 'framer-motion';
 
 export interface CheckboxProps extends React.PropsWithChildren<UseCheckboxProps> {
-    checkedColor: string,
-    uncheckedColor: string,
+    checkedColor: string;
+    uncheckedColor: string;
 }
 
 export const HashtagCheckbox = (props: CheckboxProps) => {

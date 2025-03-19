@@ -17,17 +17,16 @@
 
 declare module "../type" {
     interface MessageTypes {
-        'remove-video': [RemoveVideoRequest, void],
-        'reset-storage': [ResetStorageRequest, void],
+        'remove-video': [RemoveVideoRequest, void];
+        'reset-storage': [ResetStorageRequest, void];
     }
 }
 
 
 export type RemoveVideoRequest = {
-    platform: string,
-    videoId: string,
+    platform: string;
+    videoId: string;
 };
 
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type ResetStorageRequest = {};

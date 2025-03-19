@@ -21,7 +21,7 @@ import { useController, useFormContext, FieldValues } from 'react-hook-form';
 import { TypedFieldPath } from './TypedFieldPath';
 
 type SwitchControlProps<T extends FieldValues> = {
-    name: TypedFieldPath<T, boolean>,
+    name: TypedFieldPath<T, boolean>;
 };
 
 const SwitchControl = <T extends FieldValues, >({ name }: SwitchControlProps<T>): React.ReactElement => {

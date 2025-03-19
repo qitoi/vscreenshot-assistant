@@ -24,7 +24,7 @@ import { TypedFieldPath } from './TypedFieldPath';
 type ValueType = hotkeys.KeyConfig;
 
 type HotkeyInputControlProps<T extends FieldValues> = Omit<InputProps, 'name'> & {
-    name: TypedFieldPath<T, ValueType>,
+    name: TypedFieldPath<T, ValueType>;
 };
 
 const HotkeyInputControl = <T extends FieldValues, >({ name, ...rest }: HotkeyInputControlProps<T>): React.ReactElement => {

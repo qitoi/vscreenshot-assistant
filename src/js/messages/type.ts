@@ -15,7 +15,6 @@
  */
 
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MessageTypes {
 }
 
@@ -33,19 +32,18 @@ export type MessageResponseValue<Key extends MessageKey> = MessageTypes[Key][1];
 
 // クライアント・サーバ間の通信用オブジェクト
 export type MessageRequest<Key extends MessageKey> = {
-    key: Key,
-    value: MessageRequestValue<Key>,
+    key: Key;
+    value: MessageRequestValue<Key>;
 };
 export type MessageResponse<Key extends MessageKey> = {
-    key: Key,
-    value: MessageResponseValues,
+    key: Key;
+    value: MessageResponseValues;
 } | {
-    key: Key,
-    error: string,
+    key: Key;
+    error: string;
 };
 
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PortMessageTypes {
 }
 
@@ -74,13 +72,13 @@ export type PortResponseValue<Type extends PortType, Key extends PortMessageKey<
 
 // ポート間の通信用オブジェクト
 export type PortRequest<Type extends PortType, Key extends PortMessageKey<Type>> = {
-    key: PortMessageKey<Type>,
-    value: PortRequestValue<Type, Key>,
+    key: PortMessageKey<Type>;
+    value: PortRequestValue<Type, Key>;
 };
 export type PortResponse<Type extends PortType, Key extends PortMessageKey<Type>> = {
-    key: PortMessageKey<Type>,
-    value: PortResponseValue<Type, Key>,
+    key: PortMessageKey<Type>;
+    value: PortResponseValue<Type, Key>;
 } | {
-    key: PortMessageKey<Type>,
-    error: string,
+    key: PortMessageKey<Type>;
+    error: string;
 };

@@ -25,11 +25,11 @@ import { ThumbnailAspectRatio } from '../../components/ThumbnailAspectRatio';
 import { removeThumbnail, selectCachedThumbnail } from './screenshotSlice';
 
 export type LazyLoadScreenshotThumbnail = {
-    platform: string,
-    videoId: string,
-    no: number,
-    onLoad: () => void,
-    onVisible: () => void,
+    platform: string;
+    videoId: string;
+    no: number;
+    onLoad: () => void;
+    onVisible: () => void;
 };
 
 const LazyLoadScreenshotThumbnail = React.forwardRef<HTMLImageElement, LazyLoadScreenshotThumbnail>(

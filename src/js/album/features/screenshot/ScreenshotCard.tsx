@@ -26,14 +26,14 @@ import ScreenshotThumbnail from './ScreenshotThumbnail';
 
 
 type ScreenshotCardProps = {
-    info: ScreenshotInfo,
-    isChecked: boolean,
-    disabled: boolean,
-    className?: string,
-    lazyLoad: boolean,
-    loadThumbnail: (platform: string, videoId: string, no: number) => Promise<string>,
-    onClick: (info: ScreenshotInfo, thumbnail: ImageDataUrl) => void,
-    onExpandClick: (info: ScreenshotInfo) => void,
+    info: ScreenshotInfo;
+    isChecked: boolean;
+    disabled: boolean;
+    className?: string;
+    lazyLoad: boolean;
+    loadThumbnail: (platform: string, videoId: string, no: number) => Promise<string>;
+    onClick: (info: ScreenshotInfo, thumbnail: ImageDataUrl) => void;
+    onExpandClick: (info: ScreenshotInfo) => void;
 };
 
 const ScreenshotCard = ({ info, isChecked, disabled, className, lazyLoad, loadThumbnail, onClick, onExpandClick }: ScreenshotCardProps) => {

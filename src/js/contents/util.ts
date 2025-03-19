@@ -24,7 +24,7 @@ let currentPlatform: Platform | null = null;
 let currentVideoId: string | null = null;
 let currentVideoInfo: PlatformVideoInfo | null = null;
 
-export async function getVideoInfo(platform: Platform): Promise<{ videoId: string, videoInfo: PlatformVideoInfo }> {
+export async function getVideoInfo(platform: Platform): Promise<{ videoId: string; videoInfo: PlatformVideoInfo }> {
     const videoId = platform.getVideoId();
     let videoInfo = currentVideoInfo;
 

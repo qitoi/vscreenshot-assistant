@@ -83,9 +83,9 @@ const theme = extendTheme({
 });
 
 type TabConfig = {
-    hash: string,
-    messageId: MessageId,
-    panel: React.ReactElement,
+    hash: string;
+    messageId: MessageId;
+    panel: React.ReactElement;
 };
 
 const App: React.FC = () => {

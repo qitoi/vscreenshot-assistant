@@ -20,18 +20,18 @@ import { ScreenshotInfo, VideoInfo } from '../../libs/types';
 
 declare module '../type' {
     interface MessageTypes {
-        'share-screenshot': [ShareScreenshotRequest, void],
-        'attach-screenshot': [AttachScreenshotRequest, void],
+        'share-screenshot': [ShareScreenshotRequest, void];
+        'attach-screenshot': [AttachScreenshotRequest, void];
     }
 }
 
 
 export type ShareScreenshotRequest = {
-    video: VideoInfo,
-    screenshots: ScreenshotInfo[],
-    hashtags: string[],
+    video: VideoInfo;
+    screenshots: ScreenshotInfo[];
+    hashtags: string[];
 };
 
 export type AttachScreenshotRequest = {
-    images: string[],
+    images: string[];
 };

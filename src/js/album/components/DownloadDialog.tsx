@@ -22,7 +22,7 @@ import Dialog from '../../components/Dialog';
 import { SetProgressHandler } from '../hooks/useArchive';
 
 type ProgressBarProps = {
-    setProgressHandler: SetProgressHandler,
+    setProgressHandler: SetProgressHandler;
 };
 
 const ProgressBar = ({ setProgressHandler }: ProgressBarProps) => {
@@ -39,9 +39,9 @@ const ProgressBar = ({ setProgressHandler }: ProgressBarProps) => {
 };
 
 type DownloadDialogProps = {
-    isOpen: boolean,
-    onCancel: () => void,
-    setProgressHandler: SetProgressHandler,
+    isOpen: boolean;
+    onCancel: () => void;
+    setProgressHandler: SetProgressHandler;
 };
 
 const DownloadDialog = ({ isOpen, onCancel, setProgressHandler }: DownloadDialogProps) => {

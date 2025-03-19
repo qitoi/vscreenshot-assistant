@@ -22,8 +22,8 @@ import { FadeBox } from '../../components/FadeBox';
 import LazyLoadVideoThumbnail from './LazyLoadVideoThumbnail';
 
 type VideoThumbnailProps = {
-    info: VideoInfo,
-    onSelected: (info: VideoInfo) => void,
+    info: VideoInfo;
+    onSelected: (info: VideoInfo) => void;
 };
 
 const VideoThumbnail = ({ info, onSelected }: VideoThumbnailProps) => {

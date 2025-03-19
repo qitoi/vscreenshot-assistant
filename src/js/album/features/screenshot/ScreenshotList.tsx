@@ -37,10 +37,10 @@ import ScreenshotCard from './ScreenshotCard';
 
 
 type ScreenshotGridProps = {
-    video: VideoInfo,
-    screenshots: ScreenshotInfo[],
-    enableTweet: boolean,
-    onScreenshotExpandClick: (s: ScreenshotInfo) => void,
+    video: VideoInfo;
+    screenshots: ScreenshotInfo[];
+    enableTweet: boolean;
+    onScreenshotExpandClick: (s: ScreenshotInfo) => void;
 };
 
 function ScreenshotGrid({ video, screenshots, enableTweet, onScreenshotExpandClick }: ScreenshotGridProps) {

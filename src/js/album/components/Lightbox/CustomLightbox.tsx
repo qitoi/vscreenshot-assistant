@@ -31,26 +31,26 @@ import ConsistentCarousel from './ConsistentCarousel';
 
 
 export interface CustomLightboxSource {
-    key: number | string,
-    load: LazyLoadFuncType,
+    key: number | string;
+    load: LazyLoadFuncType;
 }
 
 type LightboxProps = {
-    list: CustomLightboxSource[],
-    index: number,
-    loop: boolean,
-    open: boolean,
-    onClose: () => void,
+    list: CustomLightboxSource[];
+    index: number;
+    loop: boolean;
+    open: boolean;
+    onClose: () => void;
 };
 
 type CustomLightboxSourceAction = {
-    type: 'init',
-    slides: LazyImageSlideType[],
+    type: 'init';
+    slides: LazyImageSlideType[];
 
 } | {
-    type: 'load',
-    index: number,
-    slide: Partial<LazyImageSlideType>,
+    type: 'load';
+    index: number;
+    slide: Partial<LazyImageSlideType>;
 };
 
 function CustomLightboxSourceReducer(state: LazyImageSlideType[], action: CustomLightboxSourceAction): LazyImageSlideType[] {
@@ -74,7 +74,7 @@ function CustomLightboxSourceReducer(state: LazyImageSlideType[], action: Custom
 
 type ImageCacheValue = {
     result: Promise<Blob | null>;
-    count: number,
+    count: number;
 };
 
 function useImageCache(deps: React.DependencyList) {
@@ -120,7 +120,7 @@ function CustomLightbox({ list, index, loop, open, onClose }: LightboxProps): Re
         if (first) {
             void load(first);
         }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []);
 
     React.useEffect(() => {
         const generateRelease = (src: CustomLightboxSource, idx: number) => () => {

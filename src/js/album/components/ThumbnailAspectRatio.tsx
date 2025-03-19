@@ -21,7 +21,6 @@ import { selectThumbnailPreferences } from '../features/preferences/preferencesS
 import { useSelector } from '../store';
 
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type ThumbnailAspectRatioProps = React.PropsWithChildren<{}>;
 
 export function ThumbnailAspectRatio({ children }: ThumbnailAspectRatioProps) {

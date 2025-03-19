@@ -23,8 +23,8 @@ import { useSelector } from '../../store';
 import { selectThumbnailPreferences } from '../preferences/preferencesSlice';
 
 type LazyLoadVideoThumbnailProps = {
-    platform: string,
-    videoId: string,
+    platform: string;
+    videoId: string;
 };
 
 const LazyLoadVideoThumbnail = ({ platform, videoId }: LazyLoadVideoThumbnailProps) => {

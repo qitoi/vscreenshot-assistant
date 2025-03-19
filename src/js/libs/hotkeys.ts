@@ -15,15 +15,15 @@
  */
 
 type KeyModifier = {
-    command: boolean,
-    control: boolean,
-    alt: boolean,
-    shift: boolean,
+    command: boolean;
+    control: boolean;
+    alt: boolean;
+    shift: boolean;
 };
 
 export type KeyConfig = KeyModifier & {
-    code: string,
-    key: string,
+    code: string;
+    key: string;
 };
 
 export function isKeyConfig(value: any): value is KeyConfig {

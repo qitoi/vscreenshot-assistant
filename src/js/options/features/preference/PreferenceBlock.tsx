@@ -21,7 +21,7 @@ import { MessageId } from '../../../libs/localize';
 import { LocalizedText } from '../../../components/LocalizedText';
 
 type PreferenceBlockProps = StackProps & {
-    messageId: MessageId,
+    messageId: MessageId;
 };
 
 const PreferenceBlock: React.FC<PreferenceBlockProps> = ({ messageId, children, ...rest }: PreferenceBlockProps) => {

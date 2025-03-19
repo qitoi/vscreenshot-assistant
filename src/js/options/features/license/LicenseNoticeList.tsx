@@ -30,8 +30,8 @@ import { LocalizedText } from '../../../components/LocalizedText';
 
 
 type LicenseNotice = {
-    name: string,
-    license: string,
+    name: string;
+    license: string;
 };
 
 function parseLicenseNotices(text: string): LicenseNotice[] {
