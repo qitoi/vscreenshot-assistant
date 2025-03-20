@@ -323,6 +323,9 @@
   "album_delete_confirm_label": {
     "message": "スクリーンショットを削除しますか？"
   },
+  "album_select_delete_confirm_label": {
+    "message": "選択したスクリーンショットを削除しますか？"
+  },
   "album_deleting_label": {
     "message": "スクリーンショットを削除しています..."
   },
