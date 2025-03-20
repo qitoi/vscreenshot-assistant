@@ -54,7 +54,7 @@ export async function capture(platform: Platform, prefs: prefs.Preferences): Pro
         const ext = getFileExt(prefs.screenshot.fileType);
         const a = document.createElement('a');
         a.href = image;
-        a.download = `${platform.PLATFORM_ID}_${videoId}_${result.no}.${ext}`;
+        a.download = `${platform.PLATFORM_ID}_${videoId}_${result.no}${ext}`;
         a.click();
     }
 
