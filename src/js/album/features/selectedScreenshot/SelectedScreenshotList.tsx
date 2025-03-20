@@ -143,7 +143,7 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick, ...stac
                 {!isDeletingScreenshot
                     ? (
                         <Box>
-                            <Center><Text py="1em"><LocalizedText messageId="album_delete_confirm_label" /></Text></Center>
+                            <Center><Text py="1em"><LocalizedText messageId="album_select_delete_confirm_label" /></Text></Center>
                         </Box>
                     ) : (
                         <Box>
