@@ -18,6 +18,7 @@ import * as prefs from './libs/prefs';
 import * as action from './background/action';
 import * as popup from './background/popup-window';
 import { PopupWindow } from './background/popup-window';
+import * as updateNotice from './background/update-notice';
 import { MessageServer, PortServer } from './messages/server';
 import { AnimeCaptureServer, CaptureServer } from './messages/capture/server';
 import { KeepAliveServer } from './messages/keep-alive/server';
@@ -36,6 +37,9 @@ action.setup(albumWindow);
 
 // 設定の変更監視
 prefs.watch();
+
+// 更新通知の設定
+updateNotice.setup();
 
 
 // メッセージサーバの設定

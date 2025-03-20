@@ -88,6 +88,11 @@ const GeneralPreferences: React.FC = () => {
                     <SwitchControl<Preferences> name="general.enableAutoDownload" />
                 </LabeledControl>
             </ControlGroup>
+            <ControlGroup isEnabledHover>
+                <LabeledControl messageId="prefs_general_notify_updates">
+                    <SwitchControl<Preferences> name="general.notifyUpdates" />
+                </LabeledControl>
+            </ControlGroup>
         </PreferenceBlock>
     );
 };
