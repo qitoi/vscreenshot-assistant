@@ -57,11 +57,14 @@ const SPWN: Platform = {
     },
 
     async getVideoInfo(videoId: string): Promise<PlatformVideoInfo> {
-        const resp = await fetch(`https://public.spwn.jp/event-pages/${videoId}/data.json`);
+        const { id } = parseVideoId(videoId);
+        const resp = await fetch(`https://public.spwn.jp/event-pages/${id}/data.json`);
         if (!resp.ok) {
+            const elems = document.querySelectorAll('#Streaming>div>p');
+
             return {
-                title: '-',
-                author: '-',
+                title: elems[0]?.textContent ?? '-',
+                author: elems[1]?.textContent ?? '-',
                 date: 0,
                 thumbnailUrl: null,
                 hashtags: [],
