@@ -54,6 +54,7 @@ export type Preferences = {
         notifyPosition: ToastPosition;
         notifyDuration: number;
         enableAutoDownload: boolean;
+        notifyUpdates: boolean;
     };
     screenshot: {
         hotkey: hotkeys.KeyConfig;
@@ -95,6 +96,7 @@ export const DefaultPreferences: Preferences = {
         notifyPosition: ToastPositions.LeftBottom,
         notifyDuration: 1000,
         enableAutoDownload: false,
+        notifyUpdates: true,
     },
     screenshot: {
         hotkey: hotkeys.getKeyConfig('S', { shift: true }),
@@ -144,6 +146,7 @@ function completePreferences(prefs: Preferences): Preferences {
             notifyPosition: completeToastPosition(prefs?.general?.notifyPosition, DefaultPreferences.general.notifyPosition),
             notifyDuration: completeMinMax(prefs?.general?.notifyDuration, DefaultPreferences.general.notifyDuration, 100, 60000),
             enableAutoDownload: completeBool(prefs?.general?.enableAutoDownload, DefaultPreferences.general.enableAutoDownload),
+            notifyUpdates: completeBool(prefs?.general?.notifyUpdates, DefaultPreferences.general.notifyUpdates),
         },
         screenshot: {
             hotkey: completeKeyConfig(prefs?.screenshot?.hotkey, DefaultPreferences.screenshot.hotkey),

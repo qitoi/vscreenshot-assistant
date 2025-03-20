@@ -77,6 +77,9 @@
   "prefs_general_enable_auto_download": {
     "message": "スクリーンショット撮影時に自動でダウンロード"
   },
+  "prefs_general_notify_updates": {
+    "message": "拡張機能のアップデート時に更新情報を表示"
+  },
   "prefs_screenshot_hotkey": {
     "message": "スクリーンショット撮影のキー設定"
   },
