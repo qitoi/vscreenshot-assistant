@@ -22,7 +22,11 @@ const SPWN: Platform = {
     PLATFORM_ID: 'spwn',
 
     getVideoUrl(videoId: string): string {
-        return `https://spwn.jp/events/${videoId}`;
+        const { id, vid } = parseVideoId(videoId);
+        if (vid) {
+            return `https://spwn.jp/events/${id}/streaming?vid=${vid}`;
+        }
+        return `https://spwn.jp/events/${id}`;
     },
 
     getVideoPosUrl(): string | null {
@@ -34,7 +38,13 @@ const SPWN: Platform = {
     },
 
     getVideoId(): string | null {
-        return document.location.pathname.match(/\/(?<videoId>[^/]*?)\/streaming$/)?.groups?.videoId ?? null;
+        const params = new URLSearchParams(document.location.search);
+        const id = document.location.pathname.match(/\/(?<videoId>[^/]*?)\/streaming$/)?.groups?.videoId ?? null;
+        if (!id) {
+            return null;
+        }
+        const vid = params.get('vid');
+        return (vid) ? `${id}/${vid}` : id;
     },
 
     getVideoElement(): HTMLVideoElement | null {
@@ -90,5 +100,10 @@ const SPWN: Platform = {
         };
     },
 };
+
+function parseVideoId(videoId: string): { id: string; vid: string | undefined } {
+    const [id, vid] = videoId.split('/');
+    return { id, vid };
+}
 
 export default SPWN;
