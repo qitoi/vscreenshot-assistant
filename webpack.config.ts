@@ -161,8 +161,8 @@ const config: webpack.Configuration = {
                     context: 'src',
                     globOptions: {
                         ignore: [
-                            '**/src/js',
-                            `**/*.(${browsersPattern}).[!.]+`,
+                            'js/**/*',
+                            `**/*.(${browsersPattern}).*`,
                         ],
                     },
                 },
