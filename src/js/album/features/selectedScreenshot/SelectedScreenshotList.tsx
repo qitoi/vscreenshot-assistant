@@ -89,6 +89,7 @@ const SelectedScreenshotList = ({ video, screenshots, onResize, onClick, ...stac
             {...stackProps}
             ref={ref}
             alignItems="stretch"
+            justifyContent="center"
             visibility={(selectMode === 'delete' || loaded) ? 'visible' : 'hidden'}
             bg={(selectMode === 'share') ? "gray.300" : "gray.400"}
             gap={4}>
