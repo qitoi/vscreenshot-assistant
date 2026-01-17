@@ -268,7 +268,7 @@ export function getItemById<T>(id: string, defaultVal: NonUndefined<T>): Promise
 export function getItemMapByIds<T>(ids: string[]): Promise<{ [id: string]: T }> {
     return new Promise(resolve => {
         chrome.storage.local.get(ids, items => {
-            resolve(items);
+            resolve(items as any);
         });
     });
 }

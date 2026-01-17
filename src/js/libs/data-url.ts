@@ -50,9 +50,9 @@ export function decodeDataURL(url: string): Blob {
     return new Blob([buf], { type: mime });
 }
 
-export function decodeBase64(encoded: string): Uint8Array {
+export function decodeBase64(encoded: string): Uint8Array<ArrayBuffer> {
     const data = atob(encoded);
-    const buf = new Uint8Array(new ArrayBuffer((data.length)));
+    const buf = new Uint8Array<ArrayBuffer>(new ArrayBuffer((data.length)));
     for (let i = 0; i < data.length; i++) {
         buf[i] = data.charCodeAt(i);
     }

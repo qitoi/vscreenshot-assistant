@@ -36,7 +36,7 @@ export function useWatchStorageChange(): void {
                 switch (type) {
                     case 'v:i': {
                         if ('newValue' in change) {
-                            dispatch(appendVideo(change.newValue));
+                            dispatch(appendVideo(change.newValue as any));
                         }
                         else {
                             const video = change.oldValue as VideoInfo;
@@ -47,8 +47,8 @@ export function useWatchStorageChange(): void {
                     case 's:i': {
                         if ('newValue' in change) {
                             const [, , platform, videoId] = key.split(':');
-                            const thumbnail = changes['s:t' + key.substring(3)].newValue;
-                            dispatch(appendScreenshot({ platform, videoId, target: change.newValue, thumbnail: thumbnail }));
+                            const thumbnail = changes['s:t' + key.substring(3)].newValue as any;
+                            dispatch(appendScreenshot({ platform, videoId, target: change.newValue as any, thumbnail: thumbnail }));
                         }
                         else {
                             const [, , platform, videoId, no] = key.split(':');

@@ -25,13 +25,13 @@ export type ArchiveCallback = (zip: Blob, index: number, max: number) => void;
 export type ProgressCallback = (current: number, max: number) => void;
 
 function createZip(callback: (err: fflate.FlateError | null, zip: Blob | null) => void): fflate.Zip {
-    const chunks: Uint8Array[] = [];
+    const chunks: Uint8Array<ArrayBuffer>[] = [];
     return new fflate.Zip((err: fflate.FlateError | null, data: Uint8Array, final: boolean) => {
         if (err) {
             callback(err, null);
             return;
         }
-        chunks.push(data);
+        chunks.push(data as Uint8Array<ArrayBuffer>);
         if (final) {
             callback(null, new Blob(chunks, { type: 'application/zip' }));
         }
