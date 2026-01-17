@@ -49,17 +49,22 @@ const SPWN: Platform = {
 
     getVideoElement(): HTMLVideoElement | null {
         // 再生中のプレーヤーがあればそれを採用
-        const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('video[src]')).filter(v => !v.paused);
+        const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('video')).filter(v => !v.paused);
         if (videos.length > 0) {
             return videos[0];
         }
         // 再生中のものがなく、低遅延プレーヤーが表示されていればそれを採用
-        const video = document.querySelector<HTMLVideoElement>('video#aws-video-player');
+        let video = document.querySelector<HTMLVideoElement>('video.vjs-tech');
+        if (video !== null && getComputedStyle(video).display !== 'none') {
+            return video;
+        }
+        // それもなければ src ありの表示されているプレーヤーを採用
+        video = document.querySelector<HTMLVideoElement>('video[src]');
         if (video !== null && getComputedStyle(video).display !== 'none') {
             return video;
         }
         // それでも見付からなければ最初のプレーヤーを採用
-        return document.querySelector<HTMLVideoElement>('video[src]');
+        return document.querySelector<HTMLVideoElement>('video');
     },
 
     getVideoPos(video: HTMLVideoElement): number {
@@ -70,11 +75,12 @@ const SPWN: Platform = {
         const { id } = parseVideoId(videoId);
         const resp = await fetch(`https://public.spwn.jp/event-pages/${id}/data.json`);
         if (!resp.ok) {
-            const elems = document.querySelectorAll('#Streaming>div>p');
+            const title = document.querySelector('#Streaming h1');
+            const author = title?.nextSibling;
 
             return {
-                title: elems[0]?.textContent ?? '-',
-                author: elems[1]?.textContent ?? '-',
+                title: title?.textContent ?? '-',
+                author: author?.textContent ?? '-',
                 date: 0,
                 thumbnailUrl: null,
                 hashtags: [],
