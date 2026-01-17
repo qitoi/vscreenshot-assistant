@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+### Fixed
+
+- [SPWN] SPWN でスクリーンショットが撮影できない問題を修正
+
 ## v1.9.2 - 2025-08-24
 
 ### Fixed
