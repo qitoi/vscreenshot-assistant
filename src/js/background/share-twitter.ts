@@ -91,7 +91,7 @@ async function getTweetOptions(video: VideoInfo, hashtags: string[]): Promise<Tw
 async function getPopupTabId(windowId: number): Promise<number> {
     // タブの更新を監視しポップアップのロードが完了したら tabId を返す
     return new Promise<number>(resolve => {
-        const handler = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+        const handler = (tabId: number, changeInfo: chrome.tabs.OnUpdatedInfo) => {
             if (changeInfo.status === 'complete') {
                 chrome.tabs.get(tabId, tab => {
                     if (chrome.runtime.lastError) {
