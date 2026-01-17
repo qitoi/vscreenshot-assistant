@@ -55,12 +55,12 @@ const SPWN: Platform = {
         }
         // 再生中のものがなく、低遅延プレーヤーが表示されていればそれを採用
         let video = document.querySelector<HTMLVideoElement>('video.vjs-tech');
-        if (video !== null && getComputedStyle(video).display !== 'none') {
+        if (video !== null && !!video.offsetParent) {
             return video;
         }
         // それもなければ src ありの表示されているプレーヤーを採用
         video = document.querySelector<HTMLVideoElement>('video[src]');
-        if (video !== null && getComputedStyle(video).display !== 'none') {
+        if (video !== null && !!video.offsetParent) {
             return video;
         }
         // それでも見付からなければ最初のプレーヤーを採用
