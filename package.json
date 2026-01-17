@@ -1,6 +1,6 @@
 {
   "name": "vscreenshot-assistant",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack --watch --config webpack.config.ts",
